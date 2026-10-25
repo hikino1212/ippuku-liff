@@ -283,7 +283,7 @@ button.mv:disabled{opacity:.3;cursor:default}
 .phone.framed .toast{position:absolute;bottom:84px}
 .pchk svg{vertical-align:middle}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@line/liff@2.24.0/dist/lib/index.umd.js"></script>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
 <div id="root"></div>
@@ -1066,10 +1066,10 @@ const KEY="ippuku-line-test-v2";
 const LIFF_ID="2012192016-D0MCxjX9";
 let LIFF_OK=false;
 async function initLiff(){ try{ if(!window.liff) return; await liff.init({liffId:LIFF_ID}); LIFF_OK=true;
-  if(liff.isLoggedIn()){ try{ const pr=await liff.getProfile(); S.lineName=pr.displayName; window.__lineName=pr.displayName; render(); }catch(e){} } }catch(e){ console.warn("LIFF init failed",e); } }
+  if(liff.isLoggedIn()){ try{ const pr=await liff.getProfile(); S.lineName=pr.displayName; window.__lineName=pr.displayName; render(); }catch(e){} } }catch(e){ window.__liffErr=(e&&(e.code||e.message))||String(e); console.warn("LIFF init failed",e); } }
 async function closeLine(finished){ persist();
   const st=[];
-  st.push("LIFF:"+(LIFF_OK?"OK":"NG"));
+  st.push("部品:"+(window.liff?"あり":"なし")); st.push("LIFF:"+(LIFF_OK?"OK":"NG"+(window.__liffErr?"("+window.__liffErr+")":"")));
   try{ st.push("LINE内:"+(window.liff&&liff.isInClient()?"はい":"いいえ")); }catch(e){ st.push("LINE内:不明"); }
   if(LIFF_OK){
     if(finished){ try{ await liff.sendMessages([{type:"text",text:"終わりました"}]); st.push("送信:OK"); }catch(e){ st.push("送信:失敗("+(e&&(e.code||e.message)||e)+")"); } }
