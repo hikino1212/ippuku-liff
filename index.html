@@ -960,9 +960,9 @@ function vDone(){ const n=S.art.length+S.ward.length+Object.keys(S.single).lengt
   if(S.ph==="done"&&S.finalView) return vExplain();
   return {html:`<div class="done"><div class="big">${S.art.length}句・${n-S.art.length}件</div><h1>おつかれさまでした</h1><p class="lead" style="margin-top:4px">いい一服でしたね。また明日、ひと息つきにきてください。</p><p class="lead">${esc(P().caseTitle)}</p></div><p class="note" style="text-align:center">絵の句と、各ステップの記入です。記録は管理画面の「学習状況」に反映されます（デモ）。</p>
    <div class="card" style="margin-top:14px;text-align:center"><b>最後にもう一度</b><div class="note" style="margin:4px 0 10px">同じ事例を、今日の押さえどころを意識して、もう一度見てみませんか。</div><button class="btn" id="retry" style="width:100%">もう一度やってみる</button></div>
-   <div style="display:grid;gap:8px;margin-top:12px">${S.mode==="split"?`<button class="btn sub" id="fa">今回の分析を見る</button>`:""}<button class="btn sub" id="hist">分析結果と成長記録を見る</button></div>`,
+   <div style="display:grid;gap:8px;margin-top:12px">${S.mode==="split"?`<button class="btn sub" id="fa">今回の分析を見る</button>`:""}<button class="btn sub" id="hist">分析結果と成長記録を見る</button>${S.art.length?`<button class="btn sub" id="share">句を友だちに送る</button>`:""}</div>`,
    foot:`<button class="btn" id="n">LINEに戻る</button>`,
-   bind(){ const fa=$("fa"); if(fa) fa.onclick=()=>{S.finalView=true; S.finalReturn="done"; render(); scrollTo(0,0);}; $("hist").onclick=()=>{S.ph="history"; render(); scrollTo(0,0);}; $("retry").onclick=startRetry;
+   bind(){ const fa=$("fa"); if(fa) fa.onclick=()=>{S.finalView=true; S.finalReturn="done"; render(); scrollTo(0,0);}; $("hist").onclick=()=>{S.ph="history"; render(); scrollTo(0,0);}; $("retry").onclick=startRetry; const sh=$("share"); if(sh) sh.onclick=shareKu;
      $("n").onclick=()=>{ if(!S.msgs.some(m=>m.fin)) S.msgs.push({t:"08:24",fin:true,html:`おつかれさまでした。今日は <b>${n}句</b> を記録しました。`}); closeLine(true); }; }};
 }
 
@@ -1066,16 +1066,25 @@ const KEY="ippuku-line-test-v2";
 const LIFF_ID="2012192016-D0MCxjX9";
 let LIFF_OK=false;
 async function initLiff(){ try{ if(!window.liff) return; await liff.init({liffId:LIFF_ID}); LIFF_OK=true;
-  if(liff.isLoggedIn()){ try{ const pr=await liff.getProfile(); S.lineName=pr.displayName; window.__lineName=pr.displayName; render(); }catch(e){} } }catch(e){ window.__liffErr=(e&&(e.code||e.message))||String(e); console.warn("LIFF init failed",e); } }
+  if(liff.isLoggedIn()){ try{ const pr=await liff.getProfile(); S.lineName=pr.displayName; window.__lineName=pr.displayName; render(); }catch(e){} } }catch(e){ console.warn("LIFF init failed",e); } }
 async function closeLine(finished){ persist();
-  const st=[];
-  st.push("部品:"+(window.liff?"あり":"なし")); st.push("LIFF:"+(LIFF_OK?"OK":"NG"+(window.__liffErr?"("+window.__liffErr+")":"")));
-  try{ st.push("LINE内:"+(window.liff&&liff.isInClient()?"はい":"いいえ")); }catch(e){ st.push("LINE内:不明"); }
-  if(LIFF_OK){
-    if(finished){ try{ await liff.sendMessages([{type:"text",text:"終わりました"}]); st.push("送信:OK"); }catch(e){ st.push("送信:失敗("+(e&&(e.code||e.message)||e)+")"); } }
-    try{ liff.closeWindow(); st.push("閉じる:実行"); }catch(e){ st.push("閉じる:失敗("+(e&&(e.code||e.message)||e)+")"); }
+  if(LIFF_OK&&liff.isInClient()){
+    if(finished){ try{ await liff.sendMessages([{type:"text",text:"終わりました"}]); }catch(e){ console.warn(e); } }
+    try{ liff.closeWindow(); return; }catch(e){}
   }
-  setTimeout(()=>{ S.toast="✕で閉じてLINEに戻ってください［"+st.join("／")+"］"; render(); },600); }
+  S.toast="画面上部の✕で閉じてLINEに戻り、「終わりました」を押してください"; render(); }
+const ADD_FRIEND="https://line.me/R/ti/p/@777vdkoq";
+async function shareKu(){
+  const ku=S.art[S.art.length-1]; if(!ku){ S.toast="先に句を詠んでください"; render(); return; }
+  if(!(LIFF_OK&&liff.isApiAvailable&&liff.isApiAvailable("shareTargetPicker"))){ S.toast="LINEの中で開いたときに使えます"; render(); return; }
+  const name=S.lineName||"いっぷ句の仲間";
+  const line=t=>({type:"text",text:t,size:"xl",weight:"bold",color:"#2B3A42",align:"center",wrap:true});
+  const msg={type:"flex",altText:"いっぷ句："+ku.join(" "),contents:{type:"bubble",
+    header:{type:"box",layout:"vertical",backgroundColor:"#F4EFE6",paddingAll:"14px",contents:[{type:"text",text:"いっぷ句",size:"sm",color:"#7A6A55",weight:"bold"},{type:"text",text:"一枚の絵を観て、五七五で詠みました",size:"xs",color:"#7A6A55",margin:"4px",wrap:true}]},
+    body:{type:"box",layout:"vertical",spacing:"md",paddingAll:"22px",contents:[line(ku[0]),line(ku[1]),line(ku[2]),{type:"text",text:"― "+name,size:"sm",color:"#7A6A55",align:"end",margin:"lg"}]},
+    footer:{type:"box",layout:"vertical",contents:[{type:"button",style:"primary",color:"#2F5D50",action:{type:"uri",label:"いっぷ句をのぞいてみる",uri:ADD_FRIEND}}]}}};
+  try{ const r=await liff.shareTargetPicker([msg]); S.toast=r?"送りました":"送るのをやめました"; }catch(e){ S.toast="送れませんでした（"+(e&&(e.code||e.message)||e)+"）"; }
+  render(); }
 function persist(){ try{ localStorage.setItem(KEY, JSON.stringify({code:S.org&&S.org.code,pack:S.pack,consent:S.consent,mode:S.mode,split:S.split,art:S.art,ward:S.ward,single:S.single,text:S.text,history:S.history,done:S.done})); }catch(e){} }
 function restore(){ try{ const d=JSON.parse(localStorage.getItem(KEY)||"null"); if(!d||!d.code) return false; const o=ORGS.find(x=>x.code===d.code); if(!o) return false;
   Object.assign(S,{org:o,pack:d.pack,consent:d.consent,mode:d.mode,split:d.split||{cur:0,done:[]},art:d.art||[],ward:d.ward||[],single:d.single||{},text:d.text||{},history:d.history||[],done:!!d.done}); return true; }catch(e){ return false; } }
