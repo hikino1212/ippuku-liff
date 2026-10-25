@@ -792,7 +792,7 @@ function vJoin(){
   return {html:`<h2>所属する組織を選んでください</h2><p class="lead">LINEでログインしました（表示名：${esc(S.lineName||"あなた")}）。</p>
    <button class="btn" id="qr" style="width:100%;text-align:center;margin:4px 0 16px">組織のQRコードを読み取る</button><p class="note" style="margin:-8px 0 12px">または、下から選んでください（デモ用）</p>
    ${ORGS.filter(o=>o.active!==false).map(o=>`<button class="packcard democode" data-c="${o.code}"><b>${esc(o.name)}</b><div class="note" style="margin-top:4px">使える学習：${o.packs.map(k=>esc(PACKS[k].name)).join("、")}</div></button>`).join("")}
-   <details class="more"><summary>本番ではどうなる？</summary><div class="note">本番では、所属先から配られるQRコードや組織コードで入ります。ここではデモのため、組織を選ぶだけで始められます。デモでは、業界ごとに組織を1つずつ用意しています。組織とパックの組み合わせは、管理画面の「組織と契約」で変えられます。</div></details>`,
+   <details class="more"><summary>本番ではどうなる？</summary><div class="note">本番では、所属先から配られるQRコードや組織コードで入ります。ここではデモのため、組織を選ぶだけで始められます。デモでは、業界ごとに組織を1つずつ用意しています。組織とパックの組み合わせは、管理画面の「組織と契約」で変えられます。</div></details><div class="note" style="text-align:center;margin-top:20px;line-height:2"><a href="#" data-ext="video" style="color:inherit;text-decoration:underline">▶ いっぷ句の紹介動画を見る</a><br><span style="opacity:.75">いっぷ句（特許出願中）｜<a href="#" data-ext="company" style="color:inherit;text-decoration:underline">合同会社ぽっけいし</a></span></div>`,
    bind(){ document.querySelectorAll(".democode").forEach(b=>b.onclick=()=>selectOrg(b.dataset.c)); const q=$("qr"); if(q) q.onclick=scanOrg; }};
 }
 function vPacks(){ const o=S.org;
@@ -961,7 +961,7 @@ function vDone(){ const n=S.art.length+S.ward.length+Object.keys(S.single).lengt
   if(S.ph==="done"&&S.finalView) return vExplain();
   return {html:`<div class="done"><div class="big">${S.art.length}句・${n-S.art.length}件</div><h1>${S.lineName?esc(S.lineName)+"さん、":""}おつかれさまでした</h1><p class="lead" style="margin-top:4px">いい一服でしたね。また明日、ひと息つきにきてください。</p><p class="lead">${esc(P().caseTitle)}</p></div><p class="note" style="text-align:center">絵の句と、各ステップの記入です。記録は管理画面の「学習状況」に反映されます（デモ）。</p>
    <div class="card" style="margin-top:14px;text-align:center"><b>最後にもう一度</b><div class="note" style="margin:4px 0 10px">同じ事例を、今日の押さえどころを意識して、もう一度見てみませんか。</div><button class="btn" id="retry" style="width:100%">もう一度やってみる</button></div>
-   <div style="display:grid;gap:8px;margin-top:12px">${S.mode==="split"?`<button class="btn sub" id="fa">今回の分析を見る</button>`:""}<button class="btn sub" id="hist">分析結果と成長記録を見る</button><button class="btn sub" id="share">このアプリを紹介する</button></div>`,
+   <div style="display:grid;gap:8px;margin-top:12px">${S.mode==="split"?`<button class="btn sub" id="fa">今回の分析を見る</button>`:""}<button class="btn sub" id="hist">分析結果と成長記録を見る</button><button class="btn sub" id="share">このアプリを紹介する</button><div class="note" style="text-align:center;margin-top:20px;line-height:2"><a href="#" data-ext="video" style="color:inherit;text-decoration:underline">▶ いっぷ句の紹介動画を見る</a><br><span style="opacity:.75">いっぷ句（特許出願中）｜<a href="#" data-ext="company" style="color:inherit;text-decoration:underline">合同会社ぽっけいし</a></span></div></div>`,
    foot:`<button class="btn" id="n">LINEに戻る</button>`,
    bind(){ const fa=$("fa"); if(fa) fa.onclick=()=>{S.finalView=true; S.finalReturn="done"; render(); scrollTo(0,0);}; $("hist").onclick=()=>{S.ph="history"; render(); scrollTo(0,0);}; $("retry").onclick=startRetry; const sh=$("share"); if(sh) sh.onclick=shareApp;
      $("n").onclick=()=>{ if(!S.msgs.some(m=>m.fin)) S.msgs.push({t:"08:24",fin:true,html:`おつかれさまでした。今日は <b>${n}句</b> を記録しました。`}); closeLine(true); }; }};
@@ -1079,6 +1079,9 @@ async function scanOrg(){
   if(!(LIFF_OK&&liff.isApiAvailable&&liff.isApiAvailable("scanCodeV2"))){ S.toast="LINEの中で開いたときに使えます（スマホのカメラでQRを読んでも入れます）"; render(); return; }
   try{ const r=await liff.scanCodeV2(); const code=orgFromText(r&&r.value); if(!code){ S.toast="いっぷ句の組織QRではないようです"; render(); return; } selectOrg(code); }
   catch(e){ S.toast="読み取れませんでした（"+(e&&(e.code||e.message)||e)+"）"; render(); } }
+const LINKS={company:"https://pokkeishi.studio.site/",video:"https://www.youtube.com/watch?v=g8ZsscBmsvM"};
+function openLink(url,ext){ try{ if(LIFF_OK&&liff.isInClient()){ liff.openWindow({url,external:!!ext}); return; } }catch(e){} window.open(url,"_blank","noopener"); }
+document.addEventListener("click",e=>{ const a=e.target.closest&&e.target.closest("[data-ext]"); if(!a) return; e.preventDefault(); const k=a.dataset.ext; openLink(LINKS[k],k==="video"); });
 const ADD_FRIEND="https://line.me/R/ti/p/@777vdkoq";
 const ICON_URL="https://hikino1212.github.io/ippuku-liff/icon.png";
 async function shareApp(){
@@ -1091,7 +1094,7 @@ async function shareApp(){
       {type:"text",text:"いっぷ句",size:"xxl",weight:"bold",color:"#2B3A42"},
       {type:"text",text:"ぽっけいしの「面白がり」で世界を変えていく。",size:"md",color:"#2F5D50",weight:"bold",wrap:true},
       {type:"text",text:"すき間時間で一枚の絵を見ることから始まる、15分の学び。",size:"sm",color:"#5A5A5A",wrap:true,margin:"md"}]},
-    footer:{type:"box",layout:"vertical",contents:[{type:"button",style:"primary",color:"#2F5D50",action:{type:"uri",label:"友だち追加して始める",uri:ADD_FRIEND}}]}}};
+    footer:{type:"box",layout:"vertical",spacing:"sm",contents:[{type:"button",style:"primary",color:"#2F5D50",action:{type:"uri",label:"友だち追加して始める",uri:ADD_FRIEND}},{type:"button",style:"link",height:"sm",color:"#2F5D50",action:{type:"uri",label:"紹介動画を見る",uri:LINKS.video}},{type:"text",text:"合同会社ぽっけいし｜特許出願中",size:"xxs",color:"#9A8B78",align:"center",decoration:"underline",action:{type:"uri",label:"会社サイト",uri:LINKS.company}}]}}};
   try{ const r=await liff.shareTargetPicker([msg]); S.toast=r?"紹介を送りました":"送るのをやめました"; }catch(e){ S.toast="送れませんでした（"+(e&&(e.code||e.message)||e)+"）"; }
   render(); }
 function persist(){ try{ localStorage.setItem(KEY, JSON.stringify({code:S.org&&S.org.code,pack:S.pack,consent:S.consent,mode:S.mode,split:S.split,art:S.art,ward:S.ward,single:S.single,text:S.text,history:S.history,done:S.done})); }catch(e){} }
@@ -1115,7 +1118,7 @@ function route(){ const view=param("view")||(location.hash||"").replace("#","");
   render(); scrollTo(0,0); }
 window.addEventListener("hashchange",()=>{ reset(); S.lineName=window.__lineName; route(); });
 // A3: 新しい版があれば自動で読み直す
-const APP_VER="5";
+const APP_VER="7";
 (async()=>{ try{ const r=await fetch("version.json?t="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); const q=new URLSearchParams(location.search);
   if(j.v&&j.v!==APP_VER&&q.get("v")!==j.v){ q.set("v",j.v); location.replace(location.pathname+"?"+q.toString()+location.hash); return; } } }catch(e){}
   route(); initLiff(); })();
