@@ -1084,13 +1084,13 @@ const ICON_URL="https://hikino1212.github.io/ippuku-liff/icon.png";
 async function shareApp(){
   if(!(LIFF_OK&&liff.isApiAvailable&&liff.isApiAvailable("shareTargetPicker"))){ S.toast="LINEの中で開いたときに使えます"; render(); return; }
   const from=S.lineName?S.lineName+"さんからのご紹介":"いっぷ句のご紹介";
-  const msg={type:"flex",altText:"いっぷ句のご紹介：一枚の絵と一服から始まる、15分の学び",contents:{type:"bubble",
+  const msg={type:"flex",altText:"いっぷ句のご紹介：すき間時間で一枚の絵を見ることから始まる、15分の学び",contents:{type:"bubble",
     hero:{type:"image",url:ICON_URL,size:"full",aspectRatio:"20:11",aspectMode:"fit",backgroundColor:"#EFEFEF"},
     body:{type:"box",layout:"vertical",spacing:"md",paddingAll:"20px",contents:[
       {type:"text",text:from,size:"xs",color:"#7A6A55"},
       {type:"text",text:"いっぷ句",size:"xxl",weight:"bold",color:"#2B3A42"},
       {type:"text",text:"ぽっけいしの「面白がり」で世界を変えていく。",size:"md",color:"#2F5D50",weight:"bold",wrap:true},
-      {type:"text",text:"一枚の絵を観て五七五を詠み、6つのステップで考える15分の学び。熟達者の押さえどころを知りながら、あなたならではの見方を育てます。",size:"sm",color:"#5A5A5A",wrap:true,margin:"md"}]},
+      {type:"text",text:"すき間時間で一枚の絵を見ることから始まる、15分の学び。",size:"sm",color:"#5A5A5A",wrap:true,margin:"md"}]},
     footer:{type:"box",layout:"vertical",contents:[{type:"button",style:"primary",color:"#2F5D50",action:{type:"uri",label:"友だち追加して始める",uri:ADD_FRIEND}}]}}};
   try{ const r=await liff.shareTargetPicker([msg]); S.toast=r?"紹介を送りました":"送るのをやめました"; }catch(e){ S.toast="送れませんでした（"+(e&&(e.code||e.message)||e)+"）"; }
   render(); }
@@ -1115,7 +1115,7 @@ function route(){ const view=param("view")||(location.hash||"").replace("#","");
   render(); scrollTo(0,0); }
 window.addEventListener("hashchange",()=>{ reset(); S.lineName=window.__lineName; route(); });
 // A3: 新しい版があれば自動で読み直す
-const APP_VER="4";
+const APP_VER="5";
 (async()=>{ try{ const r=await fetch("version.json?t="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); const q=new URLSearchParams(location.search);
   if(j.v&&j.v!==APP_VER&&q.get("v")!==j.v){ q.set("v",j.v); location.replace(location.pathname+"?"+q.toString()+location.hash); return; } } }catch(e){}
   route(); initLiff(); })();
