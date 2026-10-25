@@ -790,9 +790,10 @@ function bindTalk(){
 // ----- 組織コード → 業界パック（1:N） -----
 function vJoin(){
   return {html:`<h2>所属する組織を選んでください</h2><p class="lead">LINEでログインしました（表示名：${esc(S.lineName||"あなた")}）。</p>
+   <button class="btn" id="qr" style="width:100%;text-align:center;margin:4px 0 16px">組織のQRコードを読み取る</button><p class="note" style="margin:-8px 0 12px">または、下から選んでください（デモ用）</p>
    ${ORGS.filter(o=>o.active!==false).map(o=>`<button class="packcard democode" data-c="${o.code}"><b>${esc(o.name)}</b><div class="note" style="margin-top:4px">使える学習：${o.packs.map(k=>esc(PACKS[k].name)).join("、")}</div></button>`).join("")}
    <details class="more"><summary>本番ではどうなる？</summary><div class="note">本番では、所属先から配られるQRコードや組織コードで入ります。ここではデモのため、組織を選ぶだけで始められます。デモでは、業界ごとに組織を1つずつ用意しています。組織とパックの組み合わせは、管理画面の「組織と契約」で変えられます。</div></details>`,
-   bind(){ document.querySelectorAll(".democode").forEach(b=>b.onclick=()=>{ const o=ORGS.find(x=>x.code===b.dataset.c); if(!o||o.active===false) return; S.org=o; S.code=o.code; S.err=""; const usable=o.packs.filter(k=>!PACKS[k].empty); if(o.packs.length===1&&usable.length===1){S.pack=usable[0]; S.ph="consent";} else S.ph="packs"; render(); scrollTo(0,0); }); }};
+   bind(){ document.querySelectorAll(".democode").forEach(b=>b.onclick=()=>selectOrg(b.dataset.c)); const q=$("qr"); if(q) q.onclick=scanOrg; }};
 }
 function vPacks(){ const o=S.org;
   return {html:`<p class="lead">${esc(o.name)}</p><h2>どの学習を始めますか</h2><p class="lead">この組織では ${o.packs.length} つの業界パックが使えます。</p>
@@ -924,9 +925,9 @@ function vExplain(){ const p=P(),ex=EXP[S.pack]||{acts:[],whom:"",purpose:""},is
   if(personArt&&personScene) mochiL.push("絵で使えた見る目を、現場の場面でも使えています");
   const summary=`<div class="card" style="background:var(--mist)"><h2 style="margin-bottom:8px">まとめ：あなたの見方</h2>
     <div class="note" style="margin-bottom:4px">押さえておきたいポイント（根）</div><ul style="margin:0 0 12px 18px;padding:0">${pts.slice(0,3).map(x=>`<li style="margin:4px 0">${esc(x)}</li>`).join("")}</ul>
-    <div class="note" style="margin-bottom:4px">あなたの持ち味（まなざし）</div><div style="font-weight:700;font-size:17px;color:var(--ink2);margin:2px 0 4px">${esc(gz[0])}</div><ul style="margin:0 0 4px 18px;padding:0">${mochiL.map(x=>`<li style="margin:4px 0">${esc(x)}</li>`).join("")}</ul></div>
+    <div class="note" style="margin-bottom:4px">${S.lineName?esc(S.lineName)+"さん":"あなた"}の持ち味（まなざし）</div><div style="font-weight:700;font-size:17px;color:var(--ink2);margin:2px 0 4px">${esc(gz[0])}</div><ul style="margin:0 0 4px 18px;padding:0">${mochiL.map(x=>`<li style="margin:4px 0">${esc(x)}</li>`).join("")}</ul></div>
    <details class="more"><summary>くわしい分析（絵を観る／${isN?"臨床判断の6つのシーン":"6つのステップ"}）</summary>`;
-  return {html:`<h2>あなたの見方の分析</h2><p class="lead">「絵を観る」と「${isN?"臨床判断の6つのシーン":"6つのステップ"}」の両方から振り返ります。正解ではなく、${esc(p.expertWord)}${E}人が「どこを見ていたか」との比較です。</p>
+  return {html:`<h2>${S.lineName?esc(S.lineName)+"さん":"あなた"}の見方の分析</h2><p class="lead">「絵を観る」と「${isN?"臨床判断の6つのシーン":"6つのステップ"}」の両方から振り返ります。正解ではなく、${esc(p.expertWord)}${E}人が「どこを見ていたか」との比較です。</p>
 
    ${summary}<div class="card line"><h2>1. 「絵を観る」の分析</h2><div style="display:flex;gap:10px;align-items:center;margin:6px 0 10px"><img src="${curArt().src}" alt="${esc(curArt().alt)}" style="width:120px;height:auto;border-radius:10px;flex:0 0 auto"><div class="note">今日の一枚<br><b style="color:var(--text)">${esc(curArt().title)}</b><br>${esc(curArt().author)}</div></div>
     <div class="note">詠んだ句：${S.art.length}句${S.art[0]?`／最初の句：「${esc(kt(S.art[0]))}」`:""}</div>
@@ -958,7 +959,7 @@ function vMini(){ const p=P(),i=S.split.cur;
 }
 function vDone(){ const n=S.art.length+S.ward.length+Object.keys(S.single).length;
   if(S.ph==="done"&&S.finalView) return vExplain();
-  return {html:`<div class="done"><div class="big">${S.art.length}句・${n-S.art.length}件</div><h1>おつかれさまでした</h1><p class="lead" style="margin-top:4px">いい一服でしたね。また明日、ひと息つきにきてください。</p><p class="lead">${esc(P().caseTitle)}</p></div><p class="note" style="text-align:center">絵の句と、各ステップの記入です。記録は管理画面の「学習状況」に反映されます（デモ）。</p>
+  return {html:`<div class="done"><div class="big">${S.art.length}句・${n-S.art.length}件</div><h1>${S.lineName?esc(S.lineName)+"さん、":""}おつかれさまでした</h1><p class="lead" style="margin-top:4px">いい一服でしたね。また明日、ひと息つきにきてください。</p><p class="lead">${esc(P().caseTitle)}</p></div><p class="note" style="text-align:center">絵の句と、各ステップの記入です。記録は管理画面の「学習状況」に反映されます（デモ）。</p>
    <div class="card" style="margin-top:14px;text-align:center"><b>最後にもう一度</b><div class="note" style="margin:4px 0 10px">同じ事例を、今日の押さえどころを意識して、もう一度見てみませんか。</div><button class="btn" id="retry" style="width:100%">もう一度やってみる</button></div>
    <div style="display:grid;gap:8px;margin-top:12px">${S.mode==="split"?`<button class="btn sub" id="fa">今回の分析を見る</button>`:""}<button class="btn sub" id="hist">分析結果と成長記録を見る</button><button class="btn sub" id="share">このアプリを紹介する</button></div>`,
    foot:`<button class="btn" id="n">LINEに戻る</button>`,
@@ -1066,13 +1067,18 @@ const KEY="ippuku-line-test-v2";
 const LIFF_ID="2012192016-D0MCxjX9";
 let LIFF_OK=false;
 async function initLiff(){ try{ if(!window.liff) return; await liff.init({liffId:LIFF_ID}); LIFF_OK=true;
-  if(liff.isLoggedIn()){ try{ const pr=await liff.getProfile(); S.lineName=pr.displayName; window.__lineName=pr.displayName; render(); }catch(e){} } }catch(e){ console.warn("LIFF init failed",e); } }
+  if(liff.isLoggedIn()){ try{ const pr=await liff.getProfile(); S.lineName=pr.displayName; window.__lineName=pr.displayName; render(); }catch(e){} }
+  const now=(param("view")||(location.hash||"").replace("#",""))+"|"+orgFromText(param("org")); if(now!==ROUTED_VIEW) route(); }catch(e){ console.warn("LIFF init failed",e); } }
 async function closeLine(finished){ persist();
   if(LIFF_OK&&liff.isInClient()){
     if(finished){ try{ await liff.sendMessages([{type:"text",text:"終わりました"}]); }catch(e){ console.warn(e); } }
     try{ liff.closeWindow(); return; }catch(e){}
   }
-  S.toast="画面上部の✕で閉じてLINEに戻り、「終わりました」を押してください"; render(); }
+  S.toast="画面上部の✕で閉じて、トークに「終わりました」と送ってください"; render(); }
+async function scanOrg(){
+  if(!(LIFF_OK&&liff.isApiAvailable&&liff.isApiAvailable("scanCodeV2"))){ S.toast="LINEの中で開いたときに使えます（スマホのカメラでQRを読んでも入れます）"; render(); return; }
+  try{ const r=await liff.scanCodeV2(); const code=orgFromText(r&&r.value); if(!code){ S.toast="いっぷ句の組織QRではないようです"; render(); return; } selectOrg(code); }
+  catch(e){ S.toast="読み取れませんでした（"+(e&&(e.code||e.message)||e)+"）"; render(); } }
 const ADD_FRIEND="https://line.me/R/ti/p/@777vdkoq";
 const ICON_URL="https://hikino1212.github.io/ippuku-liff/icon.png";
 async function shareApp(){
@@ -1091,17 +1097,28 @@ async function shareApp(){
 function persist(){ try{ localStorage.setItem(KEY, JSON.stringify({code:S.org&&S.org.code,pack:S.pack,consent:S.consent,mode:S.mode,split:S.split,art:S.art,ward:S.ward,single:S.single,text:S.text,history:S.history,done:S.done})); }catch(e){} }
 function restore(){ try{ const d=JSON.parse(localStorage.getItem(KEY)||"null"); if(!d||!d.code) return false; const o=ORGS.find(x=>x.code===d.code); if(!o) return false;
   Object.assign(S,{org:o,pack:d.pack,consent:d.consent,mode:d.mode,split:d.split||{cur:0,done:[]},art:d.art||[],ward:d.ward||[],single:d.single||{},text:d.text||{},history:d.history||[],done:!!d.done}); return true; }catch(e){ return false; } }
-function route(){ const h=(location.hash||"").replace("#","");
-  if(h==="join"){ try{localStorage.removeItem(KEY);}catch(e){} reset(); S.ph="join"; render(); scrollTo(0,0); return; }
+function param(k){ const q=new URLSearchParams(location.search); let v=q.get(k);
+  if(!v){ const ls=q.get("liff.state"); if(ls){ const m=decodeURIComponent(ls).match(new RegExp("[?&]"+k+"=([^&#]+)")); if(m) v=decodeURIComponent(m[1]); } }
+  return v; }
+function orgFromText(t){ if(!t) return null; const m=String(t).match(/org=([A-Za-z0-9-]+)/)||String(t).match(/^(?:IPPUKU:)?([A-Z0-9-]+)$/); return m?m[1].toUpperCase():null; }
+function selectOrg(code){ const o=ORGS.find(x=>x.code===code); if(!o||o.active===false){ S.toast="この組織コードは見つかりませんでした（"+code+"）"; render(); return false; }
+  S.org=o; S.code=o.code; S.err=""; const usable=o.packs.filter(k=>!PACKS[k].empty); if(o.packs.length===1&&usable.length===1){S.pack=usable[0]; S.ph="consent";} else S.ph="packs"; render(); scrollTo(0,0); return true; }
+let ROUTED_VIEW=null;
+function route(){ const view=param("view")||(location.hash||"").replace("#",""); const org=orgFromText(param("org")); ROUTED_VIEW=view+"|"+org;
+  if(view==="join"){ try{localStorage.removeItem(KEY);}catch(e){} reset(); S.lineName=window.__lineName; S.ph="join"; render(); scrollTo(0,0); return; }
   const ok=restore();
-  if((h==="history"||h==="posts")&&ok&&S.pack) S.ph="history";
+  if(org&&!(ok&&S.org&&S.org.code===org)){ reset(); S.lineName=window.__lineName; if(selectOrg(org)) return; }
+  if((view==="history"||view==="posts")&&ok&&S.pack) S.ph="history";
   else if(ok&&S.pack&&S.consent&&S.mode) S.ph=S.done?"done":(S.mode==="split"?"splithome":"step");
   else if(ok&&S.pack) S.ph="consent";
   else S.ph="join";
   render(); scrollTo(0,0); }
 window.addEventListener("hashchange",()=>{ reset(); S.lineName=window.__lineName; route(); });
-route();
-initLiff();
+// A3: 新しい版があれば自動で読み直す
+const APP_VER="4";
+(async()=>{ try{ const r=await fetch("version.json?t="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); const q=new URLSearchParams(location.search);
+  if(j.v&&j.v!==APP_VER&&q.get("v")!==j.v){ q.set("v",j.v); location.replace(location.pathname+"?"+q.toString()+location.hash); return; } } }catch(e){}
+  route(); initLiff(); })();
 
 
 </script>
