@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>いっぷ句</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#17303F; --ink2:#24485C; --mist:#EDF1F3; --mist2:#DCE4E8;
+  --shu:#C0503C; --moss:#2F6E5E; --muted:#5A6B76; --line:#C9D4DA;
+  --bg:#E4EAED; --surface:#FFFFFF; --text:#17303F; --sub:#5A6B76;
+  --chip:#EDF1F3; --chipOn:#17303F; --chipOnText:#FFFFFF;
+  --green:#3E8E5E; --yellow:#D9A400; --red:#C0503C;
+  --serif:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;
+  --sans:"Noto Sans JP","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1E27; --surface:#17303F; --text:#EDF1F3; --sub:#A9BAC4;
+    --mist:#1F3D4F; --mist2:#24485C; --line:#2F5568; --chip:#1F3D4F;
+    --chipOn:#EDF1F3; --chipOnText:#17303F; --ink:#EDF1F3; --ink2:#C9D4DA;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1E27; --surface:#17303F; --text:#EDF1F3; --sub:#A9BAC4;
+  --mist:#1F3D4F; --mist2:#24485C; --line:#2F5568; --chip:#1F3D4F;
+  --chipOn:#EDF1F3; --chipOnText:#17303F; --ink:#EDF1F3; --ink2:#C9D4DA;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.phone{max-width:430px;margin:0 auto;min-height:100vh;background:var(--surface);display:flex;flex-direction:column;position:relative}
+@media (min-width:600px){.phone{margin:24px auto;min-height:calc(100vh - 48px);border-radius:28px;box-shadow:0 0 0 1px var(--line);overflow:hidden}}
+.mockbar{font-size:11px;color:var(--sub);background:var(--mist);text-align:center;padding:4px 8px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);padding:10px 16px 8px;border-bottom:1px solid var(--line)}
+.toprow{display:flex;align-items:center;gap:8px}
+.back{border:0;background:none;color:var(--sub);font-size:22px;line-height:1;padding:4px 8px 4px 0;cursor:pointer;min-width:28px}
+.back:disabled{visibility:hidden}
+.steptitle{font-weight:700;font-size:15px}
+.stepcount{margin-left:auto;font-size:12px;color:var(--sub)}
+.progress{display:flex;gap:4px;margin-top:8px}
+.progress span{flex:1;height:4px;border-radius:2px;background:var(--mist2)}
+.progress span.on{background:var(--ink2)}
+main{flex:1;padding:18px 18px 110px;overflow-x:hidden}
+h1{font-family:var(--serif);font-weight:700;font-size:24px;line-height:1.45;margin:6px 0 10px}
+h2{font-family:var(--serif);font-weight:700;font-size:19px;line-height:1.5;margin:0 0 6px}
+.lead{color:var(--sub);font-size:14px;margin:0 0 16px}
+.card{background:var(--mist);border-radius:14px;padding:14px 16px;margin:0 0 14px}
+.card.line{background:none;border:1px solid var(--line)}
+.patient{display:flex;gap:12px;align-items:flex-start}
+.patient .name{font-weight:700;font-size:16px}
+.vitals{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin-top:10px}
+.vital{background:var(--surface);border-radius:10px;padding:8px 10px;cursor:pointer;border:1.5px solid transparent;text-align:left;color:var(--text);font:inherit;font-size:13px}
+.vital b{display:block;font-size:16px}
+.vital.on{border-color:var(--shu)}
+.vital small{color:var(--sub)}
+.q{font-weight:700;margin:18px 0 8px;font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--chip);color:var(--text);border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}
+.chip.on{background:var(--chipOn);color:var(--chipOnText);border-color:var(--chipOn)}
+textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text);font:inherit;padding:10px 12px}
+textarea{min-height:72px;resize:vertical}
+.note{font-size:12px;color:var(--sub)}
+.foot{position:sticky;bottom:0;margin-top:auto;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--line);display:flex;gap:10px}
+.btn{flex:1;border:0;border-radius:12px;padding:14px 12px;font:inherit;font-weight:700;font-size:15px;cursor:pointer;background:var(--ink2);color:#fff}
+:root[data-theme="dark"] .btn{background:#C9D4DA;color:#17303F}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn{background:#C9D4DA;color:#17303F}}
+.btn.sub{background:var(--mist);color:var(--text)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--shu);outline-offset:2px}
+/* 病室の絵 */
+.scene{border-radius:14px;overflow:hidden;background:#F3F0E8;margin:0 0 6px}
+.scene svg{display:block;width:100%;height:auto}
+.scene-cap{font-size:12px;color:var(--sub);margin:0 0 14px}
+/* 句の入力 */
+.kuform{display:grid;gap:8px;margin:6px 0 4px}
+.kurow{display:flex;align-items:center;gap:8px}
+.kurow input{font-family:var(--serif);font-size:17px}
+.mora{font-size:12px;color:var(--sub);min-width:56px;text-align:right}
+.mora.ok{color:var(--moss);font-weight:700}
+/* 短冊：このモックで唯一の見せ場 */
+.tanzaku-row{display:flex;flex-direction:row-reverse;gap:10px;overflow-x:auto;padding:4px 2px 10px;justify-content:flex-start}
+.tanzaku{writing-mode:vertical-rl;font-family:var(--serif);font-size:17px;line-height:1.9;letter-spacing:.08em;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 8px;min-height:210px;flex:0 0 auto;position:relative}
+.tanzaku.mine{border-color:var(--ink2);box-shadow:inset 0 0 0 1px var(--ink2)}
+.tanzaku.expert{border-color:var(--moss);box-shadow:inset 0 0 0 1px var(--moss)}
+.tanzaku .who{font-family:var(--sans);font-size:10px;color:var(--sub);letter-spacing:0;margin-top:10px}
+.tanzaku .lock{font-family:var(--sans);font-size:10px;color:var(--sub);letter-spacing:0}
+.peer{display:flex;flex-direction:column;align-items:center;gap:6px}
+.react{border:1px solid var(--line);background:var(--chip);color:var(--text);border-radius:999px;padding:3px 10px;font:inherit;font-size:12px;cursor:pointer}
+.react.on{background:var(--shu);border-color:var(--shu);color:#fff}
+.counter{display:flex;gap:6px;align-items:center;margin:4px 0 12px}
+.counter i{width:22px;height:6px;border-radius:3px;background:var(--mist2)}
+.counter i.on{background:var(--shu)}
+.counter span{font-size:12px;color:var(--sub);margin-left:4px}
+/* 信号 */
+.signals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sig{border:1.5px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;padding:12px 6px;font:inherit;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
+.sig i{width:26px;height:26px;border-radius:50%}
+.sig.on{border-width:3px}
+.sig[data-v="緑"] i{background:var(--green)} .sig[data-v="緑"].on{border-color:var(--green)}
+.sig[data-v="黄"] i{background:var(--yellow)} .sig[data-v="黄"].on{border-color:var(--yellow)}
+.sig[data-v="赤"] i{background:var(--red)} .sig[data-v="赤"].on{border-color:var(--red)}
+.sbar{display:grid;gap:8px}
+.sbar label{display:flex;gap:10px;align-items:flex-start}
+.sbar label b{font-family:var(--serif);width:18px;padding-top:10px;text-align:center}
+/* レポート */
+.matrix{width:100%;border-collapse:collapse;font-size:14px}
+.matrix th,.matrix td{padding:8px 4px;border-bottom:1px solid var(--line);text-align:center}
+.matrix th:first-child,.matrix td:first-child{text-align:left}
+.dot{display:inline-block;width:14px;height:14px;border-radius:50%;border:1.5px solid var(--line)}
+.dot.me{background:var(--ink2);border-color:var(--ink2)}
+.dot.ex{background:var(--moss);border-color:var(--moss)}
+.gap td:first-child{color:var(--shu);font-weight:700}
+.insight{border-left:3px solid var(--shu);padding:2px 0 2px 12px;margin:0 0 14px}
+.insight.good{border-color:var(--moss)}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cmp > div{background:var(--surface);border-radius:10px;padding:10px}
+.cmp small{color:var(--sub);display:block}
+.done{text-align:center;padding-top:30px}
+.done .big{font-family:var(--serif);font-size:44px;color:var(--shu)}
+.src{font-size:11px;color:var(--sub);margin-top:20px;line-height:1.6}
+@media (prefers-reduced-motion:no-preference){.fade{animation:fade .25s ease-out}@keyframes fade{from{opacity:0}to{opacity:1}}}
+.days{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 16px}
+.day{border:1px solid var(--line);border-radius:14px;padding:10px 8px;text-align:center;background:var(--surface);position:relative;min-height:112px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.day .dn{font-size:11px;color:var(--sub);letter-spacing:.06em}
+.day .sn{font-family:var(--serif);font-weight:700;font-size:13px;line-height:1.4}
+.day.now{border:2px solid var(--shu)}
+.day.lock{opacity:.45}
+.seal{width:44px;height:44px;border-radius:50%;border:2.5px solid var(--shu);color:var(--shu);font-family:var(--serif);font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center;transform:rotate(-8deg);margin-top:2px}
+.seal.empty{border-style:dashed;border-color:var(--line);color:var(--line)}
+.streak{display:flex;align-items:baseline;gap:6px;margin:4px 0 2px}
+.streak b{font-family:var(--serif);font-size:34px;color:var(--shu);line-height:1}
+.scene-q{background:var(--ink2);color:#fff;border-radius:12px;padding:12px 14px;margin:0 0 12px}
+:root[data-theme="dark"] .scene-q{background:#C9D4DA;color:#17303F}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .scene-q{background:#C9D4DA;color:#17303F}}
+.scene-q small{display:block;opacity:.8;font-size:12px}
+.scene-q b{font-family:var(--serif);font-size:17px}
+.situ{font-size:14px;margin:0 0 12px}
+.bigseal{width:110px;height:110px;font-size:46px;border-width:4px;margin:10px auto}
+@media (prefers-reduced-motion:no-preference){.stamp{animation:stamp .45s cubic-bezier(.2,1.6,.4,1) both}@keyframes stamp{from{transform:scale(1.8) rotate(-8deg);opacity:0}to{transform:scale(1) rotate(-8deg);opacity:1}}}
+.tanzaku.sm{min-height:130px;font-size:14px;padding:10px 6px}
+.tomorrow{border:1px dashed var(--line);border-radius:12px;padding:12px 14px;margin:14px 0}
+/* LINEトーク（イメージ） */
+.talk{flex:1;display:flex;flex-direction:column;background:#C9D6E3;min-height:0}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .talk{background:#1B2B36}}
+:root[data-theme="dark"] .talk{background:#1B2B36}
+.talkhead{background:var(--surface);padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.oa{width:34px;height:34px;border-radius:50%;background:var(--ink2);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;font-size:15px;flex:0 0 auto}
+.talkbody{flex:1;min-height:0;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:14px}
+.msg{display:flex;gap:8px;align-items:flex-start}
+.bubble{background:var(--surface);border-radius:4px 16px 16px 16px;padding:10px 14px;max-width:78%;font-size:14px;line-height:1.6}
+.bubble .cardbtn{display:block;margin-top:10px;border:0;border-radius:10px;background:var(--ink2);color:#fff;font:inherit;font-weight:700;padding:10px;width:100%;cursor:pointer}
+.time{font-size:10px;color:var(--sub);align-self:flex-end}
+.richmenu{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.richmenu button{border:0;background:var(--surface);color:var(--text);font:inherit;font-size:13px;font-weight:700;padding:10px 6px;cursor:pointer}
+.richmenu button small{display:block;font-weight:400;color:var(--sub);font-size:11px}
+/* LIFFのヘッダー（イメージ） */
+.liffbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--line)}
+.liffbar .x{border:0;background:none;font-size:20px;color:var(--text);cursor:pointer;width:32px}
+.liffbar .t{flex:1;text-align:center;line-height:1.3}
+.liffbar .t b{display:block;font-size:14px}
+.liffbar .t small{font-size:10.5px;color:var(--sub)}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--ink2);color:#fff;font-size:12.5px;padding:8px 14px;border-radius:999px;z-index:20;max-width:90%;text-align:center}
+.single{border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0 4px}
+.single .lab{font-size:13px;font-weight:700;margin-bottom:6px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;margin:10px 0}
+.check input{width:20px;height:20px;margin-top:2px}
+.scenetag{display:inline-block;font-size:11px;color:var(--sub);border:1px solid var(--line);border-radius:999px;padding:1px 8px;margin-bottom:6px}
+/* 画面切り替え */
+.switcher{position:sticky;top:0;z-index:30;display:flex;justify-content:center;gap:6px;padding:8px;background:var(--bg);border-bottom:1px solid var(--line)}
+.switcher button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;padding:7px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.switcher button.on{background:var(--ink2);color:#fff;border-color:var(--ink2)}
+.packtag{display:inline-block;font-size:11px;border-radius:999px;padding:1px 8px;background:var(--mist);color:var(--sub);margin-right:4px}
+.packcard{display:block;width:100%;text-align:left;border:1.5px solid var(--line);border-radius:14px;padding:14px;background:var(--surface);color:var(--text);font:inherit;margin:0 0 10px;cursor:pointer}
+.packcard.on{border-color:var(--shu);box-shadow:inset 0 0 0 1px var(--shu)}
+.packcard:disabled{opacity:.45;cursor:not-allowed}
+.packcard b{font-size:16px}
+.modecard{display:block;width:100%;text-align:left;border:1.5px solid var(--line);border-radius:14px;padding:14px;background:var(--surface);color:var(--text);font:inherit;margin:0 0 10px;cursor:pointer}
+.stepgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 14px}
+.stepgrid .day{min-height:96px}
+.art{border-radius:12px;overflow:hidden;margin:0 0 6px;background:#eee}
+.art img{display:block;width:100%;height:auto}
+.count{font-size:12px;color:var(--sub)}
+.bar{height:8px;border-radius:4px;background:var(--mist2);overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%;background:var(--moss)}
+/* 管理画面 */
+.admin{max-width:1040px;margin:0 auto;padding:16px;min-height:100vh}
+.admin h1{font-size:22px;margin:4px 0 2px}
+.atabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin:12px 0 16px}
+.atabs button{border:0;background:none;color:var(--sub);font:inherit;font-weight:700;padding:10px 12px;cursor:pointer;border-bottom:3px solid transparent}
+.atabs button.on{color:var(--text);border-bottom-color:var(--shu)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:0 0 16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.kpi small{color:var(--sub);display:block;font-size:12px}
+.kpi b{font-family:var(--serif);font-size:26px}
+.tbl-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin:0 0 16px}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
+.tbl th,.tbl td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{font-size:12px;color:var(--sub);font-weight:700;background:var(--mist)}
+.tbl tr.click{cursor:pointer}
+.tbl tr.click:hover td{background:var(--mist)}
+.pchk{display:inline-flex;align-items:center;gap:4px;margin:2px 8px 2px 0;font-size:13px}
+.notice{border-left:3px solid var(--shu);background:var(--surface);padding:10px 12px;border-radius:0 10px 10px 0;margin:0 0 12px;font-size:13px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.pcard h2{margin:0 0 4px}
+.status{font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px;margin-left:6px}
+.status.live{background:var(--moss);color:#fff}
+.status.prep{background:var(--mist2);color:var(--sub)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;white-space:pre;overflow-x:auto;background:var(--mist);border-radius:10px;padding:10px;margin:0 0 12px}
+.select{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;background:var(--surface);color:var(--text)}
+
+.phone{min-height:auto}
+/* ===== やさしさ（学習者の画面だけに適用） ===== */
+.phone{--bg:#F4EEE3;--surface:#FFFDF8;--mist:#F5EEE2;--mist2:#E9DFCD;--line:#E4D8C4;--text:#3F3A34;--sub:#8A7E70;--ink:#3F3A34;--ink2:#5E8A73;--shu:#D9785D;--moss:#5E8A73;--chip:#FBF6EE;--chipOn:#5E8A73;--chipOnText:#FFFFFF;--green:#6FA37F;--yellow:#E3B54A;--red:#D9785D;
+  font-family:"Zen Maru Gothic",var(--sans);background:var(--surface);color:var(--text)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .phone{--bg:#1E1B18;--surface:#26221E;--mist:#302B26;--mist2:#3B342D;--line:#4A4239;--text:#F1EAE0;--sub:#BFB3A4;--ink:#F1EAE0;--ink2:#8DB79E;--shu:#E7987F;--moss:#8DB79E;--chip:#302B26;--chipOn:#8DB79E;--chipOnText:#1E1B18}}
+:root[data-theme="dark"] .phone{--bg:#1E1B18;--surface:#26221E;--mist:#302B26;--mist2:#3B342D;--line:#4A4239;--text:#F1EAE0;--sub:#BFB3A4;--ink:#F1EAE0;--ink2:#8DB79E;--shu:#E7987F;--moss:#8DB79E;--chip:#302B26;--chipOn:#8DB79E;--chipOnText:#1E1B18}
+.phone h1,.phone h2{font-family:"Zen Maru Gothic",var(--sans);font-weight:700;letter-spacing:.02em}
+.phone .btn{border-radius:999px;background:var(--ink2);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.08);transition:transform .12s ease}
+.phone .btn:active{transform:translateY(2px);box-shadow:none}
+.phone .btn.sub{background:var(--mist);color:var(--text);box-shadow:none}
+.phone .card{border-radius:20px}
+.phone .chip{border-radius:999px;background:var(--chip);transition:transform .12s ease,background .2s}
+.phone .chip:active{transform:scale(.96)}
+.phone .chip.on{background:var(--chipOn);color:var(--chipOnText);border-color:var(--chipOn)}
+.phone .vital{border-radius:14px}
+.phone .packcard,.phone .modecard{border-radius:20px}
+.phone .progress span{height:6px;border-radius:3px}
+.phone .progress span.on{background:var(--ink2)}
+.phone .liffbar,.phone header.top,.phone .foot{background:var(--surface)}
+.phone .talk{background:#E8EFE6}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .phone .talk{background:#20261F}}
+:root[data-theme="dark"] .phone .talk{background:#20261F}
+.phone .bubble{border-radius:6px 20px 20px 20px}
+.phone .oa{background:var(--ink2)}
+.phone textarea,.phone .kurow input{border-radius:14px!important}
+
+details.more{margin:6px 0 12px;border-radius:14px;background:var(--mist);padding:2px 12px}
+details.more summary{cursor:pointer;font-size:13px;color:var(--sub);padding:8px 0;list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:"＋ ";color:var(--ink2);font-weight:700}
+details.more[open] summary::before{content:"－ "}
+details.more .note{padding:0 0 10px}
+/* 一服の入口 */
+.ippuku{display:flex;align-items:center;gap:12px;background:var(--mist);border-radius:20px;padding:12px 14px;margin:0 0 12px}
+.ippuku svg{flex:0 0 auto}
+.ippuku b{display:block;font-size:15px}
+.ippuku span{font-size:13px;color:var(--sub)}
+.steam path{animation:steam 2.6s ease-in-out infinite;opacity:.0}
+.steam path:nth-child(2){animation-delay:.6s}.steam path:nth-child(3){animation-delay:1.2s}
+@keyframes steam{0%{opacity:0;transform:translateY(4px)}40%{opacity:.8}100%{opacity:0;transform:translateY(-8px)}}
+/* ぽん（判子） */
+.pon{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%) scale(.6) rotate(-8deg);width:92px;height:92px;border-radius:50%;border:4px solid var(--shu);color:var(--shu);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;font-size:22px;background:rgba(255,253,248,.92);z-index:30;opacity:0;pointer-events:none;animation:pon 1.1s ease-out forwards}
+@keyframes pon{0%{opacity:0;transform:translate(-50%,-50%) scale(1.6) rotate(-8deg)}25%{opacity:1;transform:translate(-50%,-50%) scale(.95) rotate(-8deg)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1) rotate(-8deg)}}
+@media (prefers-reduced-motion:reduce){.steam path,.pon{animation:none}.pon{opacity:0}}
+
+button.stt{border:1px solid var(--line);background:var(--mist2);color:var(--sub);border-radius:999px;padding:4px 10px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+button.stt.on{background:var(--moss);border-color:var(--moss);color:#fff}
+button.del{border:1px solid var(--line);background:var(--surface);color:var(--shu);border-radius:8px;padding:4px 10px;font:inherit;font-size:12px;cursor:pointer;white-space:nowrap}
+tr.orgrow{cursor:grab}
+tr.orgrow.dragging{opacity:.4}
+tr.orgrow.dropover td{box-shadow:inset 0 3px 0 var(--shu)}
+.grip{color:var(--sub);font-size:16px;vertical-align:middle;cursor:grab;user-select:none}
+button.mv{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:6px;width:24px;height:24px;margin-left:2px;cursor:pointer;font:inherit;font-size:12px;padding:0}
+button.mv:disabled{opacity:.3;cursor:default}
+.phone.talkview{height:calc(100vh - 56px);height:calc(100dvh - 56px);min-height:0;display:flex;flex-direction:column;overflow:hidden}
+@media (min-width:600px){.phone.talkview{margin:12px auto;height:calc(100vh - 80px);height:calc(100dvh - 80px)}}
+.talkview .talkhead{position:static}
+.phone.framed main{flex:1;min-height:0;overflow-y:auto;padding-bottom:24px}
+.phone.framed header.top{position:static}
+.phone.framed .foot{position:static;margin-top:0;flex:0 0 auto}
+.phone.framed .toast{position:absolute;bottom:84px}
+.pchk svg{vertical-align:middle}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@line/liff@2.24.0/dist/lib/index.umd.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const mora = s => [...s.replace(/[\s、。！？!?・「」]/g,"")].filter(c=>!"ゃゅょぁぃぅぇぉャュョァィゥェォ".includes(c)).length;
+const T=[5,7,5], PH=["上の五","中の七","下の五"], N=5;
+const tanzaku=(k,cls="",who="")=>`<div class="tanzaku ${cls}">${k.map(esc).join("<br>")}${who?`<div class="who">${esc(who)}</div>`:""}</div>`;
+const kt=k=>k.join("");
+const STEP_NAMES=["見立てる","見渡す","見極める","手を打つ","伝える","振り返る"];
+
+// ===== 場面のイラスト =====
+const ROOM=`<svg viewBox="0 0 400 240" role="img" aria-label="病室：ベッドの高齢女性、鼻カニュラ、点滴、食事の残り、ティッシュ"><rect width="400" height="240" fill="#F3F0E8"/><rect width="400" height="140" fill="#E8EDEF"/><rect x="300" y="24" width="72" height="44" rx="4" fill="#D7DEE2"/><rect x="306" y="30" width="60" height="32" rx="2" fill="#2B3E48"/><text x="311" y="51" font-size="11" fill="#7FD0A0" font-family="sans-serif">SpO2 95</text><rect x="40" y="36" width="26" height="16" rx="3" fill="#2F6E5E"/><text x="45" y="48" font-size="9" fill="#fff" font-family="sans-serif">O2</text><path d="M53 52 C 60 86,120 88,128 112" stroke="#9FC8D8" stroke-width="2" fill="none"/><line x1="250" y1="16" x2="250" y2="190" stroke="#9AA6AD" stroke-width="3"/><path d="M238 20 h24 v32 a12 12 0 0 1 -24 0z" fill="#DDEFF6" stroke="#9AA6AD"/><path d="M250 64 C 250 112,215 122,200 142" stroke="#B9D7E3" stroke-width="2" fill="none"/><rect x="20" y="132" width="250" height="66" rx="8" fill="#fff" stroke="#C9D4DA"/><rect x="20" y="110" width="70" height="40" rx="10" fill="#F7F7F7" stroke="#C9D4DA"/><ellipse cx="128" cy="116" rx="22" ry="25" fill="#F1D7C4"/><path d="M106 108 C 108 90,148 88,151 106 C 140 98,118 100,106 108z" fill="#C9C9C9"/><path d="M116 114 q5 3 10 0 M133 113 q5 3 10 0" stroke="#5A4A40" stroke-width="1.6" fill="none"/><ellipse cx="129" cy="131" rx="4" ry="2.4" fill="#B07C70"/><path d="M110 123 q18 6 38 0" stroke="#9FC8D8" stroke-width="2" fill="none"/><path d="M95 142 C 150 124,230 132,268 142 L268 196 L95 196z" fill="#BFD6E6"/><ellipse cx="205" cy="152" rx="16" ry="7" fill="#F1D7C4"/><rect x="214" y="160" width="20" height="9" rx="4" fill="#fff" stroke="#C0503C"/><rect x="285" y="142" width="100" height="10" rx="3" fill="#C9B79C"/><rect x="330" y="152" width="6" height="70" fill="#9AA6AD"/><ellipse cx="312" cy="134" rx="13" ry="5" fill="#fff" stroke="#C9D4DA"/><ellipse cx="312" cy="133" rx="9" ry="3" fill="#F0E6CF"/><rect x="356" y="120" width="26" height="22" rx="3" fill="#fff" stroke="#C9D4DA"/></svg>`;
+const DOOR=`<svg viewBox="0 0 400 240" role="img" aria-label="夕方の雨の玄関：傘をさした高齢女性、古い玄関ドアと鍵穴、表札、郵便受け、暗い玄関灯"><rect width="400" height="240" fill="#59646B"/><g stroke="#8FA1AB" stroke-width="1" opacity=".6"><path d="M20 0l-8 30M70 10l-8 30M130 0l-8 30M200 15l-8 30M260 0l-8 30M330 12l-8 30M380 0l-8 30M40 60l-8 30M300 70l-8 30M360 90l-8 30"/></g><rect x="150" y="40" width="140" height="190" fill="#8A6A4E" stroke="#5C4532" stroke-width="4"/><rect x="160" y="52" width="120" height="168" fill="#9C7A5B"/><circle cx="262" cy="140" r="5" fill="#C9B79C"/><rect x="258" y="150" width="8" height="12" rx="2" fill="#3B3B3B"/><circle cx="262" cy="154" r="1.6" fill="#C9A34A"/><path d="M256 168l12 2" stroke="#CFCFCF" stroke-width="1"/><rect x="300" y="70" width="44" height="18" fill="#E9E2D0"/><text x="306" y="83" font-size="10" fill="#333" font-family="serif">山田</text><rect x="300" y="110" width="44" height="30" rx="3" fill="#6E7B83"/><rect x="306" y="116" width="32" height="5" fill="#444"/><rect x="309" y="113" width="20" height="6" fill="#F4F1E8"/><circle cx="220" cy="30" r="8" fill="#555"/><circle cx="220" cy="30" r="4" fill="#333"/><path d="M60 150 q35 -40 70 0z" fill="#3F6E8C"/><line x1="95" y1="150" x2="95" y2="205" stroke="#333" stroke-width="2"/><ellipse cx="95" cy="168" rx="12" ry="14" fill="#E8CDB8"/><path d="M84 162 q11 -10 22 0" fill="#BDBDBD"/><rect x="80" y="182" width="30" height="45" rx="8" fill="#8C6D8C"/><path d="M90 170 q5 2 10 0" stroke="#6A4A40" stroke-width="1.4" fill="none"/><rect x="112" y="196" width="18" height="20" rx="3" fill="#7A5C3E"/><rect x="0" y="228" width="400" height="12" fill="#3C4448"/><rect x="40" y="206" width="16" height="22" rx="3" fill="#5E7A55"/><path d="M48 206 q-6 -14 0 -22 q6 8 0 22" fill="#6E9A60"/></svg>`;
+
+// ===== 業界アイコン =====
+const ICON_PATHS={
+ nursing:'<circle cx="32" cy="32" r="26"/><path d="M10 34H22L27 22L33 44L38 30L42 34H54"/>',
+ home:'<circle cx="20" cy="32" r="11"/><path d="M31 32H56M48 32V41M55 32V39"/>',
+ care:'<path d="M10 30L32 11L54 30V55H10Z"/><path d="M32 47C22 39 24 30 32 35C40 30 42 39 32 47Z"/>',
+ sales:'<path d="M12 10H34Q38 10 38 14V26Q38 30 34 30H20L13 37V30H12Q8 30 8 26V14Q8 10 12 10Z"/><path d="M30 34H52Q56 34 56 38V48Q56 52 52 52H50V58L43 52H30Q26 52 26 48V38Q26 34 30 34Z"/>',
+ parenting:'<circle cx="22" cy="17" r="7"/><path d="M10 56C10 38 34 38 34 56"/><circle cx="45" cy="31" r="5"/><path d="M37 56C37 44 53 44 53 56"/><path d="M31 46L39 48"/>',
+ nursery:'<rect x="9" y="34" width="21" height="21" rx="2"/><rect x="34" y="34" width="21" height="21" rx="2"/><rect x="21" y="11" width="21" height="21" rx="2"/>',
+ site:'<path d="M14 44C14 27 23 19 32 19C41 19 50 27 50 44"/><path d="M32 19V31"/><path d="M7 44H57V50H7Z"/>',
+ fire:'<path d="M32 7C40 19 50 25 47 41C45 51 38 56 32 56C24 56 16 50 17 40C18 30 27 28 25 17C30 21 33 25 32 7Z"/><path d="M32 52C28 52 25 49 26 45C27 40 32 39 31 33C36 37 38 41 37 45C37 49 35 52 32 52Z"/>',
+ aviation:'<path d="M32 7C35 7 35 13 35 17V27L56 37V42L35 36V49L42 54V57L32 54L22 57V54L29 49V36L8 42V37L29 27V17C29 13 29 7 32 7Z"/>'
+};
+const icon=(k,sz=40)=>`<svg viewBox="0 0 64 64" width="${sz}" height="${sz}" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto">${ICON_PATHS[k]||""}</svg>`;
+
+// ===== 業界パック =====
+const PACKS={
+ nursing:{name:"看護パック",icon:"nursing",prio:"稼働中",status:"live",ver:"v0.3",sup:"看護教員（監修）",expertWord:"熟達者",predictLabel:"予測した兆しを、見に行けたか",
+  stepLabel:i=>["シーン① 事前予測","シーン② パッと見判断","シーン③ 患者安全信号機","シーン④ 実践","シーン⑤ I-SBAR-C報告","シーン⑥ 振り返り"][i],
+  caseTitle:"渡辺マサ子さん（70歳代・誤嚥性肺炎・入院2日目）",
+  info:[["体温","37.8℃"],["脈拍","88回/分"],["SpO₂","95%"],["呼吸数","22回/分"],["酸素","鼻カニュラ 1L/分"],["症状","湿性咳嗽・黄色痰"],["朝食時","むせ込みあり"],["治療","抗菌薬を点滴中"]],
+  worst:["呼吸不全","窒息","敗血症性ショック","転倒・転落"], first:["呼吸数の増加","SpO₂の低下","落ち着かなさ","会話が短くなる","痰の増加","顔色の変化"],
+  scene:ROOM, sceneCap:"9時、初めて訪室しました。",
+  s3:{title:"10時頃、トイレから戻ったあと「息苦しくて…」",detail:[["SpO₂","89%"],["呼吸数","32回/分"]],note:"会話が短く、顔色がすぐれません。"},
+  levels:[{n:"緑",c:"var(--green)",d:"予定どおり"},{n:"黄",c:"var(--yellow)",d:"中断し再評価"},{n:"赤",c:"var(--red)",d:"中止し迅速に対応"}],
+  actions:["予定どおりのケアを続ける","ケアを中断し呼吸状態を再評価する","酸素の接続と流量を確かめる","体位を整え、痰の喀出を促す","リーダー看護師に相談する"],
+  whom:["リーダー看護師","主治医"], purpose:["情報提供","指示をもらう","応援要請"], reportLabel:"I-SBAR-Cの要点を一句で",
+  views:[{n:"開眼",kw:["目","眠","開け"]},{n:"視線",kw:["視線","こちら","見て"]},{n:"顔色",kw:["顔色","唇","色を"]},{n:"表情",kw:["表情","眉","苦し"]},{n:"姿勢",kw:["姿勢","横を","肩"]},{n:"呼吸状態",kw:["息","呼吸","胸","咳","痰"]},{n:"ベッド周囲",kw:["点滴","管","カニュ","酸素","呼び鈴","お盆","粥","ティッシュ"]}],
+  firstToView:{"呼吸数の増加":"呼吸状態","SpO₂の低下":"顔色","落ち着かなさ":"表情","会話が短くなる":"呼吸状態","痰の増加":"呼吸状態","顔色の変化":"顔色"},
+  experts:[{who:"熟達者A",ku:[["肩で息","数えてみれば","二十二"],["唇の","色をたしかめ","声かける"]]},{who:"熟達者B",ku:[["名を呼べば","目を開けこちら","見てくれる"],["痰の色","ティッシュの山に","黄が混じる"]]},{who:"熟達者C",ku:[["カニューレの","先は鼻から","外れぬか"],["胸の上下","速さを数え","顔を見る"]]}],
+  peers:[["白い布","胸の上下が","早く見え"],["鼻の管","まっすぐ伸びて","眠る人"],["お盆には","残る粥あり","朝のむせ"],["眉の間","しわが寄るのは","苦しいか"]],
+  expertLevel:"黄",
+  notes:["熟達者は「最初の変化」を呼吸数の増加という具体的な症状で言葉にしている","熟達者は眠っているように見えても声をかけ、開眼と視線で意識を確かめている","熟達者は数値だけでなく会話の短さと顔色も根拠に黄と判断している","熟達者は手を打ったあとに「もう一度見る」までを実践にしている","熟達者は報告に「次の移動は付き添う」という提案まで含めている","熟達者はできたことを先に認め、次の行動を具体的な一手にしている"],
+  sample:{ward:[["おばあさん","目を閉じたまま","横を向く"],["鼻の管","酸素の音が","細く鳴る"],["お盆には","半分残る","おかゆさん"]],s1:[["朝のむせ","昼の食事で","また来るか"]],s3:[["数えれば","息は二十二","黄と見る"]],s4:[["手を止めて","体を起こして","息を見る"]],s5:[["リーダーへ","むせと息とを","短く告ぐ"]],good:[["むせ込みに","気づいて手を","止められた"]],next:[["次からは","唇の色も","確かめる"]]}
+ },
+ lock:{name:"住まいのトラブル対応（鍵）",icon:"home",prio:"試作中",status:"prep",ver:"v0.2（試作）",sup:"熟達した職人（予定）",expertWord:"ベテラン職人",
+  stepLabel:i=>["一 見立てる（受付・出動前）","二 見渡す（到着）","三 見極める（診断）","四 手を打つ（説明・作業）","五 伝える（引き渡し・報告）","六 振り返る（申し送り）"][i],
+  caseTitle:"「玄関の鍵が開かない」80代女性・一人暮らし",
+  intake:{time:"18:05 受付（お客様の携帯から）",lines:["玄関の鍵が差さるが回らない","外出先から戻ったところで、家に入れない","80代女性・一人暮らし。外は雨","薬を家の中に置いている","築30年の戸建て。到着予定は30分後"],
+   causes:["鍵穴の異物・錆","鍵のすり減り・変形","シリンダーの摩耗","扉や枠のゆがみ"],
+   checks:["お客様の体調と待ち時間","本人確認（表札・郵便物）","鍵穴と鍵の状態","扉と枠のゆがみ"],
+   tools:["解錠用の工具","交換用シリンダー","鍵穴用の潤滑剤","手元を照らすライト","料金表と見積書"]},
+  predictLabel:"最初に確かめたいことを、見に行けたか",
+  scene:DOOR, sceneCap:"18:40 到着しました。",
+  s3:{title:"診断：鍵穴の奥に細かい砂。鍵も大きくすり減っている",detail:[["鍵","すり減り大"],["鍵穴","砂・錆"],["お客様","手が震えている"]],note:"お客様は、薬の時間が近いと言っています。",
+   q:{label:"原因の見立ては？",options:["鍵穴の異物","鍵のすり減り","シリンダーの摩耗","いくつかの重なり"]},qLabel:"どう進めますか"},
+  levels:[{n:"その場で直す",c:"var(--green)",d:"説明してすぐ作業"},{n:"説明してから",c:"var(--yellow)",d:"止めて説明・見積り"},{n:"応援・再訪",c:"var(--red)",d:"部品や人手を呼ぶ"}],
+  s4Title:"説明と作業。何を、どの順でしますか",
+  actions:["お客様に軒下か車で待ってもらう","身分証や郵便物で本人確認をする","料金と方法を説明し、了承をもらう","鍵穴を清掃して解錠する","シリンダー交換を見積もって提案する","何度か開け閉めして動きを確かめる"],
+  s5Title:"引き渡しと報告",tellLabel:"お客様に伝えること（いくつでも）",tell:["原因（砂と鍵のすり減り）","再発を防ぐコツ","交換の目安と見積り","料金の内訳","困ったときの連絡先"],
+  whom:["お客様","事務所"], purpose:["原因と再発防止を伝える","追加作業の了承をもらう","作業内容と再訪の要否を報告"], reportLabel:"一番伝えたいことを一句で",
+  views:[{n:"お客様の様子",kw:["震","顔","手","薬","寒","声","待"]},{n:"対象物の状態",kw:["鍵穴","鍵","錠","扉","シリンダ"]},{n:"周りの痕跡",kw:["砂","錆","傷","跡"]},{n:"二次被害の危険",kw:["雨","濡","暗","滑"]},{n:"本人確認",kw:["表札","郵便","名"]},{n:"道具と部材",kw:["道具","工具","部材","ライト","照ら"]}],
+  firstToView:{"お客様の体調と待ち時間":"お客様の様子","本人確認（表札・郵便物）":"本人確認","鍵穴と鍵の状態":"対象物の状態","扉と枠のゆがみ":"対象物の状態"},
+  experts:[{who:"職人A",ku:[["雨の中","まず軒下へと","声かけて"],["表札と","郵便物で","名を確かむ"]]},{who:"職人B",ku:[["鍵穴の","奥に光るは","砂か錆"],["震える手","薬はどこと","先に聞く"]]},{who:"職人C",ku:[["扉枠","ゆがみを見てから","鍵に触る"],["暗がりで","手元照らして","傷を見る"]]}],
+  peers:[["雨の音","おばあさんの","肩が濡れ"],["鍵穴が","ちょっと黒くて","古そうだ"],["玄関の","灯りがつかず","手元暗し"],["傘立てに","閉じた傘ひとつ","濡れている"]],
+  expertLevel:"説明してから",
+  notes:["職人は、受付の段階で「雨・薬・一人暮らし」から、鍵より先にお客様の体調を気にかけている","職人は、鍵に触る前にお客様と周りの安全、表札で本人確認の手がかりを見ている","職人は、原因が重なっていると見て、すぐ直さずにいったん説明と見積りに切り替えている","職人は、手を出す前に料金と方法を伝え、作業後に何度も開け閉めして確かめている","職人は、お客様には再発を防ぐコツを、事務所には再訪の要否を、相手で中身を分けて伝えている","職人は、次の現場に向けて「受付で薬の有無を聞く」を一手として申し送っている"],
+  sample:{ward:[["傘さして","待っていたのは","おばあさん"],["鍵穴の","まわりに小さな","傷がある"],["雨の音","手元が暗くて","見えにくい"]],s1:[["雨と薬","待たせる時間が","気にかかる"]],s3:[["砂とすり減り","重なるならば","まず説明"]],s4:[["料金を","伝えて頷き","それからだ"]],s5:[["鍵穴に","砂を入れない","コツを言う"]],good:[["待つ人の","雨に気づけた","まず一歩"]],next:[["受付で","薬のことまで","聞いておく"]]}
+ },
+ water:{name:"住まいのトラブル対応（水回り）",icon:"home",prio:"準備中",status:"prep",ver:"未作成",sup:"未定",empty:true,journey:["受付・出動前","到着","診断","説明・作業","引き渡し・報告","申し送り"]},
+ care:{name:"介護パック",icon:"care",prio:"優先度：高",status:"prep",ver:"未作成",sup:"未定",empty:true,journey:["訪問前に申し送りを読む","玄関を入った瞬間の本人と部屋","いつもと違うか（様子を見る／相談／救急）","介助","家族・ケアマネ・看護師への連絡","記録と申し送り"]},
+ sales:{name:"営業パック",icon:"sales",prio:"優先度：高",status:"prep",ver:"未作成",sup:"未定",empty:true,journey:["訪問前の仮説","商談の冒頭（相手と場の様子）","進める／確かめる／引く","提案・対応","顧客へのフォローと社内共有","商談の振り返り"]},
+ parenting:{name:"子育てパック（家庭）",icon:"parenting",prio:"優先度：中",status:"prep",ver:"未作成",sup:"未定",empty:true,journey:["前日の様子と今日の予定から予測","朝、子どもの顔を見た瞬間","様子を見る／相談する／すぐ受診","声かけ・手当て","パートナー・園・医師への伝達","一日の振り返り"]},
+ nursery:{name:"保育パック",icon:"nursery",prio:"優先度：中",status:"prep",ver:"未作成",sup:"未定",empty:true,journey:["連絡帳と前日の様子","朝の受け入れ（顔色・機嫌）","見守る／声をかける／止める","声かけ・手当て","保護者・同僚への伝達","連絡帳と振り返り"]},
+ site:{name:"建設・製造の現場パック",icon:"site",prio:"優先度：中",status:"prep",ver:"未作成",sup:"未定",empty:true,journey:["作業前の危険予知","現場に入った瞬間","続行／中断／停止","作業・処置","職長・発注者への報告","日報と申し送り"]},
+ fire:{name:"消防・救急パック",icon:"fire",prio:"優先度：低〜中",status:"prep",ver:"未作成",sup:"未定",empty:true,journey:["出動指令の情報で想定","現場到着時の全体把握","進入する／待機する／応援を要請する","活動","無線報告・病院への引き継ぎ","事後の検証"]},
+ aviation:{name:"航空パック",icon:"aviation",prio:"優先度：低",status:"prep",ver:"未作成",sup:"未定",empty:true,journey:["飛行前のブリーフィング","外部点検・計器の確認","続行／回避／別の空港へ","操作","管制・クルーへの連絡","デブリーフィング"]}
+};
+
+// ===== 組織（組織とパックは1:N） =====
+const ORGS=[
+ {code:"DEMO-NURSE",name:"デモ看護大学 看護学科",packs:["nursing"],seats:40,conc:20,term:"2027/01〜2027/12",sample:[["学生01","nursing","分割",4,11,"今日"],["学生02","nursing","分割",6,18,"昨日"],["学生03","nursing","完結",8,9,"3日前"]]},
+ {code:"DEMO-LOCK",name:"デモ鍵サービス",packs:["lock"],seats:60,conc:15,term:"2027/07〜2028/06",sample:[["職人01","lock","分割",3,7,"昨日"],["新人01","lock","完結",8,12,"今日"]]},
+ {code:"DEMO-WATER",name:"デモ水回りサービス",packs:["water"],seats:40,conc:10,term:"2027/07〜2028/06",sample:[]},
+ {code:"DEMO-CARE",name:"デモ介護サービス",packs:["care"],seats:50,conc:20,term:"未契約（検討中）",sample:[]},
+ {code:"DEMO-SALES",name:"デモ商事 営業部",packs:["sales"],seats:80,conc:25,term:"未契約（検討中）",sample:[]},
+ {code:"DEMO-KOSODATE",name:"デモ子育てひろば",packs:["parenting"],seats:100,conc:30,term:"未契約（検討中）",sample:[]},
+ {code:"DEMO-HOIKU",name:"デモ保育園",packs:["nursery"],seats:30,conc:10,term:"未契約（検討中）",sample:[]},
+ {code:"DEMO-GENBA",name:"デモ建設",packs:["site"],seats:60,conc:20,term:"未契約（検討中）",sample:[]},
+ {code:"DEMO-FIRE",name:"デモ消防本部",packs:["fire"],seats:40,conc:15,term:"未契約（検討中）",sample:[]},
+ {code:"DEMO-AIR",name:"デモ航空",packs:["aviation"],seats:30,conc:10,term:"未契約（検討中）",sample:[]}
+];
+
+// ===== 追加パックの場面イラスト =====
+const SC={
+water:`<svg viewBox="0 0 400 240" role="img" aria-label="台所の流しの下：扉が開いた収納、配管の継ぎ目からの水漏れ、床の水たまり、バケツとタオル"><rect width="400" height="240" fill="#EDEAE3"/><rect x="60" y="40" width="280" height="22" fill="#C9C2B5"/><rect x="70" y="62" width="260" height="140" fill="#D9D2C4" stroke="#B5AC9C"/><rect x="70" y="62" width="60" height="140" fill="#E8E2D6" stroke="#B5AC9C"/><rect x="270" y="62" width="60" height="140" fill="#E8E2D6" stroke="#B5AC9C"/><path d="M200 62V110Q200 130 180 130H160" stroke="#8A9399" stroke-width="8" fill="none"/><path d="M230 62V150" stroke="#8A9399" stroke-width="6"/><circle cx="200" cy="112" r="7" fill="#6C757B"/><path d="M200 120q-3 8 0 12q3-4 0-12" fill="#5AA0D0"/><ellipse cx="200" cy="212" rx="120" ry="14" fill="#9CC8E4" opacity=".8"/><rect x="300" y="170" width="34" height="40" rx="4" fill="#6E8BA0"/><rect x="40" y="190" width="40" height="14" rx="3" fill="#F2EFE6" stroke="#C9C2B5"/><rect x="150" y="150" width="40" height="22" fill="#B9A98C"/><text x="153" y="165" font-size="10" fill="#555" font-family="sans-serif">洗剤</text></svg>`,
+care:`<svg viewBox="0 0 400 240" role="img" aria-label="一人暮らしの高齢女性の居間：椅子に座る女性、半分残った湯のみ、閉め切った窓と扇風機、丸印のカレンダー"><rect width="400" height="240" fill="#F1EADF"/><rect x="250" y="24" width="120" height="80" fill="#BFD9E8" stroke="#8C7B65" stroke-width="4"/><path d="M310 24V104M250 64H370" stroke="#8C7B65" stroke-width="3"/><rect x="40" y="30" width="56" height="64" fill="#fff" stroke="#C9BFAE"/><text x="48" y="46" font-size="10" fill="#555" font-family="sans-serif">7月</text><circle cx="76" cy="70" r="7" fill="none" stroke="#C0503C" stroke-width="2"/><rect x="0" y="190" width="400" height="50" fill="#C9B79C"/><rect x="110" y="120" width="70" height="80" rx="8" fill="#8C6D5A"/><ellipse cx="145" cy="104" rx="16" ry="18" fill="#EED8C6"/><path d="M130 98q15-16 30 0" fill="#D6D6D6"/><path d="M139 104q3 2 6 0M150 104q3 2 6 0" stroke="#5A4A40" stroke-width="1.4" fill="none"/><rect x="124" y="122" width="42" height="50" rx="8" fill="#9DB5A0"/><rect x="200" y="160" width="90" height="10" fill="#A88B6A"/><rect x="215" y="170" width="6" height="30" fill="#A88B6A"/><rect x="275" y="170" width="6" height="30" fill="#A88B6A"/><rect x="235" y="146" width="16" height="14" rx="3" fill="#fff" stroke="#999"/><rect x="237" y="152" width="12" height="6" fill="#E9DFC7"/><circle cx="340" cy="150" r="22" fill="none" stroke="#999" stroke-width="3"/><path d="M340 172V196M326 196H354" stroke="#999" stroke-width="3"/></svg>`,
+sales:`<svg viewBox="0 0 400 240" role="img" aria-label="会議室：机の向こうに座る2人の顧客。腕を組む人と時計を見る人。閉じたままの資料"><rect width="400" height="240" fill="#E9EDF0"/><circle cx="330" cy="40" r="20" fill="#fff" stroke="#8A9399" stroke-width="3"/><path d="M330 40V28M330 40L340 46" stroke="#555" stroke-width="2"/><rect x="40" y="20" width="120" height="70" fill="#CFE0EA" stroke="#9AA6AD"/><ellipse cx="140" cy="100" rx="18" ry="20" fill="#EED8C6"/><path d="M122 92q18-20 36 0" fill="#3D3D3D"/><rect x="116" y="120" width="48" height="60" rx="10" fill="#4A5B6B"/><path d="M118 140H162" stroke="#2F3E4C" stroke-width="10"/><ellipse cx="250" cy="96" rx="18" ry="20" fill="#E8CDB8"/><path d="M232 90q18-18 36 0" fill="#9A9A9A"/><rect x="226" y="116" width="48" height="64" rx="10" fill="#6B5B4A"/><path d="M262 140l14-8" stroke="#E8CDB8" stroke-width="6"/><rect x="276" y="128" width="8" height="5" fill="#C9A34A"/><rect x="40" y="178" width="320" height="16" fill="#A88B6A"/><rect x="170" y="166" width="60" height="12" fill="#fff" stroke="#9AA6AD"/><text x="176" y="176" font-size="8" fill="#555" font-family="sans-serif">ご提案資料</text></svg>`,
+parenting:`<svg viewBox="0 0 400 240" role="img" aria-label="朝の子ども部屋：布団の中の子ども、くまのぬいぐるみ、枕元の体温計、遠足用のリュック"><rect width="400" height="240" fill="#F6EFE4"/><rect x="280" y="20" width="90" height="70" fill="#FCE3B0" stroke="#C9B79C" stroke-width="3"/><circle cx="345" cy="50" r="12" fill="#F7C25A"/><rect x="40" y="130" width="230" height="70" rx="10" fill="#9DBBD6"/><rect x="40" y="120" width="60" height="30" rx="8" fill="#fff"/><ellipse cx="80" cy="128" rx="18" ry="16" fill="#F2D3BE"/><path d="M64 122q16-16 32 0" fill="#5A4030"/><path d="M73 130q3 2 6 0M84 130q3 2 6 0" stroke="#5A4030" stroke-width="1.4" fill="none"/><circle cx="160" cy="132" r="12" fill="#B07A4E"/><circle cx="152" cy="122" r="5" fill="#B07A4E"/><circle cx="168" cy="122" r="5" fill="#B07A4E"/><rect x="290" y="160" width="70" height="40" fill="#C9B79C"/><rect x="305" y="152" width="34" height="6" rx="3" fill="#fff" stroke="#999"/><rect x="330" y="153" width="8" height="4" fill="#C0503C"/><rect x="300" y="100" width="40" height="50" rx="10" fill="#F2B544"/><path d="M308 100q12-14 24 0" stroke="#C98A1E" stroke-width="3" fill="none"/></svg>`,
+nursery:`<svg viewBox="0 0 400 240" role="img" aria-label="保育園の園庭：水遊びのビニールプールで遊ぶ子どもたちと、木陰に一人で座り込む子ども"><rect width="400" height="240" fill="#CFE7F2"/><circle cx="350" cy="36" r="20" fill="#F7C25A"/><rect x="0" y="140" width="400" height="100" fill="#D8C49B"/><ellipse cx="250" cy="180" rx="90" ry="22" fill="#7FC1E0" stroke="#4E9CC0" stroke-width="3"/><circle cx="220" cy="164" r="9" fill="#F2D3BE"/><circle cx="270" cy="160" r="9" fill="#E8CDB8"/><path d="M290 150l10-10" stroke="#5AA0D0" stroke-width="3"/><rect x="40" y="40" width="14" height="110" fill="#7A5C3E"/><circle cx="47" cy="40" r="44" fill="#6E9A60"/><ellipse cx="60" cy="150" rx="50" ry="10" fill="#B8A57E"/><circle cx="70" cy="128" r="11" fill="#F0B9A0"/><path d="M60 124q10-8 20 0" fill="#3A2A20"/><rect x="60" y="138" width="22" height="18" rx="6" fill="#E57A6A"/></svg>`,
+site:`<svg viewBox="0 0 400 240" role="img" aria-label="外壁工事の現場：3階まで組まれた足場、あおられる養生シート、足場の上の作業員、近くのクレーンのフック"><rect width="400" height="240" fill="#C8D3DA"/><g stroke="#8A9399" stroke-width="2" opacity=".7"><path d="M10 30h40M30 50h50M300 20h50M320 40h60"/></g><rect x="120" y="40" width="160" height="190" fill="#D9D2C4"/><g stroke="#6E7B83" stroke-width="3"><path d="M110 40V230M290 40V230M110 100H290M110 160H290M110 220H290"/></g><path d="M290 60q30 10 20 40q-10 20 10 40" fill="#9FB7C8" opacity=".85"/><rect x="180" y="86" width="16" height="14" rx="4" fill="#F2B544"/><circle cx="188" cy="82" r="7" fill="#F2B544"/><rect x="183" y="100" width="10" height="16" fill="#4A6B8A"/><path d="M193 104q10 6 4 14" stroke="#C0503C" stroke-width="2" fill="none"/><path d="M360 0V120" stroke="#555" stroke-width="2"/><path d="M352 120q8 14 16 0" stroke="#555" stroke-width="3" fill="none"/><rect x="130" y="96" width="150" height="4" fill="#9CC8E4" opacity=".8"/></svg>`,
+fire:`<svg viewBox="0 0 400 240" role="img" aria-label="住宅火災の現場：2階の窓から黒煙が出る木造住宅、隣家、玄関前に座り込む高齢男性、消防車"><rect width="400" height="240" fill="#D7DDE2"/><path d="M120 30q-30-20 10-30q40 10 20 30q30 0 10 25" fill="#4A4A4A" opacity=".8"/><rect x="60" y="90" width="150" height="120" fill="#B89A7A"/><path d="M50 92L135 40L220 92Z" fill="#7A5C3E"/><rect x="90" y="104" width="40" height="30" fill="#2E2E2E"/><path d="M95 104q10-30 30-10" fill="#5A5A5A"/><rect x="150" y="160" width="30" height="50" fill="#6B4E36"/><rect x="230" y="110" width="110" height="100" fill="#C9BBA6"/><path d="M222 112L285 70L348 112Z" fill="#8C7560"/><circle cx="196" cy="196" r="9" fill="#E8CDB8"/><rect x="186" y="204" width="20" height="16" rx="5" fill="#5D6F80"/><path d="M206 206l14-10" stroke="#E8CDB8" stroke-width="4"/><rect x="300" y="196" width="100" height="40" rx="6" fill="#C8322A"/><rect x="310" y="204" width="24" height="14" fill="#CFE0EA"/></svg>`,
+aviation:`<svg viewBox="0 0 400 240" role="img" aria-label="操縦席から見た前方：雷雲と稲妻、計器盤、2つの操縦席"><rect width="400" height="240" fill="#1F2A33"/><path d="M30 20H370L340 120H60Z" fill="#7C8A94"/><ellipse cx="160" cy="70" rx="80" ry="30" fill="#4E5A63"/><ellipse cx="250" cy="60" rx="70" ry="28" fill="#5A6670"/><path d="M230 70l-10 22h10l-8 20" stroke="#F7E27A" stroke-width="3" fill="none"/><rect x="40" y="130" width="320" height="70" fill="#2E3A44"/><g fill="#14202A" stroke="#6FA0B8" stroke-width="2"><circle cx="90" cy="165" r="18"/><circle cx="150" cy="165" r="18"/><rect x="185" y="148" width="40" height="34"/><circle cx="260" cy="165" r="18"/><circle cx="320" cy="165" r="18"/></g><path d="M80 165h20M150 150v15M260 165l10-8" stroke="#7FD0A0" stroke-width="2"/><rect x="190" y="160" width="30" height="4" fill="#F2B544"/><path d="M100 230v-20q20-10 40 0v20M260 230v-20q20-10 40 0v20" stroke="#555" stroke-width="6" fill="none"/></svg>`
+};
+const GEN={s1:[["先を読む","最悪の前の","兆し探す"]],s3:[["止めるかを","根拠と一緒に","決めておく"]],s4:[["手を打って","もう一度見て","確かめる"]],s5:[["伝えるは","目的ひとつ","短くと"]],good:[["気づけたこと","まずはひとつを","認めよう"]],next:[["次からは","最初の一手を","早めよう"]]};
+const mk=o=>Object.assign({status:"prep",ver:"v0.1（試作）",sup:"熟達者（予定）"},o,{sample:Object.assign({},GEN,o.sample)});
+Object.assign(PACKS,{
+water:mk({name:"住まいのトラブル対応（水回り）",icon:"home",prio:"試作中",expertWord:"ベテラン職人",
+ stepLabel:i=>["一 見立てる（受付・出動前）","二 見渡す（到着）","三 見極める（診断）","四 手を打つ（説明・作業）","五 伝える（引き渡し・報告）","六 振り返る（申し送り）"][i],
+ caseTitle:"「台所の流しの下が水浸し」70代夫婦・集合住宅2階",predictLabel:"最初に確かめたいことを、見に行けたか",
+ intake:{heading:"受付メモを読んで、出動前に見立てる",time:"9:10 受付（ご主人から電話）",lines:["台所の流しの下から水が漏れている","床が濡れていて、下の階が心配","元栓の場所が分からない","70代の夫婦。集合住宅の2階","到着予定は40分後"],
+  q1Label:"考えられる原因は？（いくつでも）",causes:["給水管の継ぎ目","排水ホースの外れ・劣化","蛇口本体","床下の別の配管"],
+  q2Label:"現場で最初に確かめたいことは？（いくつでも）",checks:["水が止まっているか（止水栓・元栓）","下の階への漏水","濡れた床で滑らないか","電気機器の近くの水"],
+  q3Label:"持っていくものは？（いくつでも）",tools:["止水用の工具","交換用のパッキンとホース","吸水シート","手元を照らすライト","料金表と見積書"]},
+ scene:SC.water,sceneCap:"9:50 到着しました。",
+ s3:{title:"診断：排水ホースの継ぎ目にひび。床下の点検口の板も濡れている",detail:[["漏れ","継ぎ目からぽたぽた"],["床","点検口まで濡れている"],["下の階","まだ確認していない"]],note:"奥様は、タオルで床を拭き続けて腰が痛いと言っています。",q:{label:"原因の見立ては？",options:["排水ホースの劣化","給水管の継ぎ目","床下の配管","いくつかの重なり"]},qLabel:"どう進めますか"},
+ levels:[{n:"その場で直す",c:"var(--green)",d:"説明してすぐ作業"},{n:"説明してから",c:"var(--yellow)",d:"止めて説明・見積り"},{n:"応援・再訪",c:"var(--red)",d:"部品や人手を呼ぶ"}],expertLevel:"説明してから",
+ s4Title:"説明と作業。何を、どの順でしますか",actions:["止水栓を閉めて水を止める","濡れた床を拭き、滑らないようにする","管理会社と下の階の確認を勧める","料金と方法を説明し、了承をもらう","排水ホースを交換する","水を流して漏れがないか確かめる"],
+ s5Title:"引き渡しと報告",tellLabel:"お客様に伝えること（いくつでも）",tell:["原因（排水ホースのひび）","流しの下に物を詰め込まないコツ","床下の点検のすすめ","料金の内訳","下の階への確認"],
+ whom:["お客様","事務所","管理会社"],purpose:["原因と再発防止を伝える","追加作業の了承をもらう","作業内容と再訪の要否を報告"],reportLabel:"一番伝えたいことを一句で",
+ views:[{n:"お客様の様子",kw:["奥様","腰","ご主人","声","顔"]},{n:"水の出どころ",kw:["継ぎ目","ホース","蛇口","管","ひび"]},{n:"濡れの広がり",kw:["床","点検","染み","水たまり"]},{n:"二次被害の危険",kw:["下の階","滑","電気","コンセント"]},{n:"設備の古さ",kw:["古","錆","黄ばみ","年"]},{n:"道具と部材",kw:["工具","パッキン","部材","ライト","バケツ"]}],
+ firstToView:{"水が止まっているか（止水栓・元栓）":"水の出どころ","下の階への漏水":"二次被害の危険","濡れた床で滑らないか":"二次被害の危険","電気機器の近くの水":"二次被害の危険"},
+ experts:[{who:"職人A",ku:[["継ぎ目から","ぽたりと落ちる","ひびの線"],["点検口","板の染みまで","床の下"]]},{who:"職人B",ku:[["拭き続け","奥様の腰に","声かける"],["下の階","天井の染みを","聞いてみる"]]},{who:"職人C",ku:[["流しの下","洗剤の箱が","ホース押す"],["コンセント","水の近くに","二つある"]]}],
+ peers:[["床の水","バケツの中は","半分だ"],["タオルが","何枚も重なる","台所"],["流しの下","洗剤たくさん","並んでる"],["ご主人の","靴下までもが","濡れている"]],
+ notes:["職人は、受付で「下の階」と聞いた時点で、漏水の広がりを最悪の事態に置いている","職人は、蛇口より先に止水と床の滑り、電気の近くの水を見ている","職人は、床下まで濡れていると見て、すぐ直さず説明と見積りに切り替えている","職人は、止水してから説明し、作業後に水を流して確かめている","職人は、お客様には再発を防ぐコツを、管理会社には下の階の確認を頼んでいる","職人は「受付で止水栓の場所を案内する」を次の一手にしている"],
+ sample:{ward:[["床の水","タオル何枚も","重なって"],["流しの下","ホースの先が","濡れている"],["奥様の","腰に手を当て","立っている"]]}}),
+care:mk({name:"介護パック",icon:"care",prio:"優先度：高",expertWord:"ベテランヘルパー",
+ stepLabel:i=>["一 見立てる（訪問前）","二 見渡す（玄関を入った瞬間）","三 見極める（いつもと違うか）","四 手を打つ（介助）","五 伝える（連絡）","六 振り返る（記録と申し送り）"][i],
+ caseTitle:"訪問介護：一人暮らしの90歳・トミさん（仮名）",predictLabel:"訪問してまず確かめたいことを、見に行けたか",
+ intake:{heading:"申し送りを読んで、訪問前に見立てる",time:"9:00 訪問前の申し送り",lines:["昨日の夕食を半分残した","夜中にトイレに3回起きた（家族から連絡）","最近、湯のみを持つ手が震える","今日は入浴介助の予定","日中の気温が上がる予報"],
+  q1Label:"気になる変化は？（いくつでも）",causes:["食欲の低下","脱水","転倒の危険","体調の急な悪化"],
+  q2Label:"訪問してまず確かめたいことは？（いくつでも）",checks:["顔色と表情","水分のとり具合","部屋の温度","歩き方とふらつき"],
+  q3Label:"準備するものは？（いくつでも）",tools:["体温計と血圧計","飲み物","記録用紙","家族の連絡先"]},
+ scene:SC.care,sceneCap:"10:00 訪問しました。",
+ s3:{title:"体温37.2℃。口の中が乾いていて、返事がいつもより遅い",detail:[["体温","37.2℃"],["室温","30℃"],["水分","朝から湯のみ半分"]],note:"本人は「大丈夫、お風呂に入りたい」と言っています。",q:{label:"見立ては？",options:["脱水の疑い","風邪の始まり","疲れ","わからない"]},qLabel:"どう進めますか"},
+ levels:[{n:"様子を見る",c:"var(--green)",d:"予定どおり介助"},{n:"相談する",c:"var(--yellow)",d:"入浴を止めて連絡"},{n:"救急",c:"var(--red)",d:"すぐ119番"}],expertLevel:"相談する",
+ s4Title:"何をしますか",actions:["入浴を中止する","水分をとってもらう","窓を開け、室温を下げる","体温を測り直す","事業所に連絡する","家族に連絡する"],
+ whom:["事業所（サービス提供責任者）","家族","訪問看護"],purpose:["状態の報告","指示をもらう","受診の相談"],reportLabel:"一番伝えたいことを一句で",
+ views:[{n:"表情・顔色",kw:["顔","表情","笑","色"]},{n:"口と肌の乾き",kw:["唇","乾","かさ","口"]},{n:"動きとふらつき",kw:["立ち","手すり","歩","ふら","震"]},{n:"部屋の環境",kw:["窓","扇風機","室温","暑","部屋"]},{n:"食事と水分",kw:["湯のみ","白湯","お茶","水","食"]},{n:"本人の言葉",kw:["返事","声","言","大丈夫"]}],
+ firstToView:{"顔色と表情":"表情・顔色","水分のとり具合":"食事と水分","部屋の温度":"部屋の環境","歩き方とふらつき":"動きとふらつき"},
+ experts:[{who:"ヘルパーA",ku:[["湯のみには","朝の白湯が","まだ半分"],["唇の","かさつき見えて","声かける"]]},{who:"ヘルパーB",ku:[["窓閉めて","扇風機だけ","まわる部屋"],["立ち上がり","手すり頼りに","ひと呼吸"]]},{who:"ヘルパーC",ku:[["いつもより","返事がひとつ","遅れたり"],["カレンダー","今日の丸印","通院日"]]}],
+ peers:[["お茶飲みね","にっこり笑う","トミさんだ"],["扇風機","首を振るたび","髪ゆれる"],["カレンダー","赤い丸印","今日の日"],["座ったまま","お帰りなさいと","手を振った"]],
+ notes:["ヘルパーは、申し送りの「夜中のトイレ」と「残した夕食」を、脱水の兆しとして読んでいる","ヘルパーは、玄関を入った瞬間に、室温と湯のみの残りを見ている","ヘルパーは、本人が「大丈夫」と言っても、数値と様子から入浴を止めて相談している","ヘルパーは、水分をとってもらい、室温を下げてから測り直している","ヘルパーは、事業所には数値と様子を、家族には安心できる言い方で伝えている","ヘルパーは「暑い日は最初に室温を見る」を申し送りにしている"],
+ sample:{ward:[["湯のみには","お茶が半分","残ってる"],["扇風機","閉めた窓の","前で鳴る"],["手すりつかみ","ゆっくり立って","笑ってる"]]}}),
+sales:mk({name:"営業パック",icon:"sales",prio:"優先度：高",expertWord:"トップ営業",
+ stepLabel:i=>["一 見立てる（訪問前の仮説）","二 見渡す（商談の冒頭）","三 見極める（進める／確かめる／引く）","四 手を打つ（提案・対応）","五 伝える（フォローと社内共有）","六 振り返る（商談の振り返り）"][i],
+ caseTitle:"更新提案の商談：製造業の総務部長と新任の課長",predictLabel:"冒頭で確かめたいことを、見に行けたか",
+ intake:{heading:"顧客メモを読んで、訪問前に仮説を立てる",time:"前日17:00 訪問の準備",lines:["3年使ってもらっているサービスの更新時期","先月、先方の担当者が交代した","最近、問い合わせの件数が増えている","今回は新任の課長が同席する","競合が値下げしているという話がある"],
+  q1Label:"相手の関心は何だと思いますか？（いくつでも）",causes:["費用の削減","運用の手間","担当交代の不安","他社への乗り換え"],
+  q2Label:"商談の冒頭で確かめたいことは？（いくつでも）",checks:["相手の表情と温度感","決める人は誰か","新任の課長の立場","最近の困りごと"],
+  q3Label:"持っていくものは？（いくつでも）",tools:["利用状況のデータ","改善の提案書","料金の比較表","導入事例"]},
+ scene:SC.sales,sceneCap:"14:00 会議室に通されました。",
+ s3:{title:"課長は腕を組み、部長はしきりに時計を見ている",detail:[["残り時間","20分"],["課長の一言","「他社も見ています」"],["資料","まだ開かれていない"]],note:"用意した提案は、説明に15分かかる内容です。",q:{label:"相手の本音の見立ては？",options:["費用への不満","手間への不満","時間がない","様子見"]},qLabel:"どう進めますか"},
+ levels:[{n:"進める",c:"var(--green)",d:"用意した提案をする"},{n:"確かめる",c:"var(--yellow)",d:"質問に切り替える"},{n:"引く",c:"var(--red)",d:"次の場を設ける"}],expertLevel:"確かめる",
+ s4Title:"何をしますか",actions:["用意した提案を最後まで話す","質問に切り替えて困りごとを聞く","課長の意見を先に聞く","残り時間を確かめ、要点だけにする","次の打ち合わせを提案する"],
+ s5Title:"フォローと社内共有",tellLabel:"伝えること（いくつでも）",tell:["商談の要点","相手の懸念","次の約束","社内で必要な対応"],
+ whom:["お客様","上司・社内"],purpose:["次の約束を決める","社内で対応策を相談する","記録を共有する"],reportLabel:"一番伝えたいことを一句で",
+ views:[{n:"相手の表情",kw:["顔","表情","目","笑"]},{n:"しぐさと姿勢",kw:["腕","組","時計","姿勢","足"]},{n:"発言と沈黙",kw:["言","沈黙","一言","声"]},{n:"同席者の関係",kw:["課長","部長","名刺","役目"]},{n:"場と時間",kw:["時間","会議","部屋","窓"]},{n:"資料への反応",kw:["資料","提案","開"]}],
+ firstToView:{"相手の表情と温度感":"相手の表情","決める人は誰か":"同席者の関係","新任の課長の立場":"同席者の関係","最近の困りごと":"発言と沈黙"},
+ experts:[{who:"トップ営業A",ku:[["腕組みは","まだ開かぬ","扉かも"],["時計見る","部長の頭は","次の会議"]]},{who:"トップ営業B",ku:[["他社もと","言うのは比べる","物差しか"],["資料より","課長の顔を","先に見る"]]},{who:"トップ営業C",ku:[["沈黙の","あとの一言","待ってみる"],["名刺から","課長の役目","読み取って"]]}],
+ peers:[["窓の外","ビルの影から","日がのぞく"],["お茶二つ","手をつけぬまま","冷めていく"],["ネクタイの","色がそろった","二人連れ"],["資料には","付箋の一つも","ついてない"]],
+ notes:["トップ営業は、担当交代と問い合わせ増から、「不安」が本音かもしれないと仮説を立てている","トップ営業は、話し始める前に、決める人と同席者の関係を見ている","トップ営業は、腕組みと時計を見て、用意した提案をいったん脇に置き、質問に切り替えている","トップ営業は、相手の困りごとを聞いてから、要点だけを提案している","トップ営業は、お客様には次の約束を、社内には懸念と必要な対応を分けて伝えている","トップ営業は「新任の人がいる商談は、最初に役割を聞く」を次の一手にしている"],
+ sample:{ward:[["腕を組み","課長は窓の","外を見る"],["部長さん","時計を二度も","見ていたな"],["資料には","まだ誰ひとり","触れてない"]]}}),
+parenting:mk({name:"子育てパック（家庭）",icon:"parenting",prio:"優先度：中",expertWord:"子育ての先輩",
+ stepLabel:i=>["一 見立てる（前日と今朝）","二 見渡す（顔を見た瞬間）","三 見極める（様子を見る／相談／受診）","四 手を打つ（声かけ・手当て）","五 伝える（パートナー・園・医師）","六 振り返る（一日の振り返り）"][i],
+ caseTitle:"朝、5歳の子がなんとなく元気がない",predictLabel:"朝いちばんに確かめたいことを、見に行けたか",
+ intake:{heading:"前日の様子から、今朝を見立てる",time:"前日の夜と今朝",lines:["昨日の夕食をいつもより残した","夜中に一度起きて泣いた","今日は保育園の遠足","下の子が先週、胃腸炎だった","朝は時間に余裕がない"],
+  q1Label:"考えられることは？（いくつでも）",causes:["胃腸炎のうつり始め","風邪の始まり","遠足への緊張","寝不足"],
+  q2Label:"朝いちばんに確かめたいことは？（いくつでも）",checks:["顔色と機嫌","熱","食欲と水分","おなかの痛み"],
+  q3Label:"準備しておくものは？（いくつでも）",tools:["体温計","着替え","小児科の診察券","園の連絡先"]},
+ scene:SC.parenting,sceneCap:"7:00 子ども部屋に起こしに行きました。",
+ s3:{title:"体温37.4℃。朝ごはんは一口だけで、おなかを押さえている",detail:[["体温","37.4℃"],["食事","一口だけ"],["様子","横になりたがる"]],note:"子どもは「遠足に行きたい」と言っています。",q:{label:"見立ては？",options:["胃腸炎の始まり","風邪","緊張","わからない"]},qLabel:"どうしますか"},
+ levels:[{n:"様子を見る",c:"var(--green)",d:"予定どおり登園"},{n:"相談する",c:"var(--yellow)",d:"休ませて小児科・#8000"},{n:"すぐ受診",c:"var(--red)",d:"ぐったり・水分がとれない"}],expertLevel:"相談する",
+ s4Title:"何をしますか",actions:["遠足を休ませる","水分を少しずつとらせる","園に連絡する","小児科に電話する","パートナーと分担を決める","1時間後に熱を測り直す"],
+ whom:["園","パートナー","小児科"],purpose:["休む連絡","様子の共有","受診の相談"],reportLabel:"一番伝えたいことを一句で",
+ views:[{n:"顔色",kw:["顔","白","青","色"]},{n:"機嫌と元気",kw:["歌","笑","元気","泣","横に"]},{n:"食欲と水分",kw:["ごはん","一口","スプーン","水","麦茶"]},{n:"体の痛み",kw:["おなか","押さえ","痛"]},{n:"熱",kw:["熱","体温","額"]},{n:"いつもとの違い",kw:["いつも","弟","リュック","遠足"]}],
+ firstToView:{"顔色と機嫌":"顔色","熱":"熱","食欲と水分":"食欲と水分","おなかの痛み":"体の痛み"},
+ experts:[{who:"先輩A",ku:[["朝ごはん","一口だけで","スプーン置く"],["遠足の","リュックも見ずに","横になる"]]},{who:"先輩B",ku:[["おなか押さえ","いつもの歌が","聞こえない"],["弟の","胃腸炎から","五日目だ"]]},{who:"先輩C",ku:[["熱よりも","顔の白さが","気にかかる"],["水筒の","麦茶を少し","ひと口ずつ"]]}],
+ peers:[["くまさんを","ぎゅっと抱いたまま","目を開けた"],["カーテンの","すきまの光","まぶしそう"],["リュックには","遠足のおやつ","入ってる"],["パジャマの","ボタンがひとつ","ずれていた"]],
+ notes:["先輩は、下の子の胃腸炎と夕食の残しから、うつり始めを最悪の事態に置いている","先輩は、熱を測る前に、顔の白さと好きな歌が聞こえないことに気づいている","先輩は、本人が行きたがっても、食事と痛みから休ませて相談している","先輩は、水分を少しずつとらせてから、時間を決めて測り直している","先輩は、園には休む連絡を、パートナーには分担を、小児科には経過を伝えている","先輩は「行事の前の日は夕食の量を見ておく」を次の一手にしている"],
+ sample:{ward:[["くまさんを","抱いたままで","起きてこない"],["朝ごはん","スプーン持ったまま","止まってる"],["遠足の","リュック見ないで","横になる"]]}}),
+nursery:mk({name:"保育パック",icon:"nursery",prio:"優先度：中",expertWord:"ベテラン保育士",
+ stepLabel:i=>["一 見立てる（連絡帳と前日）","二 見渡す（受け入れ・活動中）","三 見極める（見守る／声をかける／対応）","四 手を打つ（声かけ・手当て）","五 伝える（保護者・同僚）","六 振り返る（連絡帳と振り返り）"][i],
+ caseTitle:"3歳のゆうきくん（仮名）：水遊びの日",predictLabel:"受け入れで確かめたいことを、見に行けたか",
+ intake:{heading:"連絡帳を読んで、受け入れ前に見立てる",time:"8:30 受け入れ前",lines:["連絡帳「昨夜はなかなか寝つけなかった」","先週から少し咳がある","今日は園庭で水遊びの予定","気温が高い","お迎えはいつもより遅い予定"],
+  q1Label:"考えられることは？（いくつでも）",causes:["体調の悪化","熱中症","機嫌が悪く友だちとトラブル","寝不足でのけが"],
+  q2Label:"受け入れで確かめたいことは？（いくつでも）",checks:["顔色と機嫌","咳の様子","保護者の様子と話","体温"],
+  q3Label:"準備しておくものは？（いくつでも）",tools:["体温計","着替え","水分","帽子"]},
+ scene:SC.nursery,sceneCap:"10:00 水遊びの時間です。",
+ s3:{title:"ゆうきくんが一人で木陰に座り込んでいる",detail:[["体温","37.6℃"],["顔","赤い"],["水分","朝から少なめ"]],note:"声をかけると「つかれた」と言います。",q:{label:"見立ては？",options:["熱中症の始まり","風邪","疲れ・寝不足","気持ちの問題"]},qLabel:"どうしますか"},
+ levels:[{n:"見守る",c:"var(--green)",d:"少し離れて見る"},{n:"声をかけて休ませる",c:"var(--yellow)",d:"涼しい所で休ませる"},{n:"すぐ対応",c:"var(--red)",d:"保護者に連絡・受診"}],expertLevel:"声をかけて休ませる",
+ s4Title:"何をしますか",actions:["涼しい部屋に移す","水分をとらせる","体温を測り直す","他の先生に知らせる","保護者に連絡する","午後の活動を見直す"],
+ whom:["保護者","主任・同僚"],purpose:["様子の共有","お迎えの相談","記録"],reportLabel:"一番伝えたいことを一句で",
+ views:[{n:"顔色",kw:["顔","赤","色","頬"]},{n:"機嫌と表情",kw:["表情","笑","つかれ","泣","目"]},{n:"動きと遊び方",kw:["座り","一人","走","遊"]},{n:"友だちとの関わり",kw:["友","みんな","輪"]},{n:"水分と体温",kw:["水","汗","熱","体温","麦茶"]},{n:"周りの環境",kw:["日","陰","木","プール","暑"]}],
+ firstToView:{"顔色と機嫌":"顔色","咳の様子":"機嫌と表情","保護者の様子と話":"機嫌と表情","体温":"水分と体温"},
+ experts:[{who:"保育士A",ku:[["木の陰に","ひとり座って","頬赤し"],["水筒の","麦茶は朝の","まま重い"]]},{who:"保育士B",ku:[["プールから","みんなの声が","届かぬ子"],["汗かかず","首すじだけが","熱いまま"]]},{who:"保育士C",ku:[["連絡帳","寝つけぬ夜の","一行が"],["つかれたと","言う目が少し","とろんとし"]]}],
+ peers:[["プールでは","水しぶき上がり","にぎやかだ"],["帽子かぶり","木の下にいる","ゆうきくん"],["お日さまが","てっぺんにきて","まぶしいな"],["バケツには","黄色いアヒル","浮いている"]],
+ notes:["保育士は、連絡帳の「寝つけなかった」と気温から、熱中症を最悪の事態に置いている","保育士は、遊びの輪から外れて一人でいることに、まず目を向けている","保育士は、汗をかいていないことと顔の赤さから、休ませる判断をしている","保育士は、涼しい部屋に移して水分をとらせ、時間を決めて測り直している","保育士は、保護者にはお迎えの相談を、同僚には午後の見守りを頼んでいる","保育士は「暑い日は寝不足の子から先に休ませる」を振り返りにしている"],
+ sample:{ward:[["木の下で","ひざを抱えて","座ってる"],["プールの","みんなの声を","聞いている"],["ほっぺたが","いつもより赤く","見えたかな"]]}}),
+site:mk({name:"建設・製造の現場パック",icon:"site",prio:"優先度：中",expertWord:"ベテラン職長",
+ stepLabel:i=>["一 見立てる（作業前の危険予知）","二 見渡す（現場に入った瞬間）","三 見極める（続行／中断／停止）","四 手を打つ（作業・処置）","五 伝える（職長・発注者）","六 振り返る（日報と申し送り）"][i],
+ caseTitle:"朝の現場：3階の足場での外壁作業",predictLabel:"現場でまず確かめたいことを、見に行けたか",
+ intake:{heading:"朝礼前に、今日の危険を予知する",time:"7:50 朝礼前",lines:["昨夜は雨で、今朝は風が強い予報","新人が今日から足場作業に入る","隣でクレーン作業がある","資材の搬入が9時に重なる","工期が押している"],
+  q1Label:"考えられる危険は？（いくつでも）",causes:["足場からの転落","物の落下","クレーンとの接触","午後の熱中症"],
+  q2Label:"現場に入ってまず確かめたいことは？（いくつでも）",checks:["足場の濡れと手すり","風の強さ","新人の顔色と装備","クレーンの動線"],
+  q3Label:"準備するものは？（いくつでも）",tools:["墜落制止用器具（安全帯）","風速計","立入禁止の表示","作業手順書"]},
+ scene:SC.site,sceneCap:"8:30 足場に上がる前です。",
+ s3:{title:"9時、風が強まり、養生シートがあおられている",detail:[["風","強まっている"],["足場","一部まだ濡れている"],["新人","安全帯のフックが外れている"]],note:"資材の搬入トラックが到着しました。",q:{label:"危険の見立ては？",options:["強風での転落","落下物","新人の不慣れ","いくつかの重なり"]},qLabel:"どう進めますか"},
+ levels:[{n:"続行",c:"var(--green)",d:"このまま作業"},{n:"中断",c:"var(--yellow)",d:"いったん降りて確かめる"},{n:"停止",c:"var(--red)",d:"作業中止・報告"}],expertLevel:"中断",
+ s4Title:"何をしますか",actions:["作業をいったん止めて足場から降りる","養生シートを固定する","新人の安全帯を確かめる","風の強さを確かめ直す","職長に報告する","搬入と作業の順番を入れ替える"],
+ whom:["職長","元請・発注者","新人"],purpose:["作業中断の報告","段取り変更の相談","指導"],reportLabel:"一番伝えたいことを一句で",
+ views:[{n:"足場と通路",kw:["足場","手すり","板","通路","濡"]},{n:"天候と風",kw:["風","雨","空","雲"]},{n:"人の様子と装備",kw:["新人","顔","安全帯","フック","ヘルメット"]},{n:"重機と動線",kw:["クレーン","フック","トラック","重機"]},{n:"資材と落下物",kw:["資材","シート","工具","落"]},{n:"周りの作業",kw:["隣","搬入","下"]}],
+ firstToView:{"足場の濡れと手すり":"足場と通路","風の強さ":"天候と風","新人の顔色と装備":"人の様子と装備","クレーンの動線":"重機と動線"},
+ experts:[{who:"職長A",ku:[["シートはね","風の重さを","足で知る"],["濡れた板","朝日で乾く","までを待つ"]]},{who:"職長B",ku:[["新人の","フックの先を","目で追う"],["ヘルメット","あごひもまでを","見て渡す"]]},{who:"職長C",ku:[["クレーンの","影が足場を","よぎる朝"],["搬入の","トラックの音","手を止める"]]}],
+ peers:[["足場には","朝の雨つぶ","光ってる"],["青いシート","風にふくらみ","はためいた"],["クレーンが","空に向かって","伸びている"],["ヘルメット","新しいのが","ひとりいる"]],
+ notes:["職長は、雨・風・新人・クレーン・搬入の重なりを、朝礼前に一つの危険として見ている","職長は、足場に上がる前に、板の濡れと新人の装備を見ている","職長は、シートのあおられ方と新人のフックから、いったん降りる判断をしている","職長は、シートを固定し、装備を確かめてから作業の順番を入れ替えている","職長は、元請には段取りの変更を、新人には理由を添えて伝えている","職長は「風の日は新人を最後に上げる」を申し送りにしている"],
+ sample:{ward:[["足場板","まだ濡れていて","光ってる"],["シートが","風にあおられ","鳴っている"],["新人の","フックが手すりに","掛かってない"]]}}),
+fire:mk({name:"消防・救急パック",icon:"fire",prio:"優先度：低〜中",expertWord:"ベテラン隊員",
+ stepLabel:i=>["一 見立てる（出動指令）","二 見渡す（現場到着）","三 見極める（進入／待機／応援要請）","四 手を打つ（活動）","五 伝える（無線報告・引き継ぎ）","六 振り返る（事後の検証）"][i],
+ caseTitle:"住宅火災の通報：2階建ての木造住宅",predictLabel:"到着してまず確かめたいことを、見に行けたか",
+ intake:{heading:"出動指令から、現場を見立てる",time:"14:02 出動指令",lines:["2階の窓から黒煙との通報","住人は高齢の夫婦。一人の所在が分からない","隣の家との間が狭い","現場まで6分","風は北西からやや強い"],
+  q1Label:"想定される危険は？（いくつでも）",causes:["逃げ遅れ","隣家への延焼","建物の崩れ","隊員のけが"],
+  q2Label:"到着してまず確かめたいことは？（いくつでも）",checks:["逃げ遅れの有無と情報","煙と炎の位置","隣家への延焼","進入路と退路"],
+  q3Label:"準備する装備・体制は？（いくつでも）",tools:["空気呼吸器","救助用の器具","応援の要請","救急隊の手配"]},
+ scene:SC.fire,sceneCap:"14:08 現場に到着しました。",
+ s3:{title:"2階の窓から黒煙。玄関前に夫が座り込み「妻がまだ2階に」",detail:[["煙","2階の窓から黒煙"],["炎","まだ外から見えない"],["情報","妻が2階にいる"]],note:"隣の家の壁まで2メートルほどです。",q:{label:"見立ては？",options:["2階に逃げ遅れ","延焼の危険","崩れの危険","情報の確認が必要"]},qLabel:"どう進めますか"},
+ levels:[{n:"進入する",c:"var(--green)",d:"救助を優先して進入"},{n:"待機して確かめる",c:"var(--yellow)",d:"情報と安全を確かめる"},{n:"応援を要請する",c:"var(--red)",d:"人手と資機材を呼ぶ"}],expertLevel:"進入する",
+ s4Title:"何をしますか",actions:["救助隊が2階へ進入する","隣家への延焼を防ぐ","夫を救急隊に引き継ぐ","応援を要請する","指揮者に状況を報告する"],
+ whom:["指揮者・指令","救急隊・病院"],purpose:["状況の報告","応援の要請","引き継ぎ"],reportLabel:"一番伝えたいことを一句で",
+ views:[{n:"煙と炎",kw:["煙","炎","黒","火"]},{n:"建物の状態",kw:["窓","屋根","壁","木造","崩"]},{n:"人の情報",kw:["夫","妻","人","声","座"]},{n:"進入路と退路",kw:["玄関","階段","道","入口"]},{n:"周りの延焼",kw:["隣","風","軒"]},{n:"隊員の安全",kw:["隊員","呼吸器","足元"]}],
+ firstToView:{"逃げ遅れの有無と情報":"人の情報","煙と炎の位置":"煙と炎","隣家への延焼":"周りの延焼","進入路と退路":"進入路と退路"},
+ experts:[{who:"隊員A",ku:[["黒煙の","色と勢いで","奥を読む"],["妻はまだ","その一言で","道が決まる"]]},{who:"隊員B",ku:[["隣家まで","二歩の軒先","風下に"],["玄関の","扉の熱さを","手で知る"]]},{who:"隊員C",ku:[["座り込む","夫の足元","裸足なり"],["階段の","位置を夫に","まず聞いた"]]}],
+ peers:[["二階から","黒いけむりが","のぼってく"],["おじいさん","玄関の前で","座ってる"],["となりの家","壁がすぐ近く","並んでる"],["赤い車","サイレン止めて","着いたとこ"]],
+ notes:["隊員は、指令の「一人の所在不明」と「狭い隣家」から、逃げ遅れと延焼を同時に想定している","隊員は、到着した瞬間に、煙の色と勢い、座り込む夫と隣家までの距離を見ている","隊員は、妻が2階にいるという情報から救助を優先し、同時に延焼の手当てを考えている","隊員は、進入と並行して延焼を防ぎ、夫を救急隊に引き継いでいる","隊員は、無線では要救助者の有無と位置を先に伝えている","隊員は「到着時に住人から階段の位置を聞く」を検証の一手にしている"],
+ sample:{ward:[["二階から","黒い煙が","ふき出した"],["座り込む","おじいさんの","手がふるえ"],["となりまで","すぐの距離に","軒がある"]]}}),
+aviation:mk({name:"航空パック",icon:"aviation",prio:"優先度：低",expertWord:"ベテラン機長",
+ stepLabel:i=>["一 見立てる（飛行前のブリーフィング）","二 見渡す（外部点検・計器）","三 見極める（続行／回避／別の空港へ）","四 手を打つ（操作）","五 伝える（管制・クルー）","六 振り返る（デブリーフィング）"][i],
+ caseTitle:"国内線の進入中、目的地の天候が急変",predictLabel:"飛行中に確かめ続けたいことを、見に行けたか",
+ intake:{heading:"ブリーフィングで、今日の飛行を見立てる",time:"出発前のブリーフィング",lines:["目的地は午後から雷雨の予報","副操縦士はこの路線が今月初めて","燃料は標準の搭載量","代替空港は1か所","到着便が混み合う時間帯"],
+  q1Label:"想定される危険は？（いくつでも）",causes:["雷雨での着陸のやり直し","燃料の余裕不足","経験の浅いクルーとの連携","管制の混雑"],
+  q2Label:"飛行中に確かめ続けたいことは？（いくつでも）",checks:["目的地の最新の天候","残りの燃料","副操縦士の様子","管制の指示"],
+  q3Label:"準備することは？（いくつでも）",tools:["燃料の追加の判断","代替空港の確認","役割分担の確認","着陸のやり直しの手順確認"]},
+ scene:SC.aviation,sceneCap:"15:20 目的地への進入を始めました。",
+ s3:{title:"前方に雷雲。管制から上空での待機の指示",detail:[["燃料","代替空港まで＋15分"],["天候","雷雲が滑走路に接近"],["副操縦士","返事が短い"]],note:"客室からは揺れで乗客が不安がっていると連絡がありました。",q:{label:"見立ては？",options:["天候の悪化が続く","燃料の余裕が少ない","クルーの負担が大きい","いくつかの重なり"]},qLabel:"どう進めますか"},
+ levels:[{n:"続行",c:"var(--green)",d:"進入を続ける"},{n:"回避",c:"var(--yellow)",d:"待機して様子を見る"},{n:"別の空港へ",c:"var(--red)",d:"代替空港へ向かう"}],expertLevel:"別の空港へ",
+ s4Title:"何をしますか",actions:["管制に代替空港へ向かうと伝える","副操縦士と判断を共有する","客室乗務員に知らせる","乗客へ案内する","燃料を確かめ直す"],
+ whom:["管制","副操縦士・客室乗務員","乗客"],purpose:["意図を伝える","役割を確認する","案内"],reportLabel:"一番伝えたいことを一句で",
+ views:[{n:"天候",kw:["雷","雲","雨","稲妻","空"]},{n:"計器と燃料",kw:["燃料","計器","針","残り"]},{n:"クルーの様子",kw:["副操縦士","返事","声","肩"]},{n:"管制の状況",kw:["管制","待機","指示","無線"]},{n:"機体の状態",kw:["揺れ","機体","翼"]},{n:"乗客と客室",kw:["乗客","客室","ベルト"]}],
+ firstToView:{"目的地の最新の天候":"天候","残りの燃料":"計器と燃料","副操縦士の様子":"クルーの様子","管制の指示":"管制の状況"},
+ experts:[{who:"機長A",ku:[["雷雲の","足の速さを","窓に測る"],["残り燃料","待つ時間へと","置き換える"]]},{who:"機長B",ku:[["副操縦士","返事の短さ","肩の固さ"],["待機せよ","管制の声も","詰まり気味"]]},{who:"機長C",ku:[["揺れのたび","客室からの","声を聞く"],["決めたなら","まず管制に","意図を言う"]]}],
+ peers:[["窓の外","灰色の雲が","近づいた"],["稲妻が","雲のすきまで","光ってる"],["計器盤","小さな針が","ふるえてる"],["となりの席","黙ったままで","前を見る"]],
+ notes:["機長は、雷雨の予報と初めての路線のクルーを、ブリーフィングの段階で重ねて見ている","機長は、計器と燃料だけでなく、副操縦士の返事の短さにも目を向けている","機長は、燃料と雷雲の速さから、待機を続けずに別の空港へ向かう判断をしている","機長は、判断を副操縦士と共有してから、操作と連絡を分担している","機長は、管制には意図を先に、乗客には安心できる案内を伝えている","機長は「初めての路線のクルーとは、やり直しの手順を声に出して確かめる」を次の一手にしている"],
+ sample:{ward:[["窓の外","雷雲こちらへ","寄ってくる"],["計器盤","燃料の針を","二度も見る"],["副操縦士","返事のあとに","息をつく"]]}})
+});
+// 全業界を試せるデモ組織
+
+
+
+// ===== 五七五は「絵を観る」だけ。他は50字の短文 =====
+const MAXC=50;
+const TX=x=>Array.isArray(x)?x.join("、")+"。":String(x);
+const EXPERT_TEXT={
+ nursing:[["肩で息をしている。呼吸数を数えると22回。最初の変化はここに出る","唇の色を確かめながら、名前を呼んで声をかけた"],["名前を呼ぶと目を開けて、こちらを見てくれる。意識ははっきりしている","ティッシュの山に黄色い痰が混じっている。量も増えている"],["鼻のカニューレが外れていないか、酸素の流量と合わせて確かめた","胸の上下の速さを数えながら、顔色と表情も見ている"]],
+ lock:[["雨の中で待つお客様に、まず軒下へ入ってもらうよう声をかけた","表札と郵便物の宛名で、名前が合っているかを確かめた"],["鍵穴の奥に光るものがある。砂か錆かを、ライトで照らして見た","手が震えているので、薬の場所と時間を先に聞いた"],["鍵に触る前に、扉と枠にゆがみがないかを見た","暗がりでは手元を照らし、鍵穴まわりの傷も確かめた"]],
+ water:[["継ぎ目からぽたりと落ちる水。ホースに細いひびの線がある","点検口の板まで染みている。床の下にも広がっていそうだ"],["床を拭き続けている奥様の腰を気づかい、まず声をかけた","下の階の天井に染みが出ていないか、管理会社に聞いてもらう"],["流しの下に詰めた洗剤の箱が、ホースを押していた","水のすぐ近くにコンセントが二つある。電気に注意が要る"]],
+ care:[["湯のみには朝の白湯がまだ半分。水分が足りていない","唇がかさついている。声をかけて口の中の乾きも確かめた"],["窓を閉め切り、扇風機だけが回っている。室温が高い部屋だ","立ち上がるとき、手すりを頼りにひと呼吸おいていた"],["いつもより返事がひとつ遅れる。本人の言葉の調子が違う","顔色がいつもより白い。カレンダーの丸印は今日の通院日だ"]],
+ sales:[["課長の腕組みは、まだ心の扉が開いていない合図かもしれない","部長が時計を見ている。頭はもう次の会議に向いている"],["「他社も」という一言は、比べる物差しを探している発言だ","資料より先に、課長の表情と目線を見て話し始めた"],["沈黙のあとの一言を待つ。ここで相手の本音が出やすい","名刺の肩書きから、課長が決める役目なのかを読み取った"]],
+ parenting:[["朝ごはんを一口だけ食べて、スプーンを置いてしまった","楽しみにしていた遠足のリュックも見ずに、横になっている"],["おなかを押さえていて、いつもの歌が聞こえてこない","弟の胃腸炎から五日目。うつった可能性を考えておく"],["熱の数字よりも、顔の白さのほうが気にかかる","水筒の麦茶を、ひと口ずつ少しずつ飲ませてみた"]],
+ nursery:[["木の陰にひとりで座り、頬が赤い。いつもの元気がない","水筒の麦茶が朝のまま重い。水分がとれていない"],["プールのみんなの声に加わらず、輪から外れている","汗をかいていないのに、首すじが熱いままだ"],["連絡帳の「寝つけなかった」の一行を思い出した","「つかれた」と言う目が、少しとろんとしている"]],
+ site:[["シートのはね方で風の強さを読む。足元にも重さを感じる","濡れた足場板が乾くまで、上がるのを待つ"],["新人の安全帯のフックが、手すりに掛かっているかを目で追う","ヘルメットのあごひもまで確かめてから足場に上げる"],["クレーンの影が足場をよぎる。動線が重なっている","搬入トラックの音がしたら、いったん手を止める"]],
+ fire:[["黒煙の色と勢い、窓の様子から、火元が奥にあると読む","「妻がまだ2階に」の一言で、救助の道筋が決まる"],["隣家まで軒先が二歩ほど。風下なので延焼に注意する","玄関の扉の熱さを手で確かめてから進入する"],["座り込む夫は裸足で、手が震えている。救急隊に引き継ぐ","階段の位置を、まず夫に聞いた"]],
+ aviation:[["雷雲の足の速さを、窓の外の動きで測っている","残り燃料を、待機できる時間に置き換えて考えた"],["副操縦士の返事が短く、肩に力が入っている","管制の声も詰まり気味。待機の指示が続きそうだ"],["揺れのたびに、客室からの声に耳を傾けた","判断したら、まず管制に意図をはっきり伝えた"]]
+};
+const EXP={
+ nursing:{acts:["ケアを中断し呼吸状態を再評価する","酸素の接続と流量を確かめる","リーダー看護師に相談する"],whom:"リーダー看護師",purpose:"指示をもらう"},
+ lock:{acts:["お客様に軒下か車で待ってもらう","身分証や郵便物で本人確認をする","料金と方法を説明し、了承をもらう","何度か開け閉めして動きを確かめる"],whom:"お客様",purpose:"原因と再発防止を伝える"},
+ water:{acts:["止水栓を閉めて水を止める","濡れた床を拭き、滑らないようにする","料金と方法を説明し、了承をもらう","水を流して漏れがないか確かめる"],whom:"管理会社",purpose:"作業内容と再訪の要否を報告"},
+ care:{acts:["入浴を中止する","水分をとってもらう","窓を開け、室温を下げる","事業所に連絡する"],whom:"事業所（サービス提供責任者）",purpose:"指示をもらう"},
+ sales:{acts:["質問に切り替えて困りごとを聞く","課長の意見を先に聞く","残り時間を確かめ、要点だけにする","次の打ち合わせを提案する"],whom:"お客様",purpose:"次の約束を決める"},
+ parenting:{acts:["遠足を休ませる","水分を少しずつとらせる","小児科に電話する","1時間後に熱を測り直す"],whom:"小児科",purpose:"受診の相談"},
+ nursery:{acts:["涼しい部屋に移す","水分をとらせる","体温を測り直す","他の先生に知らせる"],whom:"保護者",purpose:"お迎えの相談"},
+ site:{acts:["作業をいったん止めて足場から降りる","養生シートを固定する","新人の安全帯を確かめる","職長に報告する"],whom:"職長",purpose:"作業中断の報告"},
+ fire:{acts:["救助隊が2階へ進入する","隣家への延焼を防ぐ","夫を救急隊に引き継ぐ","指揮者に状況を報告する"],whom:"指揮者・指令",purpose:"状況の報告"},
+ aviation:{acts:["管制に代替空港へ向かうと伝える","副操縦士と判断を共有する","客室乗務員に知らせる","燃料を確かめ直す"],whom:"管制",purpose:"意図を伝える"}
+};
+const PERSON_VIEW={site:"人の様子と装備",fire:"人の情報",aviation:"クルーの様子"};
+Object.entries(EXPERT_TEXT).forEach(([k,arr])=>{ if(PACKS[k]&&!PACKS[k].empty) PACKS[k].experts=PACKS[k].experts.map((e,i)=>({who:e.who,ku:arr[i]})); });
+// 「絵を観る」の観点（絵ごとに監修で決める想定。ここでは今日の一枚用の仮）
+const ART_VIEWS=[{n:"人物",kw:["人","四人","男","彼"]},{n:"表情・しぐさ",kw:["顔","目","口","表情","足","手","座","首","角度","見て"]},{n:"色",kw:["色","赤","緑","青","ピンク","桃","茶"]},{n:"背景・街",kw:["ビル","街","空","川","船","汽車","影"]},{n:"並び・構図",kw:["並","ベンチ","横","奥","同じ"]},{n:"気持ち・物語",kw:["待","何","さみ","楽し","歌","思","あたたか","見ていない"]}];
+const artViewsOf=t=>ART_VIEWS.filter(v=>v.kw.some(k=>t.includes(k))).map(v=>v.n);
+
+
+
+// ===== 仲間のコメント（50字以内の普通の文） =====
+const PEER_TEXT={
+ nursing:["白い布団の胸のあたりが、上下に速く動いているように見えた","鼻の管はまっすぐ伸びていて、本人は眠っているように見える","お盆に朝の粥が残っている。朝食のむせと関係がありそう","眉の間にしわが寄っている。息が苦しいのかもしれない"],
+ lock:["雨の音が強い。お客様の肩が濡れていて寒そうだった","鍵穴が黒っぽく、だいぶ古いもののように見えた","玄関の灯りがつかず、手元がかなり暗い","傘立てに閉じた傘がひとつ。濡れているので最近使ったようだ"],
+ water:["床の水をためたバケツが、もう半分くらいまでたまっている","台所にタオルが何枚も重なっていて、拭き続けた様子がわかる","流しの下に洗剤がたくさん並んでいて、奥が見えにくい","ご主人の靴下まで濡れている。水はかなり広がっている"],
+ care:["「お茶飲みね」と笑ってくれた。いつものトミさんに見える","扇風機が首を振るたびに、髪がゆれていた","カレンダーの今日の日付に赤い丸がついている","座ったまま手を振ってくれた。立ち上がらなかったのが少し気になる"],
+ sales:["窓の外のビルの影から、日が差し込んでいた","出されたお茶に二人とも手をつけないまま冷めていった","二人ともネクタイの色がそろっていて、きちんとした印象","資料には付箋も書き込みもなく、読まれていない様子だった"],
+ parenting:["くまのぬいぐるみをぎゅっと抱いたまま目を開けた","カーテンのすきまの光を、まぶしそうにしていた","リュックには遠足のおやつがもう入っている","パジャマのボタンがひとつずれていた。自分で着替えようとしたのかも"],
+ nursery:["プールでは水しぶきが上がって、とてもにぎやかだった","帽子をかぶったまま、木の下にゆうきくんがいる","日差しが強く、園庭はかなり暑そうだった","バケツに黄色いアヒルが浮いていて、みんな夢中で遊んでいる"],
+ site:["足場に朝の雨つぶが残って、光っていた","青い養生シートが風でふくらみ、大きくはためいていた","クレーンが空に向かって長く伸びている","新しいヘルメットの人がひとりいる。今日から来た新人のようだ"],
+ fire:["2階の窓から黒い煙がのぼっていくのが見えた","玄関の前で、おじいさんが座り込んでいた","隣の家の壁がすぐ近くに並んでいる","消防車がサイレンを止めて、ちょうど着いたところだった"],
+ aviation:["窓の外に灰色の雲が近づいてきた","雲のすきまで稲妻が光っていた","計器盤の小さな針が、細かくふるえていた","隣の席の副操縦士は、黙ったまま前を見ている"]
+};
+Object.entries(PEER_TEXT).forEach(([k,a])=>{ if(PACKS[k]&&!PACKS[k].empty) PACKS[k].peers=a; });
+
+// ===== 50字の例文（五七五ではなく、選んだ内容に合わせて作る） =====
+const WARD_EX={
+ nursing:["目を閉じたまま横を向いている。声をかけると返事は短い","鼻の酸素の管から細い音がする。胸の上下が速く見える","お盆の粥が半分残っている。ティッシュに黄色い痰がある"],
+ lock:["傘をさしたお客様が玄関の前で待っていて、肩が濡れている","鍵穴のまわりに小さな傷がある。玄関灯がつかず手元が暗い","表札は「山田」。郵便受けにも同じ名前の封筒が見える"],
+ water:["流しの下の床に水たまり。タオルが何枚も重なっている","排水ホースの先が濡れている。洗剤の箱がホースに当たっている","奥様が腰に手を当てて立っている。拭き続けて疲れた様子"],
+ care:["湯のみにお茶が半分残っている。窓は閉め切ったままだ","扇風機だけが回っていて、部屋がむっと暑い","立ち上がるときに手すりをつかみ、ひと呼吸おいている"],
+ sales:["課長は腕を組んで窓の外を見ている。表情は硬い","部長が時計を二度見た。次の予定があるのかもしれない","資料はまだ誰も開いていない。お茶にも手がついていない"],
+ parenting:["くまのぬいぐるみを抱いたまま、なかなか起きてこない","朝ごはんのスプーンを持ったまま止まっている","遠足のリュックを見ても反応がなく、横になりたがる"],
+ nursery:["木陰でひざを抱えて座っている。みんなの輪から離れている","ほっぺたがいつもより赤い。水筒の麦茶が減っていない","声をかけると「つかれた」と言い、目がとろんとしている"],
+ site:["足場の板がまだ濡れて光っている。手すりにも水滴がある","養生シートが風にあおられて大きく鳴っている","新人の安全帯のフックが手すりに掛かっていない"],
+ fire:["2階の窓から黒い煙が勢いよく出ている","玄関前でおじいさんが座り込み、手が震えている","隣の家の軒先まで2メートルほどしかない"],
+ aviation:["前方の灰色の雲が近づき、雲のすきまで稲妻が光った","燃料計の残りを確かめた。待機できる時間は長くない","副操縦士は返事が短く、肩に力が入っている"]
+};
+WARD_EX.nursing.push(...["唇の色が少し白っぽい。顔色もすぐれない", "呼び鈴が手の届かない棚の上に置いてある", "肩で息をしているように見える。会話が途切れがち"]);
+WARD_EX.lock.push(...["扉の枠が少しゆがんで見える。閉まりが悪そうだ", "鍵穴の奥に砂のようなものが光っている", "お客様の手が少し震えている。寒いのか不安なのか"]);
+WARD_EX.water.push(...["コンセントのすぐ横まで水が来ている", "点検口の板に染みが広がっている", "蛇口の根元に黄ばみと錆がある。かなり古そうだ"]);
+WARD_EX.care.push(...["唇がかさついている。水分が足りていないかも", "いつもより返事が遅い気がする", "カレンダーの今日の日付に赤い丸がある"]);
+WARD_EX.sales.push(...["課長が「他社も見ています」と一言だけ言った", "名刺の肩書きを見ると、課長が決める立場らしい", "沈黙が長い。こちらの話を待っている様子"]);
+WARD_EX.parenting.push(...["顔がいつもより白い。熱の数字より気になる", "好きな歌を口ずさまない。元気がない", "弟の胃腸炎から五日目。うつったのかもしれない"]);
+WARD_EX.nursery.push(...["汗をかいていないのに、首すじが熱い", "プールのみんなの輪に入らず、離れている", "日差しが強く、木陰以外はとても暑そうだ"]);
+WARD_EX.site.push(...["クレーンの影が足場の上を横切っている", "搬入のトラックが足場の下に入ってきた", "新人のヘルメットのあごひもがゆるい"]);
+WARD_EX.fire.push(...["黒い煙の勢いが強い。火元は奥のほうかも", "玄関の扉に手をかざすと熱い", "夫は裸足のまま。階段の位置を聞きたい"]);
+WARD_EX.aviation.push(...["管制の声が詰まり気味で、待機が長引きそう", "揺れが強まり、客室から不安の声が届いた", "燃料計の針を見ると、待てる時間は少ない"]);
+
+const cut=t=>[...t].slice(0,MAXC).join("");
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function genSample(k,n){ const p=P(),it=p.intake,ex=EXP[S.pack]||{acts:[]},f=[...S.first],c=[...S.causes],acts=[...S.acts],tell=[...S.tell],tool=[...S.tools][0];
+  const f0=f[0]||"全体の様子", f1=f[1], lv=S.level?`「${S.level}」`:"進め方", d=p.s3?p.s3.detail:[["様子",""],["状況",""]];
+  const mine=viewsOf(S.ward.map(TX).join("")), majMiss=expertStats().filter(x=>x.c>=2&&!mine.includes(x.n)).map(x=>x.n), miss=ex.acts.filter(a=>!S.acts.has(a));
+  if(k==="ward"){ const a=WARD_EX[S.pack]||["気づいたことを短く書く"]; const used=new Set(S.ward); const left=a.filter(x=>!used.has(x)); return pick(left.length?left:a); }
+  if(k==="s1"){ if(it) return cut(pick([`${c[0]?c[0]+"を疑う。":"原因はまだ絞らない。"}着いたらまず${f0}を確かめる${tool?`。${tool}も持っていく`:""}`,`原因は${c[0]||"まだ分からない"}かもしれない。最初に${f0}を見て、${f1||"周り"}も確かめる`,`一番気になるのは${f0}。${tool?tool+"を持って":"準備をして"}、着いたらすぐ確かめる`]));
+    return cut(pick([`最悪は${S.worst||"状態の悪化"}。その前に${f0}が出ると考え、まずそこを見に行く`,`${f0}を見逃したくない。${S.worst||"悪化"}につながる前に気づきたい`,`情報から${S.worst||"悪化"}が心配。${f0}${f1?"と"+f1:""}を最初に確かめる`])); }
+  if(k==="s3"){ return cut(pick([`${S.cause?S.cause+"と見て、":""}${lv}を選んだ。根拠は${d[0][0]}「${d[0][1]}」と${d[1][0]}「${d[1][1]}」`,`${d[0][0]}が${d[0][1]}。${S.cause?S.cause+"と見て":"総合して"}${lv}と判断した`,`数字だけでなく様子も見て${lv}。${d[1][0]}の「${d[1][1]}」が決め手`])); }
+  if(k==="s4"){ return cut(acts.length?pick([`${acts[0]}。そのあと、もう一度様子を確かめる`,`まず${acts[0]}。続けて${acts[1]||"様子を見直す"}`,`${acts[0]}を優先した。手を打ったら必ず確かめる`]):"まず状況を確かめてから、必要な手を打つ。打ったら様子を見直す"); }
+  if(k==="s5"){ return cut(pick([`${S.whom||"相手"}へ。目的は「${S.purpose||"状況の共有"}」。${tell.length?tell.slice(0,2).join("と")+"を短く伝える":"いまの状態とお願いを短く伝える"}`,`${S.whom||"相手"}に伝える。目的は「${S.purpose||"状況の共有"}」。結論から先に話す`,`伝える相手は${S.whom||"相手"}。${tell[0]||"いまの状態"}を一番に伝える`])); }
+  if(k==="good"){ return cut(pick([`${S.level?`「${S.level}」と判断し、`:""}${acts[0]?acts[0]+"ことができた":"気づいたことを言葉にできた"}`,S.level?`${lv}の判断に、根拠を添えられた`:"見たことを、自分の言葉にできた",`${f[0]?f[0]+"を意識して見られた":"落ち着いて観察できた"}`])); }
+  if(k==="next"){ return cut(pick([miss[0]?`次は「${miss[0]}」を早めに行う`:`次は${f0}を、もっと早く見に行く`,majMiss[0]?`次は「${majMiss[0]}」にも目を向ける`:"次は、最初の確認をもう少し早める",miss[1]?`次は「${miss[1]}」も選択肢に入れて考える`:"次は、手を打ったあとの確認を丁寧にする"])); }
+  return "気づいたことを短く書く"; }
+
+
+
+// ===== まとめ：押さえておきたいポイントと持ち味 =====
+const GAZE={"人物":["人のこころを読むまなざし","人の表情やしぐさから、気持ちや状態を読み取ろうとする見方です"],"表情・しぐさ":["人のこころを読むまなざし","人の表情やしぐさから、気持ちや状態を読み取ろうとする見方です"],"色":["移ろいに気づくまなざし","色や光のちがいから、小さな変化に気づく見方です"],"背景・街":["全体を見渡すまなざし","まず全体や配置をとらえてから、細部へ進む見方です"],"並び・構図":["全体を見渡すまなざし","まず全体や配置をとらえてから、細部へ進む見方です"],"気持ち・物語":["物語を想像するまなざし","目に見えない事情や、前後の流れを想像する見方です"]};
+function gazeOf(art,uniqV){ const cnt={}; art.forEach(k=>artViewsOf(kt(k)).forEach(v=>cnt[v]=(cnt[v]||0)+1)); const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0];
+  if(top) return GAZE[top[0]]; return uniqV&&uniqV.length?["自分の角度で切り取るまなざし","ほかの人が見落としやすいところに目が向く見方です"]:["これから育つまなざし","まずは、目にとまったものを言葉にしていきましょう"]; }
+
+// ===== 成長記録（押さえどころ＝根、持ち味＝まなざし） =====
+function metricsNow(){ const p=P(),ex=EXP[S.pack]||{acts:[]},st=expertStats(),mine=viewsOf(S.ward.map(TX).join(""));
+  const maj=st.filter(x=>x.c>=2).map(x=>x.n), oshi=maj.length?Math.round(maj.filter(v=>mine.includes(v)).length/maj.length*100):0;
+  const uniq=mine.filter(v=>(st.find(x=>x.n===v)||{c:0}).c<=1).length, artc=artViewsOf(S.art.map(kt).join("")).length;
+  const first=S.ward[0]?viewsOf(TX(S.ward[0])):[], later=viewsOf(S.ward.slice(1).map(TX).join("")).filter(v=>!first.includes(v));
+  const mochi=Math.min(100,uniq*30+artc*10+(later.length?10:0));
+  const hit=ex.acts.filter(a=>S.acts.has(a)).length, act=ex.acts.length?Math.round(hit/ex.acts.length*100):0;
+  const link=[...S.first].some(f=>mine.includes(p.firstToView[f]));
+  const uq=mine.filter(v=>(st.find(x=>x.n===v)||{c:0}).c<=1); return {oshi,mochi,judge:S.level===p.expertLevel,act,link,views:mine,art:artViewsOf(S.art.map(kt).join("")),gaze:gazeOf(S.art,uq)[0]}; }
+function sampleHistory(pk){ const p=PACKS[pk]; if(!p||p.empty) return []; const v=p.views.map(x=>x.n);
+  return [{date:"10/03",mode:"完結",oshi:33,mochi:10,judge:false,act:25,link:false,views:v.slice(0,2),art:["人物"],gaze:"これから育つまなざし",note:"予測した変化を、まだ見に行けていない"},
+          {date:"10/10",mode:"分割",oshi:50,mochi:20,judge:true,act:50,link:false,views:v.slice(0,3),art:["人物","色"],gaze:"移ろいに気づくまなざし",note:"判断は熟達者と同じになった。根拠の書き方が具体的になってきた"},
+          {date:"10/17",mode:"完結",oshi:67,mochi:30,judge:true,act:75,link:true,views:v.slice(0,4),art:["人物","表情・しぐさ","色"],gaze:"人のこころを読むまなざし",note:"予測した変化を見に行けた。絵で人の表情を見る目が場面でも使えている"}]; }
+function histAll(){ const h=sampleHistory(S.pack).map(x=>({...x,sample:true})); return h.concat(S.history.filter(x=>x.pack===S.pack)); }
+const STAGES=[{n:"芽生え",d:"押さえどころを知る段階。まず熟達者がどこを見ているかを知る"},{n:"根を張る",d:"押さえどころを外さなくなってきた段階"},{n:"根が深まる",d:"押さえどころを安定して押さえられる段階。次は自分の見方を育てる"},{n:"まなざしが育つ",d:"押さえどころの上に、自分ならではの見方が加わってきた段階"},{n:"分かち合う",d:"自分の見方を言葉にして、仲間や後輩に伝えられる段階"}];
+function stageOf(h){ if(!h.length) return 0; const L=h.slice(-2), o=L.reduce((a,x)=>a+x.oshi,0)/L.length, m=L.reduce((a,x)=>a+x.mochi,0)/L.length;
+  return o>=85&&m>=60&&h.length>=5?4:o>=70&&m>=40?3:o>=70?2:o>=40?1:0; }
+function growthChart(h){ const W=330,H=170,l=34,r=10,t=14,b=30,iw=W-l-r,ih=H-t-b,X=i=>l+(h.length<2?iw/2:i*iw/(h.length-1)),Y=v=>t+ih-v/100*ih;
+  const line=(k,col)=>`<polyline fill="none" stroke="${col}" stroke-width="2.5" points="${h.map((x,i)=>`${X(i)},${Y(x[k])}`).join(" ")}"/>${h.map((x,i)=>`<circle cx="${X(i)}" cy="${Y(x[k])}" r="4" fill="${col}"/>`).join("")}`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="押さえどころと持ち味の推移" style="width:100%;height:auto">${[0,50,100].map(v=>`<line x1="${l}" x2="${W-r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${l-6}" y="${Y(v)+4}" text-anchor="end" font-size="10" fill="var(--sub)">${v}</text>`).join("")}
+   ${h.map((x,i)=>`<text x="${X(i)}" y="${H-10}" text-anchor="middle" font-size="10" fill="var(--sub)">${esc(x.date)}</text>`).join("")}${line("oshi","var(--moss)")}${line("mochi","var(--shu)")}</svg>
+   <div class="note" style="display:flex;gap:14px;justify-content:center"><span><b style="color:var(--moss)">●</b> 押さえどころ（根）</span><span><b style="color:var(--shu)">●</b> 持ち味（まなざし）</span></div>`; }
+function vHistory(){ const p=P(),h=histAll(),si=stageOf(h),st=STAGES[si];
+  return {html:`<p class="lead">${esc(p.name)}</p><h2>分析結果と成長記録</h2>
+   <div class="card line"><div class="note">いまの成熟の段階</div><h2 style="margin:4px 0">${si+1}．${esc(st.n)}</h2><p class="note">${esc(st.d)}</p>
+    <div style="display:flex;gap:4px;margin-top:8px">${STAGES.map((x,i)=>`<div style="flex:1;text-align:center"><div style="height:8px;border-radius:4px;background:${i<=si?'var(--moss)':'var(--mist2)'}"></div><div class="note" style="font-size:10.5px;margin-top:3px">${esc(x.n)}</div></div>`).join("")}</div></div>
+   ${h.length?`<div class="card"><h2>成長の推移</h2>${growthChart(h)}<p class="note">押さえどころ：${esc(p.expertWord)}の過半数が見ていた視点を、どれだけ押さえられたか。持ち味：熟達者があまり書かなかった視点や、絵で目が向いたところの広がり。どちらも仮の指標です。</p></div>`:""}
+   <h2>これまでの分析（新しい順）</h2>
+   ${h.length?h.map((x,i)=>({x,i})).reverse().map(({x,i})=>`<button class="packcard hist" data-i="${i}"><div style="display:flex;justify-content:space-between"><b>${esc(x.date)}　${esc(x.mode)}モード</b>${x.sample?`<span class="packtag">サンプル</span>`:`<span class="packtag">今回</span>`}</div><div class="note">${esc(x.gaze||"")}<br>押さえどころ ${x.oshi}／持ち味 ${x.mochi}／判断 ${x.judge?"一致":"相違"}／行動 ${x.act}%</div></button>`).join(""):`<p class="note">まだ分析結果がありません。学習を1回終えると、ここに並びます。</p>`}
+   <p class="src">過去の記録のうち「サンプル」は、表示の確認用の仮データです。</p>`,
+   foot:`<button class="btn" id="n">LINEに戻る</button>`,
+   bind(){ document.querySelectorAll(".hist").forEach(b=>b.onclick=()=>{ const x=histAll()[+b.dataset.i]; if(x.sample){S.hsel=+b.dataset.i; S.ph="histdetail";} else {S.finalView=true; S.finalReturn="history"; S.ph="done";} render(); scrollTo(0,0);}); $("n").onclick=()=>closeLine(false); }};
+}
+function vHistDetail(){ const p=P(),x=histAll()[S.hsel];
+  const box=(t,v)=>`<div class="vital"><small>${esc(t)}</small><b>${esc(v)}</b></div>`;
+  return {html:`<p class="lead">${esc(p.name)}</p><h2>${esc(x.date)} の分析</h2><span class="packtag">${esc(x.mode)}モード</span>${x.sample?`<span class="packtag">サンプル</span>`:""}
+   <div class="card line"><h2>1. 「絵を観る」</h2><div style="display:flex;gap:10px;align-items:center;margin:6px 0 10px"><img src="${curArt().src}" alt="${esc(curArt().alt)}" style="width:120px;height:auto;border-radius:10px;flex:0 0 auto"><div class="note">今日の一枚<br><b style="color:var(--text)">${esc(curArt().title)}</b><br>${esc(curArt().author)}</div></div><div class="chips">${ART_VIEWS.map(v=>`<span class="chip ${x.art.includes(v.n)?'on':''}">${esc(v.n)}</span>`).join("")}</div></div>
+   <div class="card line"><h2>2. ${S.pack==="nursing"?"臨床判断（シーン①〜⑥）":"6つのステップ"}</h2><div class="vitals">${box("押さえどころ",x.oshi+"点")}${box("持ち味",x.mochi+"点")}${box("判断",x.judge?"熟達者と一致":"熟達者と相違")}${box("押さえた行動",x.act+"%")}${box("予測→観察",x.link?"つながった":"未接続")}</div>
+    <div class="q">見ていた視点</div><div class="chips">${p.views.map(v=>`<span class="chip ${x.views.includes(v.n)?'on':''}">${esc(v.n)}</span>`).join("")}</div></div>
+   ${x.note?`<div class="insight good"><b>この回のふりかえり</b><br>${esc(x.note)}</div>`:""}`,
+   foot:`<button class="btn" id="n">一覧に戻る</button>`, bind(){ $("n").onclick=()=>{S.ph="history"; render(); scrollTo(0,0);}; }};
+}
+
+
+// ===== 絵（管理画面で差し替え） =====
+const ART_DEFAULT="data:image/jpeg;base64,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";
+const ARTS=[{id:"a1",title:"ベンチに並ぶ4人（仮題）",author:"作者・出典は確認中",source:"ユーザー提供",rights:"確認中",alt:"ビル街を背にベンチに並んで座る4人の人物の絵",src:ART_DEFAULT}];
+let CUR_ART="a1";
+const curArt=()=>ARTS.find(a=>a.id===CUR_ART)||ARTS[0];
+const RIGHTS=["パブリックドメイン","CC0","利用許諾あり","確認中"];
+
+// ===== 状態 =====
+let S;
+function reset(){ S={view:"learner",ph:"join",org:null,pack:null,consent:null,mode:null,code:"",err:"",i:0,done:false,
+  msgs:[{t:"08:00",html:"おはようございます。お茶でも一服しながら、今日の一枚を眺めてみませんか。",btn:"学習を始める"}],
+  art:[],ward:[],peerOpen:false,reacts:0,draft:{},text:{},single:{},finalView:false,focus:new Set(),worst:null,first:new Set(),level:null,acts:new Set(),whom:null,purpose:null,causes:new Set(),tools:new Set(),cause:null,tell:new Set(),
+  split:{cur:0,done:[]}, history:[], hsel:0, finalReturn:"done", aiStarted:false, toast:"", atab:"dash", aorg:0, detail:null, audit:[]}; }
+reset();
+const P=()=>PACKS[S.pack];
+const D=k=>S.draft[k]||(S.draft[k]=["","",""]);
+const COMPLETE=["art","s1","s2","s3","s4","s5","s6","explain"];
+const seqSplit=n=>["art","s"+(n+1),"mini"];
+const seq=()=>S.mode==="complete"?COMPLETE:seqSplit(S.split.cur);
+
+// ===== 共通の部品 =====
+function kuRows(key){ const dr=D(key); return [0,1,2].map(i=>{const m=mora(dr[i]); return `<div class="kurow"><input type="text" data-k="${key}" data-i="${i}" value="${esc(dr[i])}" placeholder="${PH[i]}" aria-label="${PH[i]}"><span class="mora ${m===T[i]?'ok':''}" id="m-${key}-${i}">${m}／${T[i]}音</span></div>`;}).join(""); }
+function txtBox(key){ const v=S.text[key]||""; return `<textarea data-t="${key}" maxlength="${MAXC}" rows="2" placeholder="${MAXC}文字以内で" style="width:100%;font:inherit;font-size:16px;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface);color:var(--text);resize:none">${esc(v)}</textarea><div class="note" id="c-${key}" style="text-align:right">${[...v].length}／${MAXC}字</div>`; }
+function single(key,label){ return `<div class="single"><div class="lab">${label}</div>${txtBox(key)}<button class="chip" data-sample="${key}" style="justify-self:start;margin-top:4px">例を入れる（選んだ内容から作る・デモ用）</button></div>`; }
+function sampleFor(k){ const s=P().sample; return k==="art"?ART_SAMPLE:k==="ward"?s.ward:s[k]||GEN[k]||s.s1; }
+const TXS=x=>TX(x).replace(/。$/,"").slice(0,MAXC);
+const ART_SAMPLE=[["四人並び","同じ方を","見ていない"],["帽子かぶる","男たち四人","肩寄せて"],["口結び","ひとりだけ目を","閉じている"],["足組んで","首の角度が","みなちがう"],["手は膝に","じっと座って","何を待つ"],["緑の帽子","赤い顔した","昼下がり"],["桃色の","空に溶けゆく","青いビル"],["ベンチの橙","紫の道","にぎやかだ"],["ビルの影","川の向こうに","汽車が行く"],["摩天楼","遠くに霞む","昼の街"],["横一列","ベンチの上に","四つの影"],["真ん中の","ふたりの背丈","すこし低い"],["歌い出す","前の静けさ","四重唱"],["誰を待つ","川辺のベンチ","日が暮れる"],["ひと休み","仕事帰りの","四人かな"]];
+function bindForms(){
+  document.querySelectorAll(".kurow input").forEach(inp=>inp.oninput=e=>{const k=inp.dataset.k,i=+inp.dataset.i; D(k)[i]=e.target.value; const m=mora(D(k)[i]),el=$(`m-${k}-${i}`); el.textContent=`${m}／${T[i]}音`; el.className="mora"+(m===T[i]?" ok":""); const p=$("post"); if(p&&p.dataset.k===k) p.disabled=!D(k).every(x=>x.trim()); updNext();});
+  document.querySelectorAll("[data-sample]").forEach(b=>b.onclick=()=>{const k=b.dataset.sample,pool=sampleFor(k),n=k==="art"?S.art.length:k==="ward"?S.ward.length:0; if(k==="art"){ const used=new Set(S.art.map(kt)); const left=pool.filter(x=>!used.has(kt(x))&&kt(x)!==kt(S.draft.art||[])); S.draft[k]=[...pick(left.length?left:pool)]; } else S.text[k]=genSample(k,n); render();});
+  document.querySelectorAll("textarea[data-t]").forEach(t=>t.oninput=e=>{const k=t.dataset.t; S.text[k]=e.target.value; const c=$(`c-${k}`); if(c) c.textContent=`${[...e.target.value].length}／${MAXC}字`; const p=$("post"); if(p&&p.dataset.k===k) p.disabled=!e.target.value.trim(); updNext();});
+}
+function stepMissing(){ if(S.mode!=="complete"||S.ph!=="step") return []; const id=seq()[S.i], p=P(), t=k=>(S.text[k]||"").trim(), m=[];
+  if(id==="s1"){ if(p.intake){ if(!S.causes.size) m.push("考えられること"); } else if(!S.worst) m.push("最悪の事態"); if(!S.first.size) m.push(p.intake?"確かめたいこと":"最初の兆し"); if(!t("s1")) m.push("根拠"); }
+  if(id==="s3"){ if(p.s3&&p.s3.q&&!S.cause) m.push("見立て"); if(!S.level) m.push("判断"); if(!t("s3")) m.push("根拠"); }
+  if(id==="s4"){ if(!S.acts.size) m.push("行動"); if(!t("s4")) m.push("記入"); }
+  if(id==="s5"){ if(p.tell&&!S.tell.size) m.push("伝えること"); if(!S.whom) m.push("相手"); if(!S.purpose) m.push("目的"); if(!t("s5")) m.push("記入"); }
+  if(id==="s6"){ if(!t("good")) m.push("できたこと"); if(!t("next")) m.push("次に活かすこと"); }
+  return m; }
+function updNext(){ const n=$("n"); if(n&&n.dataset.single){ if(S.mode==="complete"){ const m=stepMissing(); n.disabled=!!m.length; n.textContent=m.length?"未入力："+m.slice(0,2).join("・"):"次へ"; return; } const f=n.dataset.single.split(",").some(k=>(S.text[k]||"").trim()); n.textContent=f?"次へ":"書かずに次へ"; } }
+const singleFoot=keys=>{ if(S.mode==="complete"){ const m=stepMissing(); return `<button class="btn" id="n" data-single="${keys.join(",")}" ${m.length?"disabled":""}>${m.length?"未入力："+m.slice(0,2).join("・"):"次へ"}</button>`; } const f=keys.some(k=>(S.text[k]||"").trim()); return `<button class="btn" id="n" data-single="${keys.join(",")}">${f?"次へ":"書かずに次へ"}</button>`;};
+const saveSingle=keys=>keys.forEach(k=>{ const v=(S.text[k]||"").trim(); if(v) S.single[k]=v; else delete S.single[k]; });
+const counter=n=>`<div class="counter">${Array.from({length:N},(_,i)=>`<i class="${i<n?'on':''}"></i>`).join("")}<span>${n} / ${N}句</span></div>`;
+const tag=i=>`<span class="scenetag">${esc(P().stepLabel(i))}</span>`;
+const viewsOf=t=>P().views.filter(v=>v.kw.some(k=>t.includes(k))).map(v=>v.n);
+
+// ===== 描画 =====
+function render(){
+  const sw=""; const _sw0=`<div class="switcher"><button id="sw-l" class="${S.view==='learner'?'on':''}">学習者（LINE）</button><button id="sw-a" class="${S.view==='admin'?'on':''}">管理画面（Web）</button></div>`;
+  const root=$("root");
+  if(S.view==="admin"){ root.innerHTML=sw+vAdmin(); bindSwitch(); bindAdmin(); return; }
+  if(S.ph==="talk"){ S.ph=!S.org?"join":!S.pack?"packs":(S.consent===null||!S.mode)?"consent":S.done?"done":S.mode==="split"?"splithome":"step"; }
+  const v={join:vJoin,packs:vPacks,consent:vConsent,mode:vMode,step:vStep,splithome:vSplitHome,done:vDone,history:vHistory,histdetail:vHistDetail}[S.ph]();
+  const steps=S.ph==="step"?seq():null, idx=S.i;
+  const viewKey=S.ph+":"+S.i+":"+S.split.cur+":"+(S.finalView?1:0), oldMain=document.querySelector("main#app"), same=!!oldMain&&S._viewKey===viewKey, keepTop=same?oldMain.scrollTop:0; S._viewKey=viewKey; const keepWin=same?(window.scrollY||document.documentElement.scrollTop||0):0; if(same) root.style.minHeight=root.offsetHeight+"px";
+  root.innerHTML=sw+`<div class="phone talkview framed"><div class="mockbar">検証版：入力はダミーでお願いします</div>
+   <div class="liffbar"><span style="width:32px"></span><div class="t"><b>いっぷ句</b><small>${S.org?esc(S.org.name)+(S.pack?"｜"+esc(P().name):""):"検証版"}</small></div><button class="x" id="close" aria-label="最初からやり直す" title="最初から">↺</button></div>
+   ${steps?`<header class="top"><div class="toprow"><button class="back" id="back" ${idx===0?'disabled':''} aria-label="前に戻る">‹</button><span class="steptitle">${S.mode==="complete"?"完結モード":"分割モード"}</span><span class="stepcount">${idx+1} / ${steps.length}</span></div><div class="progress">${steps.map((_,j)=>`<span class="${j<=idx?'on':''}"></span>`).join("")}</div></header>`:""}
+   <main id="app"><div class="${same?'':'fade'}">${v.html}</div></main><div class="foot" style="display:${v.foot?'flex':'none'}">${v.foot||""}</div>
+   ${S.toast?`<div class="toast">${esc(S.toast)}</div>`:""}</div>`;
+  bindSwitch();
+  if(same){ const m=document.querySelector("main#app"); if(m) m.scrollTop=keepTop; window.scrollTo(0,keepWin); requestAnimationFrame(()=>{ const m2=document.querySelector("main#app"); if(m2) m2.scrollTop=keepTop; window.scrollTo(0,keepWin); root.style.minHeight=""; }); } else { root.style.minHeight=""; }
+  $("close").onclick=()=>{ if(confirm("最初からやり直しますか？（この端末の記録を消します）")){ try{localStorage.removeItem(KEY);}catch(e){} reset(); location.hash=""; render(); scrollTo(0,0);} };
+  persist();
+  const b=$("back"); if(b) b.onclick=()=>{ if(S.i>0){S.i--; render(); scrollTo(0,0);} };
+  document.querySelectorAll("main#app p.src").forEach(pp=>{ const d=document.createElement("details"); d.className="more"; const sm=document.createElement("summary"); sm.textContent="くわしい説明"; d.appendChild(sm); const dv=document.createElement("div"); dv.className="note"; dv.innerHTML=pp.innerHTML; d.appendChild(dv); pp.replaceWith(d); });
+  bindForms(); v.bind&&v.bind();
+  if(S.toast){const t=S.toast; setTimeout(()=>{ if(S.toast===t){S.toast=""; const el=document.querySelector(".toast"); el&&el.remove();}},2600);}
+}
+function bindSwitch(){ if(!$("sw-l")) return; $("sw-l").onclick=()=>{S.view="learner"; render(); scrollTo(0,0);}; $("sw-a").onclick=()=>{S.view="admin"; render(); scrollTo(0,0);}; }
+function nextStep(){ const s=seq(); if(S.i<s.length-1){ S.i++; render(); scrollTo(0,0);} else finishSession(); }
+function saveHistory(){ const r=S.round||1; if(S.savedRound===r) return; S.savedRound=r; const m=metricsNow(); S.history.push({...m,date:r>1?`今日 ${r}回目`:"今日",mode:S.mode==="split"?"分割":"完結",pack:S.pack}); }
+function retryHintsNow(){ const p=P(),ex=EXP[S.pack]||{acts:[]},mine=viewsOf(S.ward.map(TX).join("")); return {views:expertStats().filter(x=>x.c>=2&&!mine.includes(x.n)).map(x=>x.n).slice(0,2), acts:ex.acts.filter(a=>!S.acts.has(a)).slice(0,2), level:S.level&&S.level!==p.expertLevel?S.level:null}; }
+function startRetry(){ const h=retryHintsNow(), r=(S.round||1)+1;
+  Object.assign(S,{art:[],ward:[],peerOpen:false,reacts:0,draft:{},text:{},single:{},focus:new Set(),worst:null,first:new Set(),level:null,acts:new Set(),whom:null,purpose:null,causes:new Set(),tools:new Set(),cause:null,tell:new Set(),split:{cur:0,done:[]},aiStarted:false,done:false,i:0,finalView:false,_viewKey:null,round:r,retry:{...h,round:r}});
+  S.ph=S.mode==="split"?"splithome":"step"; render(); scrollTo(0,0); }
+function retryCard(kind){ const h=S.retry; if(!h) return ""; const parts=[]; if((kind==="view"||kind==="all")&&h.views.length) parts.push(`視点：「${h.views.join("」「")}」`); if((kind==="act"||kind==="all")&&h.acts.length) parts.push(`行動：「${h.acts.join("」「")}」`); if(!parts.length) return "";
+  return `<div class="insight good" style="margin-bottom:12px"><b>${h.round}回目：前回の押さえどころを意識して</b><br>${parts.map(esc).join("<br>")}</div>`; }
+function finishSession(){
+  if(S.mode==="complete"){ S.done=true; S.ph="done"; saveHistory(); }
+  else { if(!S.split.done.includes(S.split.cur)) S.split.done.push(S.split.cur); if(S.split.cur<5) S.split.cur++; else S.done=true; if(S.done) saveHistory(); S.ph=S.done?"done":"splithome"; }
+  render(); scrollTo(0,0);
+}
+
+// ----- LINEトーク -----
+function vTalk(){
+  return `<div class="mockbar">モックアップ（試作）です。LINEの画面はイメージです</div><div class="talk">
+   <div class="talkhead"><div class="oa">句</div><div><b>いっぷ句</b><div class="note">公式アカウント</div></div></div>
+   <div class="talkbody">${S.msgs.map((m,i)=>`<div class="msg"><div class="oa">句</div><div class="bubble">${m.html}${m.btn?`<button class="cardbtn" data-i="${i}">${esc(m.btn)}</button>`:""}</div><span class="time">${m.t}</span></div>`).join("")}</div>
+   <div class="richmenu" style="grid-template-columns:repeat(2,1fr)"><button id="rm1">今日の学習<small>続きから開く</small></button><button id="rm4">分析結果を見る<small>成長記録</small></button><button id="rm2">これまでの投稿<small>記録を見る</small></button><button id="rm3">組織を変える<small>組織コード</small></button></div></div>`;
+}
+function openApp(){ if(S.org&&S.org.active===false){ S.msgs.push({t:"08:30",html:`所属している組織（${esc(S.org.name)}）の利用が停止されました。続ける場合は、所属先にご確認ください。`}); S.org=null; S.pack=null; S.ph="talk"; render(); return; } if(!S.org) S.ph="join"; else if(!S.pack) S.ph="packs"; else if(S.consent===null||!S.mode) S.ph="consent"; else if(S.done) S.ph="done"; else if(S.mode==="split"&&S.ph!=="step") S.ph="splithome"; else S.ph="step"; render(); scrollTo(0,0); }
+function bindTalk(){
+  document.querySelectorAll(".cardbtn").forEach(b=>b.onclick=openApp); $("rm1").onclick=openApp;
+  $("rm2").onclick=()=>{ const n=S.ward.length+Object.keys(S.single).length; S.msgs.push({t:"08:15",html:S.art.length||n?`これまでに、絵の句が ${S.art.length} 句、記入が ${n} 件あります（モックでは一覧は省略）。`:"まだ記録はありません。"}); render(); };
+  $("rm4").onclick=()=>{ if(S.org&&S.org.active===false){ openApp(); return; } if(!S.org||!S.pack){ S.msgs.push({t:"08:15",html:"まだ学習を始めていません。組織コードを入れて学習を始めると、分析結果と成長記録が見られます。",btn:"学習を始める"}); render(); return;} S.ph="history"; render(); scrollTo(0,0); };
+  $("rm3").onclick=()=>{ const keep=S.msgs; reset(); S.msgs=keep; S.msgs.push({t:"08:16",html:"組織コードを入れ直します。",btn:"組織コードを入れる"}); render(); };
+  const tb=document.querySelector(".talkbody"); tb&&tb.lastElementChild&&tb.lastElementChild.scrollIntoView({block:"end"});
+}
+
+// ----- 組織コード → 業界パック（1:N） -----
+function vJoin(){
+  return {html:`<h2>所属する組織を選んでください</h2><p class="lead">LINEでログインしました（表示名：${esc(S.lineName||"あなた")}）。</p>
+   ${ORGS.filter(o=>o.active!==false).map(o=>`<button class="packcard democode" data-c="${o.code}"><b>${esc(o.name)}</b><div class="note" style="margin-top:4px">使える学習：${o.packs.map(k=>esc(PACKS[k].name)).join("、")}</div></button>`).join("")}
+   <details class="more"><summary>本番ではどうなる？</summary><div class="note">本番では、所属先から配られるQRコードや組織コードで入ります。ここではデモのため、組織を選ぶだけで始められます。デモでは、業界ごとに組織を1つずつ用意しています。組織とパックの組み合わせは、管理画面の「組織と契約」で変えられます。</div></details>`,
+   bind(){ document.querySelectorAll(".democode").forEach(b=>b.onclick=()=>{ const o=ORGS.find(x=>x.code===b.dataset.c); if(!o||o.active===false) return; S.org=o; S.code=o.code; S.err=""; const usable=o.packs.filter(k=>!PACKS[k].empty); if(o.packs.length===1&&usable.length===1){S.pack=usable[0]; S.ph="consent";} else S.ph="packs"; render(); scrollTo(0,0); }); }};
+}
+function vPacks(){ const o=S.org;
+  return {html:`<p class="lead">${esc(o.name)}</p><h2>どの学習を始めますか</h2><p class="lead">この組織では ${o.packs.length} つの業界パックが使えます。</p>
+   ${o.packs.map(k=>{const p=PACKS[k]; return `<button class="packcard ${S.pack===k?'on':''}" data-k="${k}" ${p.empty?'disabled':''}><div style="display:flex;gap:12px;align-items:center">${icon(p.icon,40)}<div><b>${esc(p.name)}</b><div class="note">${p.empty?"準備中です":esc(p.caseTitle)}</div></div></div></button>`;}).join("")}
+   ${o.packs.every(k=>PACKS[k].empty)?`<p class="note">この組織で使える学習は、いま準備中です。準備ができたらLINEでお知らせします。</p>`:""}`,
+   bind(){ document.querySelectorAll(".packcard").forEach(b=>b.onclick=()=>{S.pack=b.dataset.k; S.ph="consent"; render(); scrollTo(0,0);}); }};
+}
+function vConsent(){
+  const modes=[["complete","完結モード","1回で、絵から6つのステップまで（15分ほど）"],["split","分割モード","1回に1ステップ。6回で1つの事例（1回5分ほど）"]];
+  return {html:`<p class="lead">${esc(S.org.name)}｜${esc(P().name)}</p>
+   <h2>1. 研究への協力</h2>
+   <div class="chips" id="cs" style="margin:6px 0 4px"><button class="chip ${S.consent==="yes"?"on":""}" data-v="yes">協力する</button><button class="chip ${S.consent==="no"?"on":""}" data-v="no">協力しない（学習はできます）</button></div>
+   <details class="more"><summary>データの扱いについて</summary><div class="note">句や回答はLINEには送られず、いっぷ句のサーバー（東京）に保存されます。研究に使う場合も、名前やLINEのIDは出しません。説明文はモック用の仮の文面です。</div></details>
+   <h2 style="margin-top:16px">2. 進め方を選んで、はじめる</h2>
+   <button class="btn modecard" data-m="complete" ${S.consent?"":"disabled"} style="width:100%;text-align:center;margin:6px 0 18px;${S.consent?"":"opacity:.45"}">完結モードで始める（15分ほど）</button>
+   <div class="card line"><b>まとまった時間がとれないとき</b><div class="note" style="margin:4px 0 10px">1回に1ステップずつ、6回に分けて進めることもできます（1回5分ほど）。</div><button class="btn sub modecard" data-m="split" ${S.consent?"":"disabled"} style="width:100%;text-align:center;${S.consent?"":"opacity:.45"}">分割モードで進める</button></div>
+   ${S.consent?"":`<p class="note">先に「研究への協力」を選んでください。</p>`}`,
+   bind(){ document.querySelectorAll("#cs .chip").forEach(b=>b.onclick=()=>{S.consent=b.dataset.v; render();});
+     document.querySelectorAll(".modecard").forEach(b=>b.onclick=()=>{ if(!S.consent) return; S.mode=b.dataset.m; S.i=0; S.ph=S.mode==="complete"?"step":"splithome"; render(); scrollTo(0,0);}); }};
+}
+function vMode(){
+  return {html:`<h2>進め方を選びます</h2><p class="lead">あとから変えられます。</p>
+   <button class="modecard" data-m="complete"><b>完結モード</b><div class="note">1回で、絵から6つのステップまでを通す（15分程度）</div></button>
+   <button class="modecard" data-m="split"><b>分割モード</b><div class="note">1回に1ステップずつ、6回で1つの事例を進める（1回5分程度）</div></button>`,
+   bind(){ document.querySelectorAll(".modecard").forEach(b=>b.onclick=()=>{S.mode=b.dataset.m; S.i=0; S.ph=S.mode==="complete"?"step":"splithome"; render(); scrollTo(0,0);}); }};
+}
+function vSplitHome(){ const p=P();
+  return {html:`<p class="lead">${esc(p.caseTitle)}</p><h2>分割モード</h2>
+   <div class="streak"><b>${S.split.done.length}</b><span>/ 6 ステップ</span></div>
+   <div class="stepgrid">${STEP_NAMES.map((_,i)=>{const ok=S.split.done.includes(i),now=i===S.split.cur&&!S.done; return `<div class="day ${now?'now':''} ${!ok&&!now?'lock':''}"><span class="dn">${esc(p.stepLabel(i).split(" ")[0])}</span><span class="sn">${esc(p.stepLabel(i).split(" ").slice(1).join(" ")||STEP_NAMES[i])}</span><div class="seal ${ok?'':'empty'}">${ok?["一","二","三","四","五","六"][i]:(now?"":"🔒")}</div></div>`;}).join("")}</div>
+   ${S.split.done.length?`<div class="card line"><h2>これまでの振り返り</h2>${S.split.done.map(i=>{const k=["s1","ward","s3","s4","s5","good"][i]; const ku=i===1?S.ward[0]:S.single[k]; return `<div style="margin:8px 0"><b>${esc(p.stepLabel(i))}</b><div class="note">${ku?"あなたの記入："+esc(TX(ku)):"（記入はスキップ）"}</div></div>`;}).join("")}</div>`:""}`,
+   foot:`<button class="btn" id="n">${esc(p.stepLabel(S.split.cur))} を始める</button>`,
+   bind(){ $("n").onclick=()=>{S.i=0; S.ph="step"; render(); scrollTo(0,0);}; }};
+}
+
+// ----- ステップ -----
+function vStep(){ const id=seq()[S.i]; return {art:vArt,s1:vS1,s2:vS2,s3:vS3,s4:vS4,s5:vS5,s6:vS6,explain:vExplain,mini:vMini}[id](); }
+function vArt(){ const n=S.art.length,done=n>=N,dr=D("art");
+  return {html:`<div class="art"><img alt="${esc(curArt().alt)}" src="${curArt().src}"></div>
+   <div class="ippuku"><svg class="steam" width="54" height="54" viewBox="0 0 54 54" aria-hidden="true"><path d="M20 16c-3-4 3-6 0-10" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round"/><path d="M27 16c-3-4 3-6 0-10" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round"/><path d="M34 16c-3-4 3-6 0-10" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round"/><path d="M12 22h30v10a15 15 0 0 1-30 0z" fill="var(--ink2)"/><path d="M42 25h3a5 5 0 0 1 0 10h-4" fill="none" stroke="var(--ink2)" stroke-width="3"/></svg><div><b>一服の時間です</b><span>まずは、ゆっくり絵を眺めてみましょう。</span></div></div>
+   <p class="scene-cap">正解はありません。目にとまったもの、ふと感じたことを、五七五にしてみましょう。</p>${counter(n)}
+   ${n?`<div class="tanzaku-row">${S.art.map((k,i)=>tanzaku(k,"mine",i?`${i+1}句目`:"最初の句")).join("")}</div>`:""}
+   ${done?`<div class="card"><h2>${N}句、詠み終えました</h2></div>`:`<div class="kuform">${kuRows("art")}<button class="chip" data-sample="art" style="justify-self:start">例を入れる（デモ用）</button></div><p class="note">${N}句が目安です。いつでも次へ進めます。</p>`}
+   <p class="src">作品の作者・出典・権利は、管理画面の「業界パック」で登録する想定です（この絵の権利は確認中）。</p>`,
+   foot:done?`<button class="btn" id="n">次へ</button>`:`<button class="btn sub" id="n" ${S.mode==="complete"&&!n?'disabled':''}>${n?'このくらいで次へ':(S.mode==="complete"?'1つ書くと進めます':'今日は眺めるだけ')}</button><button class="btn" id="post" data-k="art" ${dr.every(x=>x.trim())?'':'disabled'}>この句を出す</button>`,
+   bind(){ const p=$("post"); if(p) p.onclick=()=>{const fit=dr.every((x,i)=>mora(x)===T[i]); S.art.push(dr.map(x=>x.trim())); S.draft.art=["","",""]; render(); if(fit){ const ph=document.querySelector(".phone"); if(ph){ const d=document.createElement("div"); d.className="pon"; d.textContent="ぴたり"; ph.appendChild(d); setTimeout(()=>d.remove(),1200);} }}; $("n").onclick=nextStep; }};
+}
+function vS1(){ const p=P(); if(p.intake) return vS1Intake();
+  return {html:`${tag(0)}${retryCard("all")}<h2>${esc(p.caseTitle)}</h2>
+   <p class="lead">気になる情報をタップ（いくつでも）</p><div class="vitals">${p.info.map((x,i)=>`<button class="vital ${S.focus.has(i)?'on':''}" data-i="${i}"><small>${esc(x[0])}</small><b>${esc(x[1])}</b></button>`).join("")}</div>
+   <div class="q">最悪の事態は？</div><div class="chips" id="w">${p.worst.map(x=>`<button class="chip ${S.worst===x?'on':''}">${esc(x)}</button>`).join("")}</div>
+   <div class="q">その前に出る、最初の兆しは？（いくつでも）</div><div class="chips" id="f">${p.first.map(x=>`<button class="chip ${S.first.has(x)?'on':''}">${esc(x)}</button>`).join("")}</div>
+   ${single("s1","そう考えた根拠を50字以内で")}`,
+   foot:singleFoot(["s1"]),
+   bind(){ document.querySelectorAll(".vital").forEach(b=>b.onclick=()=>{const i=+b.dataset.i; S.focus.has(i)?S.focus.delete(i):S.focus.add(i); render();});
+     document.querySelectorAll("#w .chip").forEach(b=>b.onclick=()=>{S.worst=S.worst===b.textContent?null:b.textContent; render();});
+     document.querySelectorAll("#f .chip").forEach(b=>b.onclick=()=>{const x=b.textContent; S.first.has(x)?S.first.delete(x):S.first.add(x); render();});
+     $("n").onclick=()=>{saveSingle(["s1"]); nextStep();}; }};
+}
+function vS1Intake(){ const p=P(),it=p.intake;
+  const chips=(id,arr,set)=>`<div class="chips" id="${id}">${arr.map(x=>`<button class="chip ${set.has(x)?'on':''}">${esc(x)}</button>`).join("")}</div>`;
+  return {html:`${tag(0)}${retryCard("all")}<h2>${esc(it.heading||"受付メモを読んで、出動前に見立てる")}</h2>
+   <div class="card"><div class="note">${esc(it.time)}</div><ul style="margin:6px 0 0 18px;padding:0">${it.lines.map(l=>`<li>${esc(l)}</li>`).join("")}</ul></div>
+   <div class="q">${esc(it.q1Label||"考えられる原因は？（いくつでも）")}</div>${chips("c",it.causes,S.causes)}
+   <div class="q">${esc(it.q2Label||"現場で最初に確かめたいことは？（いくつでも）")}</div>${chips("f",it.checks,S.first)}
+   <div class="q">${esc(it.q3Label||"持っていくものは？（いくつでも）")}</div>${chips("t",it.tools,S.tools)}
+   ${single("s1","見立てを50字以内で")}`,
+   foot:singleFoot(["s1"]),
+   bind(){ const tg=(id,set)=>document.querySelectorAll(`#${id} .chip`).forEach(b=>b.onclick=()=>{const x=b.textContent; set.has(x)?set.delete(x):set.add(x); render();});
+     tg("c",S.causes); tg("f",S.first); tg("t",S.tools); $("n").onclick=()=>{saveSingle(["s1"]); nextStep();}; }};
+}
+const noteCard=(t,who,cls="")=>`<div class="card ${cls}" style="margin:6px 0;padding:10px 12px"><div style="font-size:14.5px">${esc(TX(t))}</div>${who?`<div class="note" style="margin-top:4px">${esc(who)}</div>`:""}</div>`;
+function vS2(){ const p=P(),n=S.ward.length,done=n>=N,dr=S.text.ward||"",off=(n*2)%p.peers.length,peers=[...p.peers,...p.peers].slice(off,off+2);
+  return {html:`${tag(1)}${retryCard("view")}<div class="scene">${p.scene}</div><p class="scene-cap">${esc(p.sceneCap)}目に入ったことを、短い文で書きます。</p>${counter(n)}
+   ${n?S.ward.map((k,i)=>noteCard(k,i?`${i+1}つ目の気づき`:"最初の気づき（消せません）","line")).join(""):""}
+   ${S.peerOpen&&!done?`<div class="card"><h2>仲間の気づき</h2><p class="note">${esc(p.expertWord)}の観点は、このあとの解説で届きます。</p>${peers.map(k=>`<div class="peer">${noteCard(k,"仲間")}<button class="react">その視点なかった</button></div>`).join("")}</div>`:""}
+   ${!S.peerOpen&&!done?`<div class="single"><div class="lab">目に入ったこと、気づいたことを50字以内で</div>${txtBox("ward")}<button class="chip" data-sample="ward" style="justify-self:start;margin-top:4px">例を入れる（デモ用）</button></div><p class="note">最初の気づきは消せません。${N}つが目安で、いつでも次へ進めます。</p>`:""}
+   ${done?`<div class="card"><h2>${N}つ、書き終えました</h2></div>`:""}`,
+   foot:done?`<button class="btn" id="n">次へ</button>`:S.peerOpen?`<button class="btn sub" id="n">ここで次へ</button><button class="btn" id="more">別の気づきを書く</button>`:`<button class="btn sub" id="n" ${S.mode==="complete"&&!n?'disabled':''}>${n?'このくらいで次へ':(S.mode==="complete"?'1つ書くと進めます':'今日は眺めるだけ')}</button><button class="btn" id="post" data-k="ward" ${dr.trim()?'':'disabled'}>この気づきを出す</button>`,
+   bind(){ document.querySelectorAll(".react").forEach(b=>b.onclick=()=>{b.classList.toggle("on"); S.reacts=Math.max(0,S.reacts+(b.classList.contains("on")?1:-1)); if(b.classList.contains("on")){ b.textContent="ハッとした！"; } else { b.textContent="その視点なかった"; }});
+     const pp=$("post"); if(pp) pp.onclick=()=>{S.ward.push((S.text.ward||"").trim()); S.text.ward=""; S.peerOpen=S.ward.length<N; render();};
+     const m=$("more"); if(m) m.onclick=()=>{S.peerOpen=false; render();}; $("n").onclick=nextStep; }};
+}
+function vS3(){ const p=P(),s=p.s3;
+  return {html:`${tag(2)}<h2>${esc(s.title)}</h2><div class="card"><div>${esc(s.note)}</div><div class="vitals">${s.detail.map(x=>`<div class="vital"><small>${esc(x[0])}</small><b>${esc(x[1])}</b></div>`).join("")}</div></div>
+   ${s.q?`<div class="q">${esc(s.q.label)}</div><div class="chips" id="cz">${s.q.options.map(x=>`<button class="chip ${S.cause===x?'on':''}">${esc(x)}</button>`).join("")}</div>`:""}
+   <div class="q">${esc(s.qLabel||"どう判断しますか")}</div><div class="signals">${p.levels.map(l=>`<button class="sig ${S.level===l.n?'on':''}" data-v="${esc(l.n)}" style="${S.level===l.n?`border-color:${l.c}`:''}"><i style="background:${l.c}"></i>${esc(l.n)}<small class="note" style="font-weight:400">${esc(l.d)}</small></button>`).join("")}</div>
+   ${single("s3","その根拠を50字以内で")}`,
+   foot:singleFoot(["s3"]),
+   bind(){ document.querySelectorAll("#cz .chip").forEach(b=>b.onclick=()=>{S.cause=S.cause===b.textContent?null:b.textContent; render();});
+     document.querySelectorAll(".sig").forEach(b=>b.onclick=()=>{S.level=S.level===b.dataset.v?null:b.dataset.v; render();});
+     $("n").onclick=()=>{saveSingle(["s3"]); if(S.mode==="complete"&&!S.aiStarted){S.aiStarted=true; S.toast="解説を準備しています（AI分析を裏で開始）";} nextStep();}; }};
+}
+function vS4(){ const p=P();
+  return {html:`${tag(3)}${retryCard("act")}<h2>${esc(p.s4Title||"何をしますか")}</h2><p class="lead">判断と合っているかも考えながら（いくつでも）</p>
+   <div class="chips" id="a" style="flex-direction:column;align-items:flex-start">${p.actions.map(x=>`<button class="chip ${S.acts.has(x)?'on':''}">${esc(x)}</button>`).join("")}</div>${single("s4","したことと、その後に確かめることを50字以内で")}`,
+   foot:singleFoot(["s4"]),
+   bind(){ document.querySelectorAll("#a .chip").forEach(b=>b.onclick=()=>{const x=b.textContent; S.acts.has(x)?S.acts.delete(x):S.acts.add(x); render();}); $("n").onclick=()=>{saveSingle(["s4"]); nextStep();}; }};
+}
+function vS5(){ const p=P();
+  return {html:`${tag(4)}<h2>${esc(p.s5Title||"伝えます")}</h2>${p.tell?`<div class="q">${esc(p.tellLabel)}</div><div class="chips" id="tl">${p.tell.map(x=>`<button class="chip ${S.tell.has(x)?'on':''}">${esc(x)}</button>`).join("")}</div>`:""}<div class="q">誰に</div><div class="chips" id="wh">${p.whom.map(x=>`<button class="chip ${S.whom===x?'on':''}">${esc(x)}</button>`).join("")}</div>
+   <div class="q">何のために</div><div class="chips" id="pu">${p.purpose.map(x=>`<button class="chip ${S.purpose===x?'on':''}">${esc(x)}</button>`).join("")}</div>
+   ${single("s5","一番伝えたいことを50字以内で")}<p class="note">目的に向けて、伝える中身を50字に絞ります。</p>`,
+   foot:singleFoot(["s5"]),
+   bind(){ document.querySelectorAll("#tl .chip").forEach(b=>b.onclick=()=>{const x=b.textContent; S.tell.has(x)?S.tell.delete(x):S.tell.add(x); render();});
+     document.querySelectorAll("#wh .chip").forEach(b=>b.onclick=()=>{S.whom=S.whom===b.textContent?null:b.textContent; render();}); document.querySelectorAll("#pu .chip").forEach(b=>b.onclick=()=>{S.purpose=S.purpose===b.textContent?null:b.textContent; render();}); $("n").onclick=()=>{saveSingle(["s5"]); nextStep();}; }};
+}
+function vS6(){ return {html:`${tag(5)}<h2>振り返り</h2><p class="lead">できたことを起点に、次につなげます。</p>${single("good","上手くできたことを50字以内で")}${single("next","次に活かしたいことを50字以内で")}`,
+  foot:singleFoot(["good","next"]), bind(){ $("n").onclick=()=>{saveSingle(["good","next"]); nextStep();}; }}; }
+function expertStats(){ const p=P(); return p.views.map(v=>({n:v.n, c:p.experts.filter(e=>e.ku.some(k=>v.kw.some(w=>TX(k).includes(w)))).length})); }
+function vExplain(){ const p=P(),ex=EXP[S.pack]||{acts:[],whom:"",purpose:""},isN=S.pack==="nursing";
+  const wardText=S.ward.map(TX).join(""), mine=viewsOf(wardText), first=S.ward[0]?viewsOf(TX(S.ward[0])):[], later=viewsOf(S.ward.slice(1).map(TX).join("")).filter(v=>!first.includes(v));
+  const st=expertStats(),E=p.experts.length,unseen=[...S.first].filter(f=>!mine.includes(p.firstToView[f])),seen=[...S.first].filter(f=>mine.includes(p.firstToView[f]));
+  const artText=S.art.map(kt).join(""), av=artViewsOf(artText), firstArt=S.art[0]?artViewsOf(kt(S.art[0])):[];
+  const pv=PERSON_VIEW[S.pack]||p.views[0].n, personArt=av.includes("表情・しぐさ")||av.includes("人物"), personScene=mine.includes(pv);
+  const link=!S.art.length?"今回は絵を観るステップをスキップしたため、比べられませんでした。":!S.ward.length?"場面の気づきがないため、比べられませんでした。":personArt&&personScene?`絵で人の表情やしぐさに向いた目が、場面でも「${pv}」に向いています。見る目がつながっています。`:personArt?`絵では人の表情やしぐさを見ていましたが、場面では「${pv}」が書かれていません。絵で使えた目を、場面の人にも向けてみましょう。`:av.includes("背景・街")||av.includes("並び・構図")?"絵では全体や背景に目が向いていました。場面でも、全体を見てから細部へ進めているか振り返ってみましょう。":"絵と場面で、見るところの傾向を比べてみましょう。";
+  const hitActs=ex.acts.filter(a=>S.acts.has(a)), missActs=ex.acts.filter(a=>!S.acts.has(a)), extraActs=[...S.acts].filter(a=>!ex.acts.includes(a));
+  const row=(t,body)=>`<div style="padding:10px 0;border-top:1px solid var(--line)"><b>${esc(t)}</b><div style="margin-top:4px;font-size:14px">${body}</div></div>`;
+  const yours=k=>S.single[k]?`<div class="note">あなたの記入：${esc(S.single[k])}</div>`:`<div class="note">（記入なし）</div>`;
+  const majV=st.filter(x=>x.c>=2).map(x=>x.n), missV=majV.filter(v=>!mine.includes(v)), uniqV=mine.filter(v=>(st.find(x=>x.n===v)||{c:0}).c<=1);
+  const pts=[]; if(missV.length) pts.push(`「${missV.slice(0,2).join("・")}」は、${p.expertWord}の多くが見ていた視点です。次は意識して見てみましょう`);
+  if(unseen.length) pts.push(`予測した「${unseen[0]}」を、場面で確かめに行けていません`);
+  if(missActs.length) pts.push(`「${missActs[0]}」は、${p.expertWord}が押さえていた行動です`);
+  if(S.level&&S.level!==p.expertLevel) pts.push(`判断が${p.expertWord}の多数（${p.expertLevel}）と分かれました。根拠を見比べてみましょう`);
+  if(!pts.length) pts.push("押さえどころは、しっかり押さえられています。この調子で続けましょう");
+  const gz=gazeOf(S.art,uniqV), mochiL=[gz[1]];
+  if(uniqV.length) mochiL.push(`「${uniqV.join("・")}」は、${p.expertWord}があまり書かなかった、あなたならではの視点です`);
+  if(later.length) mochiL.push(`仲間の気づきを見て「${later.join("・")}」へ目を広げられる、やわらかさがあります`);
+  if(personArt&&personScene) mochiL.push("絵で使えた見る目を、現場の場面でも使えています");
+  const summary=`<div class="card" style="background:var(--mist)"><h2 style="margin-bottom:8px">まとめ：あなたの見方</h2>
+    <div class="note" style="margin-bottom:4px">押さえておきたいポイント（根）</div><ul style="margin:0 0 12px 18px;padding:0">${pts.slice(0,3).map(x=>`<li style="margin:4px 0">${esc(x)}</li>`).join("")}</ul>
+    <div class="note" style="margin-bottom:4px">あなたの持ち味（まなざし）</div><div style="font-weight:700;font-size:17px;color:var(--ink2);margin:2px 0 4px">${esc(gz[0])}</div><ul style="margin:0 0 4px 18px;padding:0">${mochiL.map(x=>`<li style="margin:4px 0">${esc(x)}</li>`).join("")}</ul></div>
+   <details class="more"><summary>くわしい分析（絵を観る／${isN?"臨床判断の6つのシーン":"6つのステップ"}）</summary>`;
+  return {html:`<h2>あなたの見方の分析</h2><p class="lead">「絵を観る」と「${isN?"臨床判断の6つのシーン":"6つのステップ"}」の両方から振り返ります。正解ではなく、${esc(p.expertWord)}${E}人が「どこを見ていたか」との比較です。</p>
+
+   ${summary}<div class="card line"><h2>1. 「絵を観る」の分析</h2><div style="display:flex;gap:10px;align-items:center;margin:6px 0 10px"><img src="${curArt().src}" alt="${esc(curArt().alt)}" style="width:120px;height:auto;border-radius:10px;flex:0 0 auto"><div class="note">今日の一枚<br><b style="color:var(--text)">${esc(curArt().title)}</b><br>${esc(curArt().author)}</div></div>
+    <div class="note">詠んだ句：${S.art.length}句${S.art[0]?`／最初の句：「${esc(kt(S.art[0]))}」`:""}</div>
+    <div class="q">目が向いたところ</div><div class="chips">${ART_VIEWS.map(v=>`<span class="chip ${av.includes(v.n)?'on':''}">${esc(v.n)}</span>`).join("")}</div>
+    ${firstArt.length?`<p class="note">最初の句では「${esc(firstArt.join("・"))}」に目が向きました。</p>`:""}
+    <div class="insight ${personArt&&personScene?'good':''}" style="margin-top:10px"><b>絵の見方と、場面の見方のつながり</b><br>${esc(link)}</div>
+    ${S.art.length?`<div class="tanzaku-row">${S.art.slice(0,3).map((k,i)=>tanzaku(k,"mine sm",i?"":"最初の句")).join("")}</div>`:""}
+   </div>
+
+   <div class="card line"><h2>2. ${isN?"臨床判断（シーン①〜⑥）の分析":"6つのステップの分析"}</h2>
+    ${row(p.stepLabel(0),S.first.size?`<span>${esc(p.predictLabel||"予測を見に行けたか")}：</span>${seen.length?`「${esc(seen.join("・"))}」は気づきに出ていました。`:""}${unseen.length?`「${esc(unseen.join("・"))}」は気づきに出てきませんでした。`:"予測と観察がつながっています。"}${yours("s1")}`:`予測を選ばずに進みました。${yours("s1")}`)}
+    ${row(p.stepLabel(1),`<table class="matrix"><thead><tr><th>観察の視点</th><th>あなた</th><th>${esc(p.expertWord)}</th></tr></thead><tbody>${st.map(x=>`<tr class="${x.c>=2&&!mine.includes(x.n)?'gap':''}"><td>${esc(x.n)}</td><td><span class="dot ${mine.includes(x.n)?'me':''}"></span></td><td><span class="count">${x.c}／${E}人</span> <span class="bar" style="display:inline-block;width:56px;vertical-align:middle"><i style="width:${Math.round(x.c/E*100)}%"></i></span></td></tr>`).join("")}</tbody></table><p class="note">赤字は、${esc(p.expertWord)}の過半数が見ていて、あなたの気づきにまだない視点です。</p>${later.length?`<div class="note">仲間の気づきを見たあと、新しく「${esc(later.join("・"))}」に目が向きました。</div>`:""}`)}
+    ${row(p.stepLabel(2),`<div class="cmp"><div><small>あなたの判断</small><b>${esc(S.level||"―")}</b></div><div><small>${esc(p.expertWord)}の多数</small><b>${esc(p.expertLevel)}</b></div></div>${S.level&&S.level!==p.expertLevel?`<p class="note">判断が分かれました。根拠を見比べてみましょう。</p>`:""}${yours("s3")}`)}
+    ${row(p.stepLabel(3),`${hitActs.length?`<div>押さえていたこと：${esc(hitActs.join("、"))}</div>`:""}${missActs.length?`<div style="color:var(--shu)">${esc(p.expertWord)}が押さえていて、選ばれなかったこと：${esc(missActs.join("、"))}</div>`:""}${extraActs.length?`<div class="note">あなたが加えたこと：${esc(extraActs.join("、"))}</div>`:""}${yours("s4")}`)}
+    ${row(p.stepLabel(4),`<div class="cmp"><div><small>あなた</small><b>${esc((S.whom||"―")+"／"+(S.purpose||"―"))}</b></div><div><small>${esc(p.expertWord)}の例</small><b>${esc(ex.whom+"／"+ex.purpose)}</b></div></div>${yours("s5")}`)}
+    ${row(p.stepLabel(5),`${yours("good")}${yours("next")}<p class="note">次の一手が具体的な行動になっているか、確かめてみましょう。</p>`)}
+   </div>
+</details>
+   <h2>${esc(p.expertWord)}の気づき</h2>${p.experts.flatMap(e=>e.ku.map(k=>noteCard(k,e.who))).join("")}
+   <p class="src">${esc(p.expertWord)}の記述・判断・行動の例はモック用のサンプルで、監修前です。視点の判定はキーワードによる仮の仕組みで、実装ではAIが分析します。「絵を観る」の観点は、今日の一枚に合わせた仮のものです。</p>`,
+   foot:S.finalView?`<button class="btn" id="n">閉じる</button>`:`<button class="btn" id="n">おわる</button>`, bind(){ $("n").onclick=()=>{ if(S.finalView){S.finalView=false; S.ph=S.finalReturn||"done"; S.finalReturn="done"; render(); scrollTo(0,0);} else nextStep(); }; }};
+}
+function vMini(){ const p=P(),i=S.split.cur;
+  return {html:`<div class="seal bigseal stamp">${["一","二","三","四","五","六"][i]}</div><h2 style="text-align:center">${esc(p.stepLabel(i))}</h2>
+   <div class="insight good"><b>${esc(p.expertWord)}の観点</b><br>${esc(p.notes[i])}</div>
+   ${i===1?`<h2>${esc(p.expertWord)}の気づき</h2>${p.experts.flatMap(e=>e.ku.map(k=>noteCard(k,e.who))).join("")}`:""}
+   ${i<5?`<div class="tomorrow"><small class="note">次のステップ</small><h2>${esc(p.stepLabel(i+1))}</h2></div>`:`<div class="tomorrow"><h2>6つのステップを歩きました</h2></div>`}`,
+   foot:`<button class="btn" id="n">${i<5?'今日はここまで':'まとめへ'}</button>`, bind(){ $("n").onclick=()=>{ nextStep(); if(i<5){ S.toast="続きは、また次の一服で"; render(); } }; }};
+}
+function vDone(){ const n=S.art.length+S.ward.length+Object.keys(S.single).length;
+  if(S.ph==="done"&&S.finalView) return vExplain();
+  return {html:`<div class="done"><div class="big">${S.art.length}句・${n-S.art.length}件</div><h1>おつかれさまでした</h1><p class="lead" style="margin-top:4px">いい一服でしたね。また明日、ひと息つきにきてください。</p><p class="lead">${esc(P().caseTitle)}</p></div><p class="note" style="text-align:center">絵の句と、各ステップの記入です。記録は管理画面の「学習状況」に反映されます（デモ）。</p>
+   <div class="card" style="margin-top:14px;text-align:center"><b>最後にもう一度</b><div class="note" style="margin:4px 0 10px">同じ事例を、今日の押さえどころを意識して、もう一度見てみませんか。</div><button class="btn" id="retry" style="width:100%">もう一度やってみる</button></div>
+   <div style="display:grid;gap:8px;margin-top:12px">${S.mode==="split"?`<button class="btn sub" id="fa">今回の分析を見る</button>`:""}<button class="btn sub" id="hist">分析結果と成長記録を見る</button></div>`,
+   foot:`<button class="btn" id="n">LINEに戻る</button>`,
+   bind(){ const fa=$("fa"); if(fa) fa.onclick=()=>{S.finalView=true; S.finalReturn="done"; render(); scrollTo(0,0);}; $("hist").onclick=()=>{S.ph="history"; render(); scrollTo(0,0);}; $("retry").onclick=startRetry;
+     $("n").onclick=()=>{ if(!S.msgs.some(m=>m.fin)) S.msgs.push({t:"08:24",fin:true,html:`おつかれさまでした。今日は <b>${n}句</b> を記録しました。`}); closeLine(true); }; }};
+}
+
+// ===== 管理画面 =====
+function learnerRows(o){ const rows=o.sample.map(r=>({name:r[0],pack:r[1],mode:r[2],step:r[3],ku:r[4],last:r[5],demo:false}));
+  if(S.org===o&&S.pack){ rows.unshift({name:"あなた（デモ）",pack:S.pack,mode:S.mode==="split"?"分割":S.mode==="complete"?"完結":"―",step:S.mode==="split"?S.split.done.length:(S.done?8:S.i),ku:S.art.length+S.ward.length+Object.keys(S.single).length,last:"今",demo:true}); }
+  return rows; }
+function vAdmin(){ ORGS.forEach(x=>{ if(x.active===undefined) x.active=true; }); if(S.aorg>=ORGS.length) S.aorg=0; const tabs=[["dash","ダッシュボード"],["orgs","組織と契約"],["packs","業界パック"],["arts","絵"],["learn","学習状況"],["data","研究データと記録"]];
+  const o=ORGS[S.aorg];
+  const orgSel=`<select class="select" id="aorg">${ORGS.map((x,i)=>`<option value="${i}" ${i===S.aorg?'selected':''}>${esc(x.name)}${x.active===false?'（停止中）':''}</option>`).join("")}</select>`;
+  let body="";
+  if(S.atab==="dash"){ const rows=learnerRows(o);
+    body=`<div style="margin:0 0 12px">${orgSel}</div><div class="kpis">
+     <div class="kpi"><small>登録人数／席数</small><b>${rows.length}</b> / ${o.seats}</div>
+     <div class="kpi"><small>同時利用ピーク／上限</small><b>${Math.min(rows.length,o.conc)}</b> / ${o.conc}</div>
+     <div class="kpi"><small>使える業界パック</small><b>${o.packs.length}</b><div style="display:flex;gap:6px;margin-top:4px">${o.packs.map(k=>`<span title="${esc(PACKS[k].name)}">${icon(PACKS[k].icon,22)}</span>`).join("")}</div></div>
+     <div class="kpi"><small>契約期間</small><b style="font-size:16px">${esc(o.term)}</b></div></div>
+     <p class="note">数値はモック用のサンプルです。</p>`; }
+  if(S.atab==="orgs"){
+    body=`<div class="notice">組織コードは、組織ごとに配る「入室の合言葉」です。学習者がLINEで入れると、その組織に紐づく業界パックだけが表示されます。組織と業界パックは1対多でつながります。チェックを変えると、学習者が組織コードを入れたあとに出てくるパックが変わります（このデモ内で反映）。</div>
+     <div style="display:flex;justify-content:space-between;align-items:center;margin:0 0 10px"><span class="note">全${ORGS.length}組織（アクティブ ${ORGS.filter(x=>x.active!==false).length}）</span><button class="btn" id="addorg" style="max-width:180px">${S.addOrg?'追加をやめる':'＋ 組織を追加'}</button></div>
+     ${S.addOrg?`<div class="pcard" style="margin:0 0 12px"><h2>組織を追加</h2><div class="grid2" style="gap:10px"><label class="note">組織名<input id="no-name" class="select" style="width:100%" placeholder="例：〇〇病院 看護部"></label><label class="note">組織コード（英数字と-）<input id="no-code" class="select" style="width:100%" placeholder="例：MARU-NURSE"></label><label class="note">席数<input id="no-seats" type="number" class="select" style="width:100%" value="30"></label><label class="note">同時利用数<input id="no-conc" type="number" class="select" style="width:100%" value="10"></label><label class="note">契約期間<input id="no-term" class="select" style="width:100%" placeholder="例：2027/04〜2028/03"></label></div><div class="q">使える業界パック</div><div>${Object.keys(PACKS).map(k=>`<label class="pchk"><input type="checkbox" class="no-pack" value="${k}">${icon(PACKS[k].icon,18)}${esc(PACKS[k].name)}</label>`).join("")}</div>${S.addErr?`<p class="note" style="color:var(--shu)">${esc(S.addErr)}</p>`:""}<button class="btn" id="no-save" style="max-width:200px;margin-top:10px">この内容で追加</button></div>`:""}
+     <div class="tbl-wrap"><table class="tbl"><thead><tr><th style="width:72px">並び順</th><th>組織</th><th>状態</th><th>組織コード</th><th>使える業界パック</th><th>席数</th><th>同時利用数</th><th>契約期間</th></tr></thead><tbody>
+     ${ORGS.map((x,i)=>`<tr class="orgrow" draggable="true" data-oi="${i}"><td style="white-space:nowrap"><span class="grip" title="ドラッグして並べ替え" aria-hidden="true">⠿</span> <button class="mv" data-mv="${i}" data-d="-1" ${i===0?'disabled':''} aria-label="${esc(x.name)}を上へ">↑</button><button class="mv" data-mv="${i}" data-d="1" ${i===ORGS.length-1?'disabled':''} aria-label="${esc(x.name)}を下へ">↓</button></td><td><b>${esc(x.name)}</b></td><td><button class="stt ${x.active!==false?'on':''}" data-st="${i}" aria-pressed="${x.active!==false}">${x.active!==false?'アクティブ':'非アクティブ'}</button></td><td><code>${x.code}</code></td><td>${Object.keys(PACKS).map(k=>`<label class="pchk"><input type="checkbox" data-o="${i}" data-p="${k}" ${x.packs.includes(k)?'checked':''}>${icon(PACKS[k].icon,18)}${esc(PACKS[k].name)}</label>`).join("")}</td><td>${x.seats}</td><td>${x.conc}</td><td>${esc(x.term)}</td><td><button class="del" data-del="${i}">${S.delAsk===x.code?'本当に削除':'削除'}</button></td></tr>`).join("")}</tbody></table></div><p class="note">非アクティブの組織は、学習者が組織コードを入れても使えません。削除は2回押して確定します（本番では、学習記録の扱いを決めてから削除する想定）。</p>`; }
+  if(S.atab==="packs"){
+    body=`<div class="notice">業界パックは${Object.keys(PACKS).length}件。すべてに試作の中身（事例・観察の視点・判断の段階・伝える型・熟達者の気づき）が入っています。稼働中は看護だけで、他は監修前の仮の内容です。</div><div class="grid2">${Object.entries(PACKS).map(([k,p])=>`<div class="pcard"><div style="display:flex;gap:12px;align-items:center;margin-bottom:6px">${icon(p.icon,44)}<h2 style="margin:0">${esc(p.name)}<span class="status ${p.status==='live'?'live':'prep'}">${esc(p.prio)}</span></h2></div>
+     <div class="note">版：${esc(p.ver)}｜監修：${esc(p.sup)}｜使っている組織：${ORGS.filter(o=>o.packs.includes(k)).length}</div>
+     ${p.empty?`<div class="q">6つのステップの呼び方（予定）</div><ol style="margin:4px 0 0 18px;padding:0;font-size:13px">${p.journey.map(j=>`<li>${esc(j)}</li>`).join("")}</ol><p class="note" style="margin-top:8px">事例・観察の視点・判断の段階・伝える型・熟達者の句を登録すると使えるようになります。</p>`:`
+     <div class="q">ステップの呼び方</div><div class="note">${[0,1,2,3,4,5].map(i=>esc(p.stepLabel(i))).join("／")}</div>
+     <div class="q">観察の視点</div><div class="chips">${p.views.map(v=>`<span class="chip">${esc(v.n)}</span>`).join("")}</div>
+     <div class="q">判断の段階</div><div class="note">${p.levels.map(l=>esc(l.n+"："+l.d)).join("／")}</div>
+     <div class="q">伝える型</div><div class="note">相手：${esc(p.whom.join("・"))}／目的：${esc(p.purpose.join("・"))}</div>
+     <div class="q">${esc(p.expertWord)}の句</div><div class="note">${p.experts.length}人・${p.experts.reduce((a,e)=>a+e.ku.length,0)}句</div>
+     <div class="q">事例</div><div class="note">${esc(p.caseTitle)}</div>`}
+     <p class="note" style="margin-top:10px">編集は監修者のみ（モックでは閲覧のみ）</p></div>`).join("")}</div>
+     <p class="note" style="margin-top:12px">「今日の一枚」の絵は、「絵」のタブで差し替えられます。</p>`; }
+  if(S.atab==="arts"){
+    body=`<div class="notice">学習者の「絵を観る」と、分析画面に表示される「今日の一枚」を管理します。使えるのは、パブリックドメイン、CC0、または利用許諾のある作品だけです。</div>
+     <div class="grid2">${ARTS.map(a=>`<div class="pcard"><img src="${a.src}" alt="${esc(a.alt)}" style="width:100%;height:auto;border-radius:10px;margin-bottom:8px">
+      <h2 style="margin:0">${esc(a.title)}${a.id===CUR_ART?'<span class="status live">今日の一枚</span>':''}</h2>
+      <div class="note">作者：${esc(a.author)}／出典：${esc(a.source)}／権利：<b style="color:${a.rights==="確認中"?"var(--shu)":"inherit"}">${esc(a.rights)}</b></div>
+      <div style="display:flex;gap:8px;margin-top:10px">${a.id===CUR_ART?"":`<button class="btn" data-use="${a.id}" style="max-width:160px" ${a.rights==="確認中"?"disabled title='権利が確認中の絵は使えません'":""}>今日の一枚にする</button>`}${a.id===CUR_ART||ARTS.length<2?"":`<button class="del" data-adel="${a.id}">${S.artDel===a.id?"本当に削除":"削除"}</button>`}</div></div>`).join("")}</div>
+     <div class="pcard" style="margin-top:12px"><h2>絵を追加</h2>
+      <label class="note">画像ファイル（JPEG・PNG）<input type="file" id="art-file" accept="image/jpeg,image/png" style="display:block;margin-top:4px"></label>
+      ${S.newArtSrc?`<img src="${S.newArtSrc}" alt="追加する絵の確認" style="max-width:260px;border-radius:10px;margin:8px 0">`:""}
+      <div class="grid2" style="gap:10px;margin-top:8px"><label class="note">題名<input id="art-title" class="select" style="width:100%"></label><label class="note">作者<input id="art-author" class="select" style="width:100%"></label><label class="note">出典（所蔵館やURL）<input id="art-source" class="select" style="width:100%"></label><label class="note">権利<select id="art-rights" class="select" style="width:100%">${RIGHTS.map(r=>`<option>${r}</option>`).join("")}</select></label><label class="note">画像の説明（読み上げ用）<input id="art-alt" class="select" style="width:100%" placeholder="例：川辺に並ぶ白い家々の風景画"></label></div>
+      ${S.artErr?`<p class="note" style="color:var(--shu)">${esc(S.artErr)}</p>`:""}
+      <button class="btn" id="art-save" style="max-width:200px;margin-top:10px">この内容で追加</button>
+      <p class="note">モックアップでは、追加した絵はこの画面を開いている間だけ有効です。「確認中」の絵は、今日の一枚にできません。</p></div>`; }
+  if(S.atab==="learn"){ const rows=learnerRows(o);
+    body=`<div style="margin:0 0 12px">${orgSel}</div><div class="notice">学習の記録は、成績評価には使いません。個人の記録を開くと、閲覧した記録が残ります。</div>
+     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>表示名</th><th>業界パック</th><th>モード</th><th>進み</th><th>句・記入の数</th><th>最終利用</th></tr></thead><tbody>
+     ${rows.map((r,i)=>`<tr class="click" data-i="${i}"><td>${esc(r.name)}</td><td>${esc(PACKS[r.pack].name)}</td><td>${esc(r.mode)}</td><td><span class="bar" style="display:inline-block;width:80px"><i style="width:${Math.round(Math.min(r.step,r.mode==="分割"?6:8)/(r.mode==="分割"?6:8)*100)}%"></i></span></td><td>${r.ku}</td><td>${esc(r.last)}</td></tr>`).join("")}</tbody></table></div>
+     ${S.detail?vDetail(rows[S.detail.i]):""}`; }
+  if(S.atab==="data"){
+    body=`<div class="notice">研究用CSVには、研究に同意した人の記録だけを、仮名のIDで出します。出力すると記録が残ります。</div>
+     <div class="mono">${esc(csvPreview())}</div><button class="btn" id="csv" style="max-width:240px">CSVを出力する（デモ）</button>
+     <h2 style="margin-top:18px">閲覧と出力の記録</h2><div class="tbl-wrap"><table class="tbl"><thead><tr><th>時刻</th><th>操作した人</th><th>内容</th></tr></thead><tbody>
+     ${S.audit.length?S.audit.slice().reverse().map(a=>`<tr><td>${a.t}</td><td>${esc(a.who)}</td><td>${esc(a.what)}</td></tr>`).join(""):`<tr><td colspan="3" class="note">まだ記録はありません</td></tr>`}</tbody></table></div>`; }
+  return `<div class="admin"><div class="mockbar" style="border-radius:8px">管理画面のモックアップ（試作）です。数値と学習者はサンプルです</div>
+   <h1>いっぷ句 管理画面</h1><div class="note">ログイン中：運営（ぽっけいし）・二段階認証済み（イメージ）</div>
+   <div class="atabs">${tabs.map(([k,l])=>`<button data-t="${k}" class="${S.atab===k?'on':''}">${l}</button>`).join("")}</div>${body}</div>`;
+}
+function vDetail(r){ if(!r) return "";
+  const mine=r.demo&&S.pack?S.ward:[]; const p=PACKS[r.pack];
+  return `<div class="pcard"><h2>${esc(r.name)}の記録</h2><div class="note">${esc(p.name)}｜${esc(r.mode)}モード</div>
+   ${r.demo?(S.ward.length||S.art.length?`${S.art.length?`<div class="tanzaku-row">${S.art.slice(0,4).map(k=>tanzaku(k,"mine sm")).join("")}</div>`:""}${S.ward.map(k=>noteCard(k,"気づき")).join("")}<div class="note">判断：${esc(S.level||"―")}／見ていた視点：${esc(viewsOf(S.ward.map(TX).join("")).join("・")||"―")}／絵で目が向いたところ：${esc(artViewsOf(S.art.map(kt).join("")).join("・")||"―")}</div>`:`<p class="note">まだ記録がありません</p>`):`<p class="note">サンプルの学習者です（句の表示は省略）</p>`}
+   <p class="note" style="margin-top:8px">成績評価には使いません。この閲覧は記録されました。</p></div>`; }
+function csvPreview(){ const lines=["pseudo_id,org,pack,mode,entry_count,judgment"]; let n=1;
+  ORGS.forEach(o=>learnerRows(o).forEach(r=>{ if(r.demo&&S.consent!=="yes") return; lines.push(`P${String(n++).padStart(4,"0")},${o.code},${r.pack},${r.mode},${r.ku},${r.demo?(S.level||""):""}`); }));
+  return lines.join("\n"); }
+function now(){ const d=new Date(); return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; }
+function bindAdmin(){
+  document.querySelectorAll(".atabs button").forEach(b=>b.onclick=()=>{S.atab=b.dataset.t; S.detail=null; render();});
+  const af=$("art-file"); if(af) af.onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(!f) return; if(f.size>3*1024*1024){ S.artErr="画像は3MB以内にしてください。"; render(); return;} const rd=new FileReader(); rd.onload=()=>{ S.newArtSrc=rd.result; S.artErr=""; render(); }; rd.readAsDataURL(f); };
+  const asv=$("art-save"); if(asv) asv.onclick=()=>{ const t=$("art-title").value.trim(), au=$("art-author").value.trim(), so=$("art-source").value.trim(), ri=$("art-rights").value, al=$("art-alt").value.trim(); if(!S.newArtSrc){S.artErr="画像ファイルを選んでください。"; render(); return;} if(!t||!au||!so){S.artErr="題名・作者・出典を入れてください。"; render(); return;} const id="a"+Date.now(); ARTS.push({id,title:t,author:au,source:so,rights:ri,alt:al||t,src:S.newArtSrc}); S.newArtSrc=null; S.artErr=""; S.audit.push({t:now(),who:"運営",what:`絵を追加（${t}・権利：${ri}）`}); render(); };
+  document.querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>{ const a=ARTS.find(x=>x.id===b.dataset.use); if(!a||a.rights==="確認中") return; CUR_ART=a.id; S.audit.push({t:now(),who:"運営",what:`今日の一枚を「${a.title}」に変更`}); render(); });
+  document.querySelectorAll("[data-adel]").forEach(b=>b.onclick=()=>{ const id=b.dataset.adel; if(S.artDel!==id){ S.artDel=id; render(); return;} S.artDel=null; const i=ARTS.findIndex(x=>x.id===id); if(i>=0&&id!==CUR_ART){ const a=ARTS.splice(i,1)[0]; S.audit.push({t:now(),who:"運営",what:`絵を削除（${a.title}）`}); } render(); });
+  const sel=$("aorg"); if(sel) sel.onchange=e=>{S.aorg=+e.target.value; S.detail=null; render();};
+  const moveOrg=(from,to)=>{ if(from===to||to<0||to>=ORGS.length) return; const keep=ORGS[S.aorg]; const [o]=ORGS.splice(from,1); ORGS.splice(to,0,o); S.aorg=Math.max(0,ORGS.indexOf(keep)); S.audit.push({t:now(),who:"運営",what:`組織の表示順を変更（${o.name} を${to+1}番目へ）`}); render(); };
+  let dragFrom=null;
+  document.querySelectorAll("tr.orgrow").forEach(tr=>{
+    tr.addEventListener("dragstart",e=>{ if(e.target.closest("input,button,label")){ e.preventDefault(); return;} dragFrom=+tr.dataset.oi; tr.classList.add("dragging"); e.dataTransfer.effectAllowed="move"; try{e.dataTransfer.setData("text/plain",String(dragFrom));}catch(_){} });
+    tr.addEventListener("dragend",()=>{ tr.classList.remove("dragging"); document.querySelectorAll("tr.orgrow").forEach(r=>r.classList.remove("dropover")); });
+    tr.addEventListener("dragover",e=>{ e.preventDefault(); e.dataTransfer.dropEffect="move"; document.querySelectorAll("tr.orgrow").forEach(r=>r.classList.remove("dropover")); tr.classList.add("dropover"); });
+    tr.addEventListener("drop",e=>{ e.preventDefault(); const to=+tr.dataset.oi; if(dragFrom!==null) moveOrg(dragFrom,to); dragFrom=null; });
+  });
+  document.querySelectorAll("button.mv").forEach(b=>b.onclick=()=>{ const i=+b.dataset.mv; moveOrg(i,i+(+b.dataset.d)); });
+  const ao=$("addorg"); if(ao) ao.onclick=()=>{ S.addOrg=!S.addOrg; S.addErr=""; render(); };
+  const ns=$("no-save"); if(ns) ns.onclick=()=>{ const name=$("no-name").value.trim(), code=$("no-code").value.trim().toUpperCase(), packs=[...document.querySelectorAll(".no-pack:checked")].map(c=>c.value);
+    if(!name){S.addErr="組織名を入れてください。"; render(); return;} if(!/^[A-Z0-9-]{3,20}$/.test(code)){S.addErr="組織コードは、英数字と-で3〜20文字で入れてください。"; render(); return;} if(ORGS.some(x=>x.code===code)){S.addErr="その組織コードはすでに使われています。"; render(); return;} if(!packs.length){S.addErr="業界パックを1つ以上選んでください。"; render(); return;}
+    ORGS.push({code,name,packs,seats:+$("no-seats").value||0,conc:+$("no-conc").value||0,term:$("no-term").value.trim()||"未設定",sample:[],active:true}); S.addOrg=false; S.addErr=""; S.audit.push({t:now(),who:"運営",what:`組織を追加（${name}・${code}）`}); render(); };
+  document.querySelectorAll("button.stt").forEach(b=>b.onclick=()=>{ const o=ORGS[+b.dataset.st]; o.active=o.active===false; S.audit.push({t:now(),who:"運営",what:`${o.name} を${o.active?"アクティブ":"非アクティブ"}に変更`}); render(); });
+  document.querySelectorAll("button.del").forEach(b=>b.onclick=()=>{ const i=+b.dataset.del,o=ORGS[i]; if(S.delAsk!==o.code){ S.delAsk=o.code; render(); return; } S.delAsk=null; const keep=ORGS[S.aorg]; ORGS.splice(i,1); S.aorg=Math.max(0,ORGS.indexOf(keep)); if(S.org===o){ S.org=null; S.pack=null; S.ph="talk"; S.msgs.push({t:"08:30",html:"所属していた組織が削除されました。組織コードを入れ直してください。",btn:"組織コードを入れる"}); } S.audit.push({t:now(),who:"運営",what:`組織を削除（${o.name}・${o.code}）`}); render(); });
+  document.querySelectorAll('input[data-o]').forEach(c=>c.onchange=()=>{ const o=ORGS[+c.dataset.o],k=c.dataset.p; if(c.checked){ if(!o.packs.includes(k)) o.packs.push(k);} else { if(o.packs.length===1){ c.checked=true; return;} o.packs=o.packs.filter(x=>x!==k);} S.audit.push({t:now(),who:"運営",what:`${o.name} の業界パックを変更（${o.packs.map(x=>PACKS[x].name).join("・")}）`}); render(); });
+  document.querySelectorAll("tr.click").forEach(tr=>tr.onclick=()=>{ const o=ORGS[S.aorg],r=learnerRows(o)[+tr.dataset.i]; S.detail={i:+tr.dataset.i}; S.audit.push({t:now(),who:"教員（デモ）",what:`${o.name}：${r.name} の記録を閲覧`}); render(); });
+  const csv=$("csv"); if(csv) csv.onclick=()=>{ S.audit.push({t:now(),who:"研究者（デモ）",what:"研究用CSVを出力（同意者のみ・仮名ID）"}); render(); };
+}
+// ===== 検証版：保存とURL（#history・#posts・#join） =====
+const KEY="ippuku-line-test-v2";
+const LIFF_ID="2012192016-D0MCxjX9";
+let LIFF_OK=false;
+async function initLiff(){ try{ if(!window.liff) return; await liff.init({liffId:LIFF_ID}); LIFF_OK=true;
+  if(liff.isLoggedIn()){ try{ const pr=await liff.getProfile(); S.lineName=pr.displayName; window.__lineName=pr.displayName; render(); }catch(e){} } }catch(e){ console.warn("LIFF init failed",e); } }
+async function closeLine(finished){ persist();
+  if(LIFF_OK&&liff.isInClient()){
+    if(finished){ try{ await liff.sendMessages([{type:"text",text:"終わりました"}]); }catch(e){ console.warn(e); } }
+    try{ liff.closeWindow(); return; }catch(e){}
+  }
+  S.toast="画面上部の✕で閉じてLINEに戻り、「終わりました」を押してください"; render(); }
+function persist(){ try{ localStorage.setItem(KEY, JSON.stringify({code:S.org&&S.org.code,pack:S.pack,consent:S.consent,mode:S.mode,split:S.split,art:S.art,ward:S.ward,single:S.single,text:S.text,history:S.history,done:S.done})); }catch(e){} }
+function restore(){ try{ const d=JSON.parse(localStorage.getItem(KEY)||"null"); if(!d||!d.code) return false; const o=ORGS.find(x=>x.code===d.code); if(!o) return false;
+  Object.assign(S,{org:o,pack:d.pack,consent:d.consent,mode:d.mode,split:d.split||{cur:0,done:[]},art:d.art||[],ward:d.ward||[],single:d.single||{},text:d.text||{},history:d.history||[],done:!!d.done}); return true; }catch(e){ return false; } }
+function route(){ const h=(location.hash||"").replace("#","");
+  if(h==="join"){ try{localStorage.removeItem(KEY);}catch(e){} reset(); S.ph="join"; render(); scrollTo(0,0); return; }
+  const ok=restore();
+  if((h==="history"||h==="posts")&&ok&&S.pack) S.ph="history";
+  else if(ok&&S.pack&&S.consent&&S.mode) S.ph=S.done?"done":(S.mode==="split"?"splithome":"step");
+  else if(ok&&S.pack) S.ph="consent";
+  else S.ph="join";
+  render(); scrollTo(0,0); }
+window.addEventListener("hashchange",()=>{ reset(); S.lineName=window.__lineName; route(); });
+route();
+initLiff();
+
+
+</script>
+</body>
+</html>
