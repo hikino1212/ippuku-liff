@@ -1068,11 +1068,14 @@ let LIFF_OK=false;
 async function initLiff(){ try{ if(!window.liff) return; await liff.init({liffId:LIFF_ID}); LIFF_OK=true;
   if(liff.isLoggedIn()){ try{ const pr=await liff.getProfile(); S.lineName=pr.displayName; window.__lineName=pr.displayName; render(); }catch(e){} } }catch(e){ console.warn("LIFF init failed",e); } }
 async function closeLine(finished){ persist();
-  if(LIFF_OK&&liff.isInClient()){
-    if(finished){ try{ await liff.sendMessages([{type:"text",text:"終わりました"}]); }catch(e){ console.warn(e); } }
-    try{ liff.closeWindow(); return; }catch(e){}
+  const st=[];
+  st.push("LIFF:"+(LIFF_OK?"OK":"NG"));
+  try{ st.push("LINE内:"+(window.liff&&liff.isInClient()?"はい":"いいえ")); }catch(e){ st.push("LINE内:不明"); }
+  if(LIFF_OK){
+    if(finished){ try{ await liff.sendMessages([{type:"text",text:"終わりました"}]); st.push("送信:OK"); }catch(e){ st.push("送信:失敗("+(e&&(e.code||e.message)||e)+")"); } }
+    try{ liff.closeWindow(); st.push("閉じる:実行"); }catch(e){ st.push("閉じる:失敗("+(e&&(e.code||e.message)||e)+")"); }
   }
-  S.toast="画面上部の✕で閉じてLINEに戻り、「終わりました」を押してください"; render(); }
+  setTimeout(()=>{ S.toast="✕で閉じてLINEに戻ってください［"+st.join("／")+"］"; render(); },600); }
 function persist(){ try{ localStorage.setItem(KEY, JSON.stringify({code:S.org&&S.org.code,pack:S.pack,consent:S.consent,mode:S.mode,split:S.split,art:S.art,ward:S.ward,single:S.single,text:S.text,history:S.history,done:S.done})); }catch(e){} }
 function restore(){ try{ const d=JSON.parse(localStorage.getItem(KEY)||"null"); if(!d||!d.code) return false; const o=ORGS.find(x=>x.code===d.code); if(!o) return false;
   Object.assign(S,{org:o,pack:d.pack,consent:d.consent,mode:d.mode,split:d.split||{cur:0,done:[]},art:d.art||[],ward:d.ward||[],single:d.single||{},text:d.text||{},history:d.history||[],done:!!d.done}); return true; }catch(e){ return false; } }
