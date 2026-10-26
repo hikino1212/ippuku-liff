@@ -1092,7 +1092,7 @@ async function shareApp(){
     body:{type:"box",layout:"vertical",spacing:"md",paddingAll:"20px",contents:[
       {type:"text",text:from,size:"xs",color:"#7A6A55"},
       {type:"text",text:"いっぷ句",size:"xxl",weight:"bold",color:"#2B3A42"},
-      {type:"text",text:"ぽっけいしの「面白がり」で世界を変えていく。",size:"md",color:"#2F5D50",weight:"bold",wrap:true},
+      {type:"text",text:"「面白がり」で世界を変えていく。",size:"md",color:"#2F5D50",weight:"bold",wrap:true},
       {type:"text",text:"すき間時間で一枚の絵を見ることから始まる、15分の学び。",size:"sm",color:"#5A5A5A",wrap:true,margin:"md"}]},
     footer:{type:"box",layout:"vertical",spacing:"sm",contents:[{type:"button",style:"primary",color:"#2F5D50",action:{type:"uri",label:"友だち追加して始める",uri:ADD_FRIEND}},{type:"button",style:"link",height:"sm",color:"#2F5D50",action:{type:"uri",label:"紹介動画を見る",uri:LINKS.video}},{type:"text",text:"合同会社ぽっけいし｜特許出願中",size:"xxs",color:"#9A8B78",align:"center",decoration:"underline",action:{type:"uri",label:"会社サイト",uri:LINKS.company}}]}}};
   try{ const r=await liff.shareTargetPicker([msg]); S.toast=r?"紹介を送りました":"送るのをやめました"; }catch(e){ S.toast="送れませんでした（"+(e&&(e.code||e.message)||e)+"）"; }
@@ -1118,7 +1118,7 @@ function route(){ const view=param("view")||(location.hash||"").replace("#","");
   render(); scrollTo(0,0); }
 window.addEventListener("hashchange",()=>{ reset(); S.lineName=window.__lineName; route(); });
 // A3: 新しい版があれば自動で読み直す
-const APP_VER="7";
+const APP_VER="8";
 (async()=>{ try{ const r=await fetch("version.json?t="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); const q=new URLSearchParams(location.search);
   if(j.v&&j.v!==APP_VER&&q.get("v")!==j.v){ q.set("v",j.v); location.replace(location.pathname+"?"+q.toString()+location.hash); return; } } }catch(e){}
   route(); initLiff(); })();
