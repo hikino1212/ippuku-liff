@@ -739,18 +739,19 @@ function render(){
   const root=$("root");
   if(S.view==="admin"){ root.innerHTML=sw+vAdmin(); bindSwitch(); bindAdmin(); return; }
   if(S.ph==="talk"){ S.ph=!S.org?"join":!S.pack?"packs":(S.consent===null||!S.mode)?"consent":S.done?"done":S.mode==="split"?"splithome":"step"; }
-  const v={join:vJoin,packs:vPacks,consent:vConsent,mode:vMode,step:vStep,splithome:vSplitHome,done:vDone,history:vHistory,histdetail:vHistDetail}[S.ph]();
+  const v={join:vJoin,packs:vPacks,consent:vConsent,mode:vMode,step:vStep,home:vHome,splithome:vSplitHome,done:vDone,history:vHistory,histdetail:vHistDetail}[S.ph]();
   const steps=S.ph==="step"?seq():null, idx=S.i;
   const viewKey=S.ph+":"+S.i+":"+S.split.cur+":"+(S.finalView?1:0), oldMain=document.querySelector("main#app"), same=!!oldMain&&S._viewKey===viewKey, keepTop=same?oldMain.scrollTop:0; S._viewKey=viewKey; const keepWin=same?(window.scrollY||document.documentElement.scrollTop||0):0; if(same) root.style.minHeight=root.offsetHeight+"px";
   root.innerHTML=sw+`<div class="phone talkview framed"><div class="mockbar">検証版：入力はダミーでお願いします</div>
    <div class="liffbar"><span style="width:32px"></span><div class="t"><b>いっぷ句</b><small>${S.org?esc(S.org.name)+(S.pack?"｜"+esc(P().name):""):"検証版"}</small></div><button class="x" id="close" aria-label="最初からやり直す" title="最初から">↺</button></div>
-   ${steps?`<header class="top"><div class="toprow"><button class="back" id="back" ${idx===0?'disabled':''} aria-label="前に戻る">‹</button><span class="steptitle">${S.mode==="complete"?"完結モード":"分割モード"}</span><span class="stepcount">${idx+1} / ${steps.length}</span></div><div class="progress">${steps.map((_,j)=>`<span class="${j<=idx?'on':''}"></span>`).join("")}</div></header>`:""}
+   ${steps?`<header class="top"><div class="toprow"><button class="back" id="back" ${idx===0?'disabled':''} aria-label="前に戻る">‹</button><span class="steptitle">${S.mode==="complete"?"完結モード":"分割モード"}</span><span class="stepcount">${idx+1} / ${steps.length}</span>${S.mode==="complete"?`<button id="pause" style="margin-left:10px;border:1px solid var(--line);background:var(--surface);color:var(--sub);border-radius:14px;font-size:12px;padding:4px 10px;cursor:pointer">今日は中断</button>`:""}</div><div class="progress">${steps.map((_,j)=>`<span class="${j<=idx?'on':''}"></span>`).join("")}</div></header>`:""}
    <main id="app"><div class="${same?'':'fade'}">${v.html}</div></main><div class="foot" style="display:${v.foot?'flex':'none'}">${v.foot||""}</div>
    ${S.toast?`<div class="toast">${esc(S.toast)}</div>`:""}</div>`;
   bindSwitch();
   if(same){ const m=document.querySelector("main#app"); if(m) m.scrollTop=keepTop; window.scrollTo(0,keepWin); requestAnimationFrame(()=>{ const m2=document.querySelector("main#app"); if(m2) m2.scrollTop=keepTop; window.scrollTo(0,keepWin); root.style.minHeight=""; }); } else { root.style.minHeight=""; }
   $("close").onclick=()=>{ if(confirm("最初からやり直しますか？（この端末の記録を消します）")){ try{localStorage.removeItem(KEY);}catch(e){} reset(); location.hash=""; render(); scrollTo(0,0);} };
   persist();
+  const pz=$("pause"); if(pz) pz.onclick=()=>{ if(confirm("今日はここで中断しますか？（書いた内容は残ります）")){ S.paused=true; S.ph="home"; persist(); render(); scrollTo(0,0);} };
   const b=$("back"); if(b) b.onclick=()=>{ if(S.i>0){S.i--; render(); scrollTo(0,0);} };
   document.querySelectorAll("main#app p.src").forEach(pp=>{ const d=document.createElement("details"); d.className="more"; const sm=document.createElement("summary"); sm.textContent="くわしい説明"; d.appendChild(sm); const dv=document.createElement("div"); dv.className="note"; dv.innerHTML=pp.innerHTML; d.appendChild(dv); pp.replaceWith(d); });
   bindForms(); v.bind&&v.bind();
@@ -813,6 +814,19 @@ function vConsent(){
    ${S.consent?"":`<p class="note">先に「研究への協力」を選んでください。</p>`}`,
    bind(){ document.querySelectorAll("#cs .chip").forEach(b=>b.onclick=()=>{S.consent=b.dataset.v; render();});
      document.querySelectorAll(".modecard").forEach(b=>b.onclick=()=>{ if(!S.consent) return; S.mode=b.dataset.m; S.i=0; S.ph=S.mode==="complete"?"step":"splithome"; render(); scrollTo(0,0);}); }};
+}
+function vHome(){ const n=seq().length, k=Math.min(S.i,n-1), nm=S.lineName?esc(S.lineName)+"さん、":"";
+  return {html:`<h2>${nm}おかえりなさい</h2><p class="lead">前回の一服の続きがあります。</p>
+   <div class="card line" style="margin:14px 0"><div class="note">完結モードの進み具合</div><div style="font-size:26px;font-weight:700;margin:6px 0">${k+1} <span style="font-size:14px;font-weight:400">/ ${n}</span></div>
+   <div class="progress" style="margin:0">${Array.from({length:n},(_,j)=>`<span class="${j<k?'on':''}"></span>`).join("")}</div></div>
+   <button class="btn" id="resume" style="width:100%;text-align:center;margin-bottom:10px">続きから再開する</button>
+   <button class="btn sub" id="restart" style="width:100%;text-align:center;margin-bottom:10px">はじめからやり直す</button>
+   <button class="btn sub" id="hist" style="width:100%;text-align:center;margin-bottom:10px">分析結果と成長記録を見る</button>
+   <button class="btn sub" id="toline" style="width:100%;text-align:center">LINEに戻る</button>`,
+   bind(){ $("resume").onclick=()=>{ S.paused=false; S.ph="step"; render(); scrollTo(0,0); };
+     $("restart").onclick=()=>{ if(!confirm("はじめからやり直しますか？（今回の記入は消えます）")) return; S.art=[]; S.text={}; S.single={}; S.ward=[]; S.i=0; S.paused=false; S.done=false; S.ph="step"; render(); scrollTo(0,0); };
+     $("hist").onclick=()=>{ S.ph="history"; render(); scrollTo(0,0); };
+     $("toline").onclick=()=>closeLine(false); }};
 }
 function vMode(){
   return {html:`<h2>進め方を選びます</h2><p class="lead">あとから変えられます。</p>
@@ -1084,11 +1098,12 @@ function openLink(url,ext){ try{ if(LIFF_OK&&liff.isInClient()){ liff.openWindow
 document.addEventListener("click",e=>{ const a=e.target.closest&&e.target.closest("[data-ext]"); if(!a) return; e.preventDefault(); const k=a.dataset.ext; openLink(LINKS[k],k==="video"); });
 const ADD_FRIEND="https://line.me/R/ti/p/@777vdkoq";
 const ICON_URL="https://hikino1212.github.io/ippuku-liff/icon.png";
+const LOGO_URL="https://hikino1212.github.io/ippuku-liff/logo.png";
 async function shareApp(){
   if(!(LIFF_OK&&liff.isApiAvailable&&liff.isApiAvailable("shareTargetPicker"))){ S.toast="LINEの中で開いたときに使えます"; render(); return; }
   const from=S.lineName?S.lineName+"さんからのご紹介":"いっぷ句のご紹介";
   const msg={type:"flex",altText:"いっぷ句のご紹介：すき間時間で一枚の絵を見ることから始まる、15分の学び",contents:{type:"bubble",
-    hero:{type:"image",url:ICON_URL,size:"full",aspectRatio:"20:11",aspectMode:"fit",backgroundColor:"#EFEFEF"},
+    hero:{type:"image",url:LOGO_URL,size:"full",aspectRatio:"20:11",aspectMode:"fit",backgroundColor:"#EFEFEF"},
     body:{type:"box",layout:"vertical",spacing:"md",paddingAll:"20px",contents:[
       {type:"text",text:from,size:"xs",color:"#7A6A55"},
       {type:"text",text:"いっぷ句",size:"xxl",weight:"bold",color:"#2B3A42"},
@@ -1097,9 +1112,9 @@ async function shareApp(){
     footer:{type:"box",layout:"vertical",spacing:"sm",contents:[{type:"button",style:"primary",color:"#2F5D50",action:{type:"uri",label:"友だち追加して始める",uri:ADD_FRIEND}},{type:"button",style:"link",height:"sm",color:"#2F5D50",action:{type:"uri",label:"紹介動画を見る",uri:LINKS.video}},{type:"text",text:"合同会社ぽっけいし｜特許出願中",size:"xxs",color:"#9A8B78",align:"center",decoration:"underline",action:{type:"uri",label:"会社サイト",uri:LINKS.company}}]}}};
   try{ const r=await liff.shareTargetPicker([msg]); S.toast=r?"紹介を送りました":"送るのをやめました"; }catch(e){ S.toast="送れませんでした（"+(e&&(e.code||e.message)||e)+"）"; }
   render(); }
-function persist(){ try{ localStorage.setItem(KEY, JSON.stringify({code:S.org&&S.org.code,pack:S.pack,consent:S.consent,mode:S.mode,split:S.split,art:S.art,ward:S.ward,single:S.single,text:S.text,history:S.history,done:S.done})); }catch(e){} }
+function persist(){ try{ localStorage.setItem(KEY, JSON.stringify({code:S.org&&S.org.code,pack:S.pack,consent:S.consent,mode:S.mode,split:S.split,art:S.art,ward:S.ward,single:S.single,text:S.text,history:S.history,done:S.done,i:S.i,paused:!!S.paused})); }catch(e){} }
 function restore(){ try{ const d=JSON.parse(localStorage.getItem(KEY)||"null"); if(!d||!d.code) return false; const o=ORGS.find(x=>x.code===d.code); if(!o) return false;
-  Object.assign(S,{org:o,pack:d.pack,consent:d.consent,mode:d.mode,split:d.split||{cur:0,done:[]},art:d.art||[],ward:d.ward||[],single:d.single||{},text:d.text||{},history:d.history||[],done:!!d.done}); return true; }catch(e){ return false; } }
+  Object.assign(S,{org:o,pack:d.pack,consent:d.consent,mode:d.mode,split:d.split||{cur:0,done:[]},art:d.art||[],ward:d.ward||[],single:d.single||{},text:d.text||{},history:d.history||[],done:!!d.done,i:d.i||0,paused:!!d.paused}); return true; }catch(e){ return false; } }
 function param(k){ const q=new URLSearchParams(location.search); let v=q.get(k);
   if(!v){ const ls=q.get("liff.state"); if(ls){ const m=decodeURIComponent(ls).match(new RegExp("[?&]"+k+"=([^&#]+)")); if(m) v=decodeURIComponent(m[1]); } }
   return v; }
@@ -1112,13 +1127,13 @@ function route(){ const view=param("view")||(location.hash||"").replace("#","");
   const ok=restore();
   if(org&&!(ok&&S.org&&S.org.code===org)){ reset(); S.lineName=window.__lineName; if(selectOrg(org)) return; }
   if((view==="history"||view==="posts")&&ok&&S.pack) S.ph="history";
-  else if(ok&&S.pack&&S.consent&&S.mode) S.ph=S.done?"done":(S.mode==="split"?"splithome":"step");
+  else if(ok&&S.pack&&S.consent&&S.mode) S.ph=S.done?"done":(S.mode==="split"?"splithome":((S.paused||S.i>0)?"home":"step"));
   else if(ok&&S.pack) S.ph="consent";
   else S.ph="join";
   render(); scrollTo(0,0); }
 window.addEventListener("hashchange",()=>{ reset(); S.lineName=window.__lineName; route(); });
 // A3: 新しい版があれば自動で読み直す
-const APP_VER="8";
+const APP_VER="12";
 (async()=>{ try{ const r=await fetch("version.json?t="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); const q=new URLSearchParams(location.search);
   if(j.v&&j.v!==APP_VER&&q.get("v")!==j.v){ q.set("v",j.v); location.replace(location.pathname+"?"+q.toString()+location.hash); return; } } }catch(e){}
   route(); initLiff(); })();
