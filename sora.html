@@ -252,7 +252,7 @@ details.more summary::-webkit-details-marker{display:none}
 details.more summary::before{content:"＋ ";color:var(--ink2);font-weight:700}
 details.more[open] summary::before{content:"－ "}
 details.more .note{padding:0 0 10px}
-/* 一服の入口 */
+/* いっぷ句の入口 */
 .ippuku{display:flex;align-items:center;gap:12px;background:var(--mist);border-radius:20px;padding:12px 14px;margin:0 0 12px}
 .ippuku svg{flex:0 0 auto}
 .ippuku b{display:block;font-size:15px}
@@ -697,7 +697,7 @@ const RIGHTS=["パブリックドメイン","CC0","利用許諾あり","確認�
 // ===== 状態 =====
 let S;
 function reset(){ S={view:"learner",ph:"join",org:null,pack:null,consent:null,mode:null,code:"",err:"",i:0,done:false,
-  msgs:[{t:"08:00",html:"おはようございます。お茶でも一服しながら、今日の一枚を眺めてみませんか。",btn:"学習を始める"}],
+  msgs:[{t:"08:00",html:"おはようございます。今日のいっぷ句です。お茶でも飲みながら、今日の一枚を眺めてみませんか。",btn:"学習を始める"}],
   art:[],ward:[],peerOpen:false,reacts:0,draft:{},text:{},single:{},finalView:false,focus:new Set(),worst:null,first:new Set(),level:null,acts:new Set(),whom:null,purpose:null,causes:new Set(),tools:new Set(),cause:null,tell:new Set(),
   split:{cur:0,done:[]}, history:[], hsel:0, finalReturn:"done", aiStarted:false, toast:"", atab:"dash", aorg:0, detail:null, audit:[]}; }
 reset();
@@ -816,7 +816,7 @@ function vConsent(){
      document.querySelectorAll(".modecard").forEach(b=>b.onclick=()=>{ if(!S.consent) return; S.mode=b.dataset.m; S.i=0; S.ph=S.mode==="complete"?"step":"splithome"; render(); scrollTo(0,0);}); }};
 }
 function vHome(){ const n=seq().length, k=Math.min(S.i,n-1), nm=S.lineName?esc(S.lineName)+"さん、":"";
-  return {html:`<h2>${nm}おかえりなさい</h2><p class="lead">前回の一服の続きがあります。</p>
+  return {html:`<h2>${nm}おかえりなさい</h2><p class="lead">前回のいっぷ句の続きがあります。</p>
    <div class="card line" style="margin:14px 0"><div class="note">完結モードの進み具合</div><div style="font-size:26px;font-weight:700;margin:6px 0">${k+1} <span style="font-size:14px;font-weight:400">/ ${n}</span></div>
    <div class="progress" style="margin:0">${Array.from({length:n},(_,j)=>`<span class="${j<k?'on':''}"></span>`).join("")}</div></div>
    <button class="btn" id="resume" style="width:100%;text-align:center;margin-bottom:10px">続きから再開する</button>
@@ -847,7 +847,7 @@ function vSplitHome(){ const p=P();
 function vStep(){ const id=seq()[S.i]; return {art:vArt,s1:vS1,s2:vS2,s3:vS3,s4:vS4,s5:vS5,s6:vS6,explain:vExplain,mini:vMini}[id](); }
 function vArt(){ const n=S.art.length,done=n>=N,dr=D("art");
   return {html:`<div class="art"><img alt="${esc(curArt().alt)}" src="${curArt().src}"></div>
-   <div class="ippuku"><svg class="steam" width="54" height="54" viewBox="0 0 54 54" aria-hidden="true"><path d="M20 16c-3-4 3-6 0-10" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round"/><path d="M27 16c-3-4 3-6 0-10" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round"/><path d="M34 16c-3-4 3-6 0-10" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round"/><path d="M12 22h30v10a15 15 0 0 1-30 0z" fill="var(--ink2)"/><path d="M42 25h3a5 5 0 0 1 0 10h-4" fill="none" stroke="var(--ink2)" stroke-width="3"/></svg><div><b>一服の時間です</b><span>まずは、ゆっくり絵を眺めてみましょう。</span></div></div>
+   <div class="ippuku"><svg class="steam" width="54" height="54" viewBox="0 0 54 54" aria-hidden="true"><path d="M20 16c-3-4 3-6 0-10" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round"/><path d="M27 16c-3-4 3-6 0-10" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round"/><path d="M34 16c-3-4 3-6 0-10" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round"/><path d="M12 22h30v10a15 15 0 0 1-30 0z" fill="var(--ink2)"/><path d="M42 25h3a5 5 0 0 1 0 10h-4" fill="none" stroke="var(--ink2)" stroke-width="3"/></svg><div><b>いっぷ句の時間です</b><span>まずは、ゆっくり絵を眺めてみましょう。</span></div></div>
    <p class="scene-cap">正解はありません。目にとまったもの、ふと感じたことを、五七五にしてみましょう。</p>${counter(n)}
    ${n?`<div class="tanzaku-row">${S.art.map((k,i)=>tanzaku(k,"mine",i?`${i+1}句目`:"最初の句")).join("")}</div>`:""}
    ${done?`<div class="card"><h2>${N}句、詠み終えました</h2></div>`:`<div class="kuform">${kuRows("art")}<button class="chip" data-sample="art" style="justify-self:start">例を入れる（デモ用）</button></div><p class="note">${N}句が目安です。いつでも次へ進めます。</p>`}
@@ -969,11 +969,11 @@ function vMini(){ const p=P(),i=S.split.cur;
    <div class="insight good"><b>${esc(p.expertWord)}の観点</b><br>${esc(p.notes[i])}</div>
    ${i===1?`<h2>${esc(p.expertWord)}の気づき</h2>${p.experts.flatMap(e=>e.ku.map(k=>noteCard(k,e.who))).join("")}`:""}
    ${i<5?`<div class="tomorrow"><small class="note">次のステップ</small><h2>${esc(p.stepLabel(i+1))}</h2></div>`:`<div class="tomorrow"><h2>6つのステップを歩きました</h2></div>`}`,
-   foot:`<button class="btn" id="n">${i<5?'今日はここまで':'まとめへ'}</button>`, bind(){ $("n").onclick=()=>{ nextStep(); if(i<5){ S.toast="続きは、また次の一服で"; render(); } }; }};
+   foot:`<button class="btn" id="n">${i<5?'今日はここまで':'まとめへ'}</button>`, bind(){ $("n").onclick=()=>{ nextStep(); if(i<5){ S.toast="続きは、また次のいっぷ句で"; render(); } }; }};
 }
 function vDone(){ const n=S.art.length+S.ward.length+Object.keys(S.single).length;
   if(S.ph==="done"&&S.finalView) return vExplain();
-  return {html:`<div class="done"><div class="big">${S.art.length}句・${n-S.art.length}件</div><h1>${S.lineName?esc(S.lineName)+"さん、":""}おつかれさまでした</h1><p class="lead" style="margin-top:4px">いい一服でしたね。また明日、ひと息つきにきてください。</p><p class="lead">${esc(P().caseTitle)}</p></div><p class="note" style="text-align:center">絵の句と、各ステップの記入です。記録は管理画面の「学習状況」に反映されます（デモ）。</p>
+  return {html:`<div class="done"><div class="big">${S.art.length}句・${n-S.art.length}件</div><h1>${S.lineName?esc(S.lineName)+"さん、":""}おつかれさまでした</h1><p class="lead" style="margin-top:4px">よいいっぷ句の時間でしたね。また明日、ひと息つきにきてください。</p><p class="lead">${esc(P().caseTitle)}</p></div><p class="note" style="text-align:center">絵の句と、各ステップの記入です。記録は管理画面の「学習状況」に反映されます（デモ）。</p>
    <div class="card" style="margin-top:14px;text-align:center"><b>最後にもう一度</b><div class="note" style="margin:4px 0 10px">同じ事例を、今日の押さえどころを意識して、もう一度見てみませんか。</div><button class="btn" id="retry" style="width:100%">もう一度やってみる</button></div>
    <div style="display:grid;gap:8px;margin-top:12px">${S.mode==="split"?`<button class="btn sub" id="fa">今回の分析を見る</button>`:""}<button class="btn sub" id="hist">分析結果と成長記録を見る</button><button class="btn sub" id="share">このアプリを紹介する</button><div class="note" style="text-align:center;margin-top:20px;line-height:2"><a href="#" data-ext="video" style="color:inherit;text-decoration:underline">▶ いっぷ句の紹介動画を見る</a><br><span style="opacity:.75">いっぷ句（特許出願中）｜<a href="#" data-ext="company" style="color:inherit;text-decoration:underline">合同会社ぽっけいし</a></span></div></div>`,
    foot:`<button class="btn" id="n">LINEに戻る</button>`,
@@ -1134,7 +1134,7 @@ function route(){ const view=param("view")||(location.hash||"").replace("#","");
   render(); scrollTo(0,0); }
 window.addEventListener("hashchange",()=>{ reset(); S.lineName=window.__lineName; route(); });
 // A3: 新しい版があれば自動で読み直す
-const APP_VER="14";
+const APP_VER="15";
 (async()=>{ try{ const r=await fetch("version.json?t="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); const q=new URLSearchParams(location.search);
   if(j.v&&j.v!==APP_VER&&q.get("v")!==j.v){ q.set("v",j.v); location.replace(location.pathname+"?"+q.toString()+location.hash); return; } } }catch(e){}
   route(); initLiff(); })();

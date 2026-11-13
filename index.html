@@ -218,7 +218,7 @@ function render(){
    r.innerHTML=`<div class="mockbar">検証版：入力はダミーでお願いします</div>
    <div class="bar"><span style="width:44px"></span><div class="t"><b>いっぷ句</b><small>臨床推論・軽量モード</small></div><span style="width:44px"></span></div>
    <main><div class="seal" style="font-size:15px">いっぷ句</div>
-   <h2>${P.nick?esc(honor(P.nick))+"、":""}${S.paused?"おかえりなさい":"一服しませんか"}</h2>
+   <h2>${P.nick?esc(honor(P.nick))+"、":""}${S.paused?"おかえりなさい":"今日のいっぷ句、はじめませんか"}</h2>
    <p class="lead">${S.paused?`前回は「${esc(LABEL[S.paused]||"")}」で中断しました。書いた内容は残っています。`:"絵を眺めて句を詠み、そのあと臨床の場面をひとつ。5分ほどです。"}</p>
    ${(S.msgs||[]).slice(-1).map(m=>`<div class="card"><div class="note">${m}</div></div>`).join("")}
    ${S.paused&&!stopped?`<button class="btn" id="resume" style="width:100%;margin:6px 0">続きから再開</button><button class="btn sub" id="restart" style="width:100%;margin:6px 0">最初からやり直す</button>`:`<button class="btn" id="go" style="width:100%;margin:6px 0">はじめる</button>`}
@@ -508,7 +508,7 @@ function vShare(){ const all=[...S.ku1,...S.ku2,...S.ku3]; if(S.sel===undefined)
   bind(){ document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{S.sel=+b.dataset.s; render();}); $("b").onclick=()=>go("done"); $("go2").onclick=()=>{S.shared=true; render();}; }}; }
 
 // ===== LINE版（LIFF）の仕組み =====
-const LIFF_ID="2012192016-D0MCxjX9", APP_VER="14", KEY="ippuku-lite-v1";
+const LIFF_ID="2012192016-D0MCxjX9", APP_VER="15", KEY="ippuku-lite-v1";
 const ADD_FRIEND="https://line.me/R/ti/p/@777vdkoq";
 const LINKS={company:"https://pokkeishi.studio.site/",video:"https://www.youtube.com/watch?v=g8ZsscBmsvM"};
 const LOGO_URL="https://hikino1212.github.io/ippuku-liff/logo.png";
