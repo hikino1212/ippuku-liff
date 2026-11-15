@@ -98,6 +98,58 @@ select.ku{appearance:auto;-webkit-appearance:menulist}
 
 textarea.ku{resize:none;line-height:1.6}
 .card ul li{list-style:disc}
+/* ===== みかた石コレクション ===== */
+body{font-size:16px}
+:root{--gold:#F2C230;--gold-d:#9A7A10;--gold-bg:#FBF0CC;--gold-tx:#6E5300;--fit-bg:#E6EEE8;--fit-bd:#8DB39C;--fit-tx:#3F5F4E;--loose-tx:#3F5A73;--hol-bg:#ECE6DC;--hol-tx:#5A5045;--g-miru:#4B7360;--g-tashi:#4E6B86;--g-omoi:#A65A3C;--scrim:rgba(40,36,32,.55)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--gold-d:#D9B44A;--gold-bg:#3B3218;--gold-tx:#F2D27A;--fit-bg:#24312A;--fit-bd:#5E8A73;--fit-tx:#A9CDB6;--loose-tx:#A9BFD6;--hol-bg:#3B342D;--hol-tx:#D8CCBC;--g-miru:#9CC4AC;--g-tashi:#A9BFD6;--g-omoi:#E7A58A;--scrim:rgba(0,0,0,.6)}}
+:root[data-theme="dark"]{--gold-d:#D9B44A;--gold-bg:#3B3218;--gold-tx:#F2D27A;--fit-bg:#24312A;--fit-bd:#5E8A73;--fit-tx:#A9CDB6;--loose-tx:#A9BFD6;--hol-bg:#3B342D;--hol-tx:#D8CCBC;--g-miru:#9CC4AC;--g-tashi:#A9BFD6;--g-omoi:#E7A58A;--scrim:rgba(0,0,0,.6)}
+.note+.slatecard{margin-top:12px}
+.slhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.slhead b{font-size:15px}
+.slate{background:#56657B;border-radius:16px;padding:8px 6px 2px;margin:8px 0}
+.slate svg{display:block;width:100%;height:auto}
+.slate .tnew{animation:tnew 1.6s ease-in-out 3}
+@keyframes tnew{0%,100%{opacity:.25}50%{opacity:1}}
+.slcount{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 8px}
+.pill{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
+.p-fit{background:var(--fit-bg);color:var(--fit-tx)}.p-loose{background:var(--surface);color:var(--loose-tx)}.p-hol{background:var(--hol-bg);color:var(--hol-tx)}
+.tembox{background:var(--surface);border:1.5px solid var(--gold);border-radius:14px;padding:10px 12px;margin:4px 0 8px;display:flex;flex-direction:column;gap:8px}
+.sevts{display:flex;flex-direction:column;gap:8px;margin:4px 0 2px}
+.sevt{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.55}
+.sevt svg{flex:0 0 auto}.sevt>div{min-width:0}
+.evl{font-size:11.5px;color:var(--sub);font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--sub);margin:0 0 8px}
+.legend span{display:flex;align-items:center;gap:4px}
+.bars{display:flex;gap:6px;margin:5px 0 3px}.bars i{width:26px;height:8px;border-radius:4px;background:var(--mist2)}.bars i.on{background:var(--g-tashi)}
+.rsgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:2px 0 0}
+.rsgrid .btn{font-size:14px;line-height:1.35;padding:10px 6px}
+.rsgrid small{display:block;font-size:11.5px;color:var(--sub)}
+.rsgrid.st{margin:6px 0 0}.rsgrid.st small{color:rgba(255,255,255,.85)}
+.pstat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.pstat div{background:var(--surface);border-radius:12px;padding:10px 12px;display:flex;align-items:baseline;gap:6px;min-width:0}
+.pstat b{font-size:24px;color:var(--ink-d);font-variant-numeric:tabular-nums}
+.gt-miru{color:var(--g-miru)}.gt-tashi{color:var(--g-tashi)}.gt-omoi{color:var(--g-omoi)}
+.slatecard.flash{animation:flash 1.6s ease-out}
+@keyframes flash{0%{box-shadow:0 0 0 3px var(--gold)}100%{box-shadow:0 0 0 0 transparent}}
+.hm-scrim{position:absolute;inset:0;background:var(--scrim);display:flex;align-items:flex-end;z-index:20;animation:hmFade .25s ease-out}
+.hm-sheet{width:100%;max-height:94%;overflow-y:auto;background:var(--surface);border-radius:24px 24px 0 0;padding:18px 18px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;animation:hmUp .35s cubic-bezier(.2,.8,.2,1)}
+.hm-sheet h3{margin:0;font-family:"Noto Serif JP",serif;font-size:21px;line-height:1.5}
+.hm-slate{width:210px;height:150px;background:#56657B;border-radius:22px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.hm-uses{width:100%;background:var(--mist);border-radius:14px;padding:10px 12px;text-align:left;display:flex;flex-direction:column;gap:6px}
+.hm-use{display:flex;gap:10px;font-size:13px;line-height:1.55}.hm-use .note{flex:0 0 40px}
+.hm-btns{display:flex;gap:10px;width:100%}
+.hm-stone{animation:hmDrop .75s cubic-bezier(.3,1.35,.5,1) .2s both}
+.hm-ring{transform-box:fill-box;transform-origin:center;animation:hmRing 1s ease-out .8s both}
+.hm-ring2{transform-box:fill-box;transform-origin:center;animation:hmRing 1.2s ease-out .95s both}
+.hm-sweep{stroke-dasharray:90 560;animation:hmSweep 1.4s ease-in-out .85s both}
+.hm-spark{transform-box:fill-box;transform-origin:center;animation:hmSpark 1.2s ease-out 1s both}.hm-spark.s2{animation-delay:1.15s}
+@keyframes hmFade{from{opacity:0}to{opacity:1}}
+@keyframes hmUp{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes hmDrop{0%{transform:translate(-8px,-36px) scale(1.15);opacity:0}25%{opacity:1}70%{transform:translate(0,3px) scale(.97)}100%{transform:none;opacity:1}}
+@keyframes hmRing{0%{opacity:0;transform:scale(.75)}50%{opacity:1}100%{opacity:1;transform:scale(1)}}
+@keyframes hmSweep{0%{stroke-dashoffset:0;opacity:0}15%{opacity:1}100%{stroke-dashoffset:-650;opacity:0}}
+@keyframes hmSpark{0%{opacity:0;transform:scale(.3)}60%{opacity:1;transform:scale(1.1)}100%{opacity:.9;transform:scale(1)}}
+.toast{position:absolute;left:16px;right:16px;bottom:88px;z-index:30;background:var(--text);color:var(--surface);border-radius:12px;padding:10px 14px;font-size:13px;line-height:1.5;text-align:center;animation:hmFade .2s ease-out}
+@media (prefers-reduced-motion:reduce){.pick,.slate .tnew,.slatecard.flash,.hm-scrim,.hm-sheet,.hm-stone,.hm-ring,.hm-ring2,.hm-spark,.toast{animation:none}.hm-sweep{display:none}}
 </style><script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body><div class="phone" id="root"></div>
@@ -197,6 +249,157 @@ const P={org:null,consent:"yes",nick:"",exp:null,posts:{ku:9,pts:7},hist:[
 const GAZE={"世界観の内側":"物語の中に入りこむまなざし","世界観の外側":"自分ごとに引き寄せるまなざし","感じたままに表現":"感じたままを受けとめるまなざし","なぜ・どういうことか":"理由をさぐるまなざし","場面・出来事を想像":"次を読むまなざし","人・気持ち・物語を想像":"人のこころを読むまなざし","笑いに変える":"笑いに変えるまなざし","離れたものを結びつける":"つなげて見るまなざし"};
 function gazeOf(){ const cnt={}; [...S.ku1,...S.ku2,...S.ku3].forEach(k=>lensOf(k.join("")).forEach(l=>cnt[l]=(cnt[l]||0)+1)); const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0]; return top?GAZE[top[0]]:"これから育つまなざし"; }
 
+// ===== みかた石コレクション（v19） =====
+const MOCKBAR="検証版：入力はダミーでお願いします";
+const SORD=["whole","small","color","more","odd","reason","link","person","before","predict"];
+const SN={whole:"ひろがり",small:"つぶ",color:"しま",more:"のぞき",odd:"かけ",reason:"わり",link:"すじ",person:"たち",before:"うず",predict:"めばえ"};
+const SG={whole:"miru",small:"miru",color:"miru",more:"miru",odd:"tashi",reason:"tashi",link:"tashi",person:"omoi",before:"omoi",predict:"omoi"};
+const GRP={miru:"みる石",tashi:"たしかめる石",omoi:"おもいえがく石"};
+const SSVG={
+ whole:'<path d="M14 58 C14 34 34 22 54 24 C76 26 88 40 86 58 C84 76 66 84 48 83 C28 82 14 74 14 58 Z" fill="#8DB39C"/><ellipse cx="38" cy="38" rx="11" ry="6" fill="#FFFFFF" opacity=".5" transform="rotate(-25 38 38)"/>',
+ small:'<path d="M14 66 C14 56 22 50 30 52 C38 54 40 62 38 70 C36 78 26 80 20 77 C15 74 14 70 14 66 Z" fill="#8DB39C"/><path d="M40 48 C40 37 49 30 60 32 C71 34 76 43 74 54 C72 65 61 70 52 68 C43 66 40 58 40 48 Z" fill="#8DB39C"/><path d="M60 74 C60 68 65 64 71 65 C77 66 80 71 78 76 C76 81 70 83 66 82 C62 81 60 78 60 74 Z" fill="#8DB39C"/><ellipse cx="54" cy="41" rx="7" ry="4" fill="#FFFFFF" opacity=".55" transform="rotate(-25 54 41)"/>',
+ color:'<path d="M18 56 C16 36 36 24 56 26 C74 28 86 42 84 58 C82 74 64 84 48 82 C30 80 20 72 18 56 Z" fill="#8DB39C"/><path d="M22 46 C40 38 62 38 80 44" fill="none" stroke="#CFE1D4" stroke-width="5" stroke-linecap="round"/><path d="M22 63 C40 55 62 55 81 61" fill="none" stroke="#5E8A73" stroke-width="4" stroke-linecap="round" opacity=".6"/><ellipse cx="40" cy="33" rx="9" ry="4.5" fill="#FFFFFF" opacity=".5" transform="rotate(-20 40 33)"/>',
+ more:'<path d="M16 54 C16 34 34 22 54 24 C74 26 86 40 84 58 C82 76 64 84 48 82 C30 80 16 72 16 54 Z M60 52 C60 46 66 43 70 46 C74 49 73 56 68 58 C63 60 60 57 60 52 Z" fill="#8DB39C" fill-rule="evenodd"/><path d="M60 52 C60 46 66 43 70 46" fill="none" stroke="#5E8A73" stroke-width="2" stroke-linecap="round" opacity=".7"/><ellipse cx="34" cy="38" rx="10" ry="5.5" fill="#FFFFFF" opacity=".5" transform="rotate(-25 34 38)"/>',
+ odd:'<path d="M16 58 C16 38 32 24 52 24 L64 26 L60 35 L71 39 L80 35 C85 42 88 50 86 60 C84 76 66 84 48 83 C28 82 16 74 16 58 Z" fill="#93AAC2"/><path d="M64 26 L60 35 L71 39 L80 35" fill="none" stroke="#5D7891" stroke-width="2" stroke-linejoin="round" opacity=".7"/><ellipse cx="36" cy="42" rx="11" ry="6" fill="#FFFFFF" opacity=".6" transform="rotate(-25 36 42)"/>',
+ reason:'<path d="M14 58 C14 38 30 26 47 25 L43 44 L49 60 L43 82 C25 80 14 72 14 58 Z" fill="#93AAC2"/><path d="M55 25 C73 26 87 40 86 58 C85 74 71 82 51 82 L57 60 L51 44 Z" fill="#7F9AB5"/><ellipse cx="29" cy="40" rx="7" ry="4.5" fill="#FFFFFF" opacity=".55" transform="rotate(-30 29 40)"/>',
+ link:'<path d="M16 56 C16 38 34 26 54 26 C74 26 86 40 84 58 C82 74 66 83 48 82 C30 81 16 72 16 56 Z" fill="#93AAC2"/><path d="M30 64 C40 48 56 68 70 44" fill="none" stroke="#D3DFEA" stroke-width="3" stroke-linecap="round"/><circle cx="30" cy="64" r="4" fill="#FFFFFF"/><circle cx="70" cy="44" r="4" fill="#FFFFFF"/><ellipse cx="38" cy="37" rx="8" ry="4.5" fill="#FFFFFF" opacity=".45" transform="rotate(-25 38 37)"/>',
+ person:'<path d="M34 86 C28 70 28 48 34 32 C38 20 50 13 59 19 C68 25 71 44 69 60 C67 72 65 80 63 86 Z" fill="#E3AA8D"/><ellipse cx="44" cy="32" rx="8" ry="4.5" fill="#FFFFFF" opacity=".5" transform="rotate(-60 44 32)"/>',
+ before:'<path d="M16 56 C16 36 34 24 52 24 C72 24 86 38 84 56 C82 74 66 84 48 82 C30 80 16 74 16 56 Z" fill="#E3AA8D"/><path d="M52 54 C52 50 58 50 58 54 C58 60 48 61 46 54 C44 46 56 42 62 48 C68 55 64 67 52 68 C40 69 33 58 37 47" fill="none" stroke="#BF7A5C" stroke-width="3" stroke-linecap="round" opacity=".8"/><ellipse cx="32" cy="38" rx="8" ry="4.5" fill="#FFFFFF" opacity=".5" transform="rotate(-30 32 38)"/>',
+ predict:'<path d="M20 64 C20 50 34 42 50 42 C68 42 82 50 80 66 C78 80 64 86 48 85 C30 84 20 78 20 64 Z" fill="#E3AA8D"/><path d="M50 43 L50 22" fill="none" stroke="#4B7360" stroke-width="3" stroke-linecap="round"/><path d="M50 32 C44 24 36 24 33 28 C39 33 45 34 50 32 Z" fill="#7FA38E"/><path d="M50 27 C56 17 66 17 69 21 C63 27 57 29 50 27 Z" fill="#7FA38E"/><ellipse cx="36" cy="56" rx="8" ry="4.5" fill="#FFFFFF" opacity=".5" transform="rotate(-20 36 56)"/>'};
+const sIcon=(f,sz)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 100 100" aria-hidden="true">${SSVG[f]}</svg>`;
+// 試作の判定はキーワード（本番ではAIが読み取る想定）
+const SKW={
+ whole:["空気","雰囲気","静か","静けさ","しずか","にぎやか","のんびり","張りつめ","穏やか","ぱっと見","全体"],
+ small:["小さ","ちいさ","隅","背景","遠く","遠き","足元","汽車","奥","かすか"],
+ color:["色","赤","緑","青","桃","紫","ピンク","黄","線","形","明る","暗い","対比"],
+ more:["よく見ると","ほかに","他に","さらに","一人ずつ","ひとりずつ","もう一つ","もうひとつ","左の","右の","見落と"],
+ odd:["違う","ちがう","なのに","るのに","たのに","いのに","変な","ふつう","普通","いつも","足りない","描かれていない","誰も","だけ"],
+ reason:["推測","事実","だから","なぜ","理由","根拠"],
+ link:["似て","同じ","比べ","呼び合","くり返","そろ","並び","並ん","みな","対に"],
+ person:["表情","顔","肩","姿勢","疲れ","元気","気持ち","膝","首","手を","足を","目を","目が","目は","閉じ","うつむ","ひとり","四人","人が","人は","人の"],
+ before:["さっき","終え","てきた","来た","前に","までは","帰り"],
+ predict:["しそう","これから","この後","このあと","来たら","だろう","やがて","待つ","待ち","5分後","次に"]};
+const famsIn=t=>SORD.filter(f=>SKW[f].some(w=>String(t||"").includes(w)));
+const owned=s=>s==="fit"||s==="temochi";
+const dayL=n=>`${n}日目`;
+function newSlate(){ const st={}; SORD.forEach(f=>st[f]={s:"none",uses:[]}); return {n:0,st,grooves:[]}; }
+function ensureSlate(){ if(!P.slate||!P.slate.st) P.slate=newSlate(); SORD.forEach(f=>{ if(!P.slate.st[f]) P.slate.st[f]={s:"none",uses:[]}; if(!P.slate.st[f].uses) P.slate.st[f].uses=[]; }); if(!P.slate.grooves) P.slate.grooves=[]; }
+P.slate=newSlate(); P.mock=null;
+const P0=JSON.parse(JSON.stringify(P));
+function toast(msg){ const r=$("root"); if(!r) return; const t=document.createElement("div"); t.className="toast"; t.setAttribute("role","status"); t.textContent=msg; r.appendChild(t); setTimeout(()=>t.remove(),2800); }
+// ヒントなしで書いたもの（①の句と、ひとことコメント）
+function freeUnits(){ return S.ku1.map((k,i)=>({ku:k.join("　"),c:((S.ku1C||[])[i]||"").trim()})); }
+function freeFams(){ const m=new Map(); freeUnits().forEach(u=>{ famsIn(u.ku).forEach(f=>{ if(!m.has(f)) m.set(f,{src:"句",text:u.ku}); }); if(u.c) famsIn(u.c).forEach(f=>{ if(!m.has(f)) m.set(f,{src:"コメント",text:u.c}); }); }); return m; }
+function provTemochi(){ const sl=P.slate, out=new Set(); if(sl.n>=3) return out; freeFams().forEach((ev,f)=>{ const s=sl.st[f].s; if(s==="none"||s==="hollow") out.add(f); }); return out; }
+const LENS2F={"感じたままに表現":"whole","世界観の内側":"whole","世界観の外側":"whole","笑いに変える":"whole","なぜ・どういうことか":"reason","場面・出来事を想像":"predict","人・気持ち・物語を想像":"person","離れたものを結びつける":"link"};
+const AV2F={"人物":"person","表情・しぐさ":"person","色・形":"color","背景・街":"small","並び・構図":"link","気持ち・物語":"person"};
+function fallbackFam(){ const t=freeUnits().map(u=>u.ku+u.c).join(" "); const a=artOf(t).map(x=>AV2F[x]).filter(Boolean); if(a.length) return a[0]; const l=lensOf(t).map(x=>LENS2F[x]).filter(Boolean); return l[0]||"whole"; }
+// ② 4つのうち1つは、まだ持っていない系統から出す
+function drawHintsSlate(){ const sl=P.slate, prov=provTemochi(), pool=shuffle(HINT_POOL), out=[], tags=new Set();
+  const un=pool.filter(h=>{ const s=sl.st[h.tag].s; return (s==="none"||s==="hollow")&&!prov.has(h.tag); });
+  if(un.length){ out.push(un[0]); tags.add(un[0].tag); }
+  for(const h of pool){ if(out.length>=4) break; if(tags.has(h.tag)) continue; tags.add(h.tag); out.push(h); }
+  return shuffle(out); }
+// ⑤ に来たとき、1回だけ石板に反映する
+function slateCommit(){ if(S.slateRes) return S.slateRes; ensureSlate();
+  const sl=P.slate, day=sl.n+1, dl=dayL(day), before={}; SORD.forEach(f=>before[f]=sl.st[f].s);
+  const res={day,first:sl.n===0,temochi:[],used:[],fit:[],self:[],picked:[],hollow:[],grooves:[]};
+  const free=freeFams(), units=freeUnits();
+  if(sl.n<3){ free.forEach((ev,f)=>{ if(before[f]==="none"||before[f]==="hollow"){ Object.assign(sl.st[f],{s:"temochi",ev,d:dl}); res.temochi.push(f); } });
+    if(res.first&&!res.temochi.length){ const f=fallbackFam(); Object.assign(sl.st[f],{s:"temochi",ev:{src:"句",text:units[0]?units[0].ku:"",fb:true},d:dl}); res.temochi.push(f); } }
+  free.forEach((ev,f)=>{ const s=sl.st[f];
+    if(before[f]==="loose"){ if(!s.uses.some(u=>u.d===dl)) s.uses.push({d:dl,src:ev.src,text:ev.text}); if(s.uses.length>=3){ s.s="fit"; s.fd=dl; res.fit.push(f); } else res.used.push(f); }
+    else if(sl.n>=3&&(before[f]==="none"||before[f]==="hollow")){ Object.assign(s,{s:"loose",uses:[{d:dl,src:ev.src,text:ev.text}],self:true}); res.self.push(f); } });
+  S.hints.forEach((h,i)=>{ const t=(S.hc[i]||"").trim(), s=sl.st[h.tag]; if(t.length>=4&&(s.s==="none"||s.s==="hollow")){ Object.assign(s,{s:"loose",uses:[],pick:{d:dl,hint:h.t,text:t}}); res.picked.push(h.tag); } });
+  S.hints.forEach(h=>{ const s=sl.st[h.tag]; if(s.s==="none"){ s.s="hollow"; s.hd=dl; res.hollow.push(h.tag); } });
+  units.forEach(u=>{ const fs=[...new Set([...famsIn(u.ku),...famsIn(u.c)])].filter(f=>owned(before[f])).sort((a,b)=>SORD.indexOf(a)-SORD.indexOf(b));
+    for(let a=0;a<fs.length;a++) for(let b=a+1;b<fs.length;b++){ const k=fs[a]+"|"+fs[b]; if(!sl.grooves.includes(k)){ sl.grooves.push(k); res.grooves.push(k); } } });
+  sl.n=day; S.slateRes=res; S.fitQ=[...res.fit]; S.fitShown=!res.fit.length; return res; }
+function countsObj(sl){ const c={fit:0,tem:0,loose:0,hollow:0,none:0}; SORD.forEach(f=>{ const s=sl.st[f].s; if(s==="fit") c.fit++; else if(s==="temochi"){ c.fit++; c.tem++; } else if(s==="loose") c.loose++; else if(s==="hollow") c.hollow++; else c.none++; }); return c; }
+const SLOT={whole:[45,40],small:[125,40],color:[205,40],more:[285,40],odd:[85,118],reason:[165,118],link:[245,118],person:[85,196],before:[165,196],predict:[245,196]};
+function tablet(sl,today){ today=today||new Set(); let g="",o="",lb=""; const k=.5;
+  sl.grooves.forEach(key=>{ const [a,b]=key.split("|"), A=SLOT[a], B=SLOT[b]; if(A&&B) g+=`<line x1="${A[0]}" y1="${A[1]}" x2="${B[0]}" y2="${B[1]}" stroke="#3A475B" stroke-width="10" stroke-linecap="round"/>`; });
+  SORD.forEach(f=>{ const [x,y]=SLOT[f], s=sl.st[f], tx=x-50*k, ty=y-54*k;
+    if(s.s==="none") o+=`<ellipse cx="${x}" cy="${y}" rx="28" ry="20" fill="none" stroke="#8693A8" stroke-width="1"/>`;
+    else { o+=`<ellipse cx="${x}" cy="${y}" rx="28" ry="20" fill="#414F64"/>`;
+      if(s.s==="loose") o+=`<ellipse cx="${x-1}" cy="${y-1}" rx="20" ry="13" fill="#1F2937" opacity=".35"/><g transform="translate(${tx-5} ${ty-10}) scale(${k})">${SSVG[f]}</g>`;
+      if(owned(s.s)) o+=`<g transform="translate(${tx} ${ty}) scale(${k})">${SSVG[f]}</g>`;
+      if(s.s==="temochi") o+=`<ellipse cx="${x}" cy="${y}" rx="26" ry="19" fill="none" stroke="#F2C230" stroke-width="2.5"/>`; }
+    if(today.has(f)) o+=`<ellipse class="tnew" cx="${x}" cy="${y}" rx="31" ry="23" fill="none" stroke="#FFFFFF" stroke-width="2"/>`;
+    lb+=`<text x="${x}" y="${y+34}" text-anchor="middle" font-size="11" fill="#F1F4F8">${SN[f]}</text>`;
+    if(s.s==="loose") lb+=[0,1,2].map(i=>`<circle cx="${x-8+i*8}" cy="${y+43}" r="2.4" fill="${i<s.uses.length?"#F2C230":"#8693A8"}"/>`).join(""); });
+  const c=countsObj(sl);
+  return `<svg viewBox="0 0 330 246" role="img" aria-label="石板：はまった石${c.fit}つ（うち、てもち${c.tem}つ）、仮置き${c.loose}つ、ほったくぼみ${c.hollow}つ、まだのくぼみ${c.none}つ">${g}${o}${lb}</svg>`; }
+function countsLine(sl){ const c=countsObj(sl); return `<div class="slcount"><span class="pill p-fit">はまった ${c.fit}${c.tem?`（てもち ${c.tem}）`:""}</span><span class="pill p-loose">仮置き ${c.loose}</span><span class="pill p-hol">くぼみ ${c.hollow}</span></div>`; }
+const legend=()=>`<div class="legend"><span><svg width="18" height="14" viewBox="0 0 18 14" aria-hidden="true"><ellipse cx="9" cy="7" rx="7" ry="5" fill="#8DB39C" stroke="#F2C230" stroke-width="1.5"/></svg>てもち</span><span><svg width="18" height="14" viewBox="0 0 18 14" aria-hidden="true"><ellipse cx="9" cy="7" rx="7" ry="5" fill="#93AAC2"/></svg>はまった</span><span><svg width="18" height="14" viewBox="0 0 18 14" aria-hidden="true"><ellipse cx="10" cy="8" rx="7" ry="5" fill="#414F64" opacity=".35"/><ellipse cx="8" cy="6" rx="7" ry="5" fill="#E3AA8D"/></svg>仮置き</span><span><svg width="18" height="14" viewBox="0 0 18 14" aria-hidden="true"><ellipse cx="9" cy="7" rx="7" ry="5" fill="#414F64"/></svg>くぼみ</span><span><svg width="18" height="14" viewBox="0 0 18 14" aria-hidden="true"><ellipse cx="9" cy="7" rx="7" ry="5" fill="none" stroke="#8693A8" stroke-width="1"/></svg>まだ</span><span><svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true"><line x1="3" y1="7" x2="17" y2="7" stroke="#3A475B" stroke-width="4" stroke-linecap="round"/></svg>みぞ（くんだ）</span></div>`;
+const slateHow=()=>`<details class="more"><summary>コレクションのしくみ</summary><div class="note">てもち：はじめの3回までに、ヒントの前の句やコメントで使えた見方は、もともと持っている石としてはまります（初回は最低1つ）。<br>ほる・ひろう：ヒントで新しい見方に出会うと、くぼみができます。そのヒントで書けたら、石を仮置きします。<br>はめる：仮置きの見方を、ちがう日に、ヒントの前の句やコメントで3回使えると、はまります。<br>くむ：はまった見方を1つの句でいっしょに使うと、みぞで結ばれます。<br>この版では、キーワードで仮に判定しています。1回終えるごとに「次の日」として数えます。</div></details>`;
+function evLine(f){ const e=P.slate.st[f].ev||{}; return e.fb?`句「${esc(e.text)}」の全体から`:`${esc(e.src||"")}「${esc(e.text||"")}」から`; }
+const evt=(f,lab,txt)=>`<div class="sevt">${sIcon(f,26)}<div><b>${SN[f]}の石　<span class="evl">${lab}</span></b><div class="note">${txt}</div></div></div>`;
+function slateToday(){ const r=slateCommit(), sl=P.slate, today=new Set([...r.temochi,...r.fit,...r.picked,...r.self]), rows=[];
+  if(!r.first) rows.push(...r.temochi.map(f=>evt(f,"てもち",`もともと持っていた見方が見つかりました（${evLine(f)}）`)));
+  rows.push(...r.fit.map(f=>evt(f,"はまった","ちがう日に、ヒントの前の句やコメントで3回使えました")));
+  rows.push(...r.used.map(f=>evt(f,"仮置き",`ヒントなしで使えました。はまるまで あと${3-sl.st[f].uses.length}回`)));
+  rows.push(...r.self.map(f=>evt(f,"仮置き","ヒントなしで、新しい見方が出てきました。ちがう日に あと2回使うと はまります")));
+  rows.push(...r.picked.map(f=>evt(f,"ひろった",`ヒント「${esc(sl.st[f].pick.hint)}」で書けたので、仮置きしました`)));
+  rows.push(...r.grooves.map(key=>{ const [a,b]=key.split("|"); return `<div class="sevt"><span style="display:flex">${sIcon(a,24)}${sIcon(b,24)}</span><div><b>${SN[a]} × ${SN[b]} を くみました</b><div class="note">はまった見方を、1つの句でいっしょに使えました</div></div></div>`; }));
+  if(r.hollow.length) rows.push(`<div class="note">新しいくぼみ：${r.hollow.map(f=>SN[f]+"の石").join("・")}（ヒントで出会った見方）</div>`);
+  const tem=r.first?`<div class="tembox"><b style="font-size:14px">あなたの、てもちの石</b>${r.temochi.map(f=>`<div class="sevt">${sIcon(f,28)}<div><b>${SN[f]}の石</b><span class="note">（${esc(TAG[f].n)}）</span><div class="note">${evLine(f)}</div></div></div>`).join("")}<div class="note">もともと持っていた見方として、はめました。3回目までは、てもちが追加で見つかることがあります。</div></div>`:"";
+  return `<div class="card slatecard" id="slatecard"><div class="slhead"><b>みかた石コレクション</b><span class="note">${r.first?"はじめての1回":dayL(r.day)}</span></div>
+   <div class="slate">${tablet(sl,today)}</div>${countsLine(sl)}${tem}${rows.length?`<div class="sevts">${rows.join("")}</div>`:`<div class="note">今日は、コレクションに変化はありませんでした。①でヒントなしに使えた見方が、仮置きの石をはめていきます。</div>`}${slateHow()}</div>`; }
+function slateHistCard(){ ensureSlate(); const sl=P.slate;
+  if(!sl.n) return `<div class="card"><div class="slhead"><b>みかた石コレクション</b></div><div class="slate">${tablet(sl)}</div><div class="note">まだ石はありません。はじめての1回で、てもちの石が届きます。</div></div>`;
+  const loose=SORD.filter(f=>sl.st[f].s==="loose");
+  return `<div class="card"><div class="slhead"><b>みかた石コレクション</b><span class="note">${sl.n}回</span></div><div class="slate">${tablet(sl)}</div>${countsLine(sl)}${legend()}
+   ${loose.length?`<div class="sevts">${loose.map(f=>{ const u=sl.st[f].uses.length; return `<div class="sevt">${sIcon(f,26)}<div style="flex:1"><b>${SN[f]}の石は 仮置き中</b><div class="bars">${[0,1,2].map(i=>`<i class="${i<u?"on":""}"></i>`).join("")}</div><div class="note">ちがう日に、ヒントの前の句やコメントで あと${3-u}回使うと はまります</div></div></div>`; }).join("")}</div>`:""}${slateHow()}</div>`; }
+// はまった日：分析の上に重ねて出す（画面は増やさない）
+function slateAfter(){ if(S.fitShown||$("hm")) return; const q=S.fitQ||[]; if(!q.length){ S.fitShown=true; return; } setTimeout(()=>{ if(S.ph==="rev"&&!$("hm")) showFit(q[0]); },350); }
+function showFit(f){ const s=P.slate.st[f], k=.9, g=SG[f], el=document.createElement("div");
+  el.className="hm-scrim"; el.id="hm"; el.setAttribute("role","dialog"); el.setAttribute("aria-modal","true"); el.setAttribute("aria-labelledby","hmT");
+  el.innerHTML=`<div class="hm-sheet"><div class="hm-slate"><svg width="200" height="140" viewBox="0 0 200 140" aria-hidden="true">
+   <rect class="hm-sweep" x="3" y="3" width="194" height="134" rx="20" fill="none" stroke="#F2C230" stroke-width="3"/>
+   <ellipse class="hm-ring2" cx="100" cy="72" rx="78" ry="56" fill="none" stroke="#F2C230" stroke-width="1.5" stroke-opacity=".45"/>
+   <ellipse class="hm-ring" cx="100" cy="72" rx="64" ry="46" fill="none" stroke="#F2C230" stroke-width="3"/>
+   <ellipse cx="100" cy="72" rx="47" ry="34" fill="#414F64"/>
+   <g class="hm-stone"><g transform="translate(${100-50*k} ${72-54*k}) scale(${k})">${SSVG[f]}</g></g>
+   <path class="hm-spark" d="M168 12 L171 21 L180 24 L171 27 L168 36 L165 27 L156 24 L165 21 Z" fill="#F2C230"/>
+   <path class="hm-spark s2" d="M30 104 L32 110 L38 112 L32 114 L30 120 L28 114 L22 112 L28 110 Z" fill="#F2C230"/></svg></div>
+   <span class="note">ちがう日に、ヒントの前の句やコメントで3回使えました</span>
+   <h3 id="hmT">この見方が、<br>あなたの石板にはまりました</h3>
+   <div><b style="font-size:19px">${SN[f]}の石</b><div class="note gt-${g}" style="font-weight:700">${GRP[g]}｜${esc(TAG[f].n)}</div></div>
+   <div class="hm-uses"><span class="note">ヒントなしで使えた3回</span>${(s.uses||[]).slice(-3).map(u=>`<div class="hm-use"><span class="note">${esc(u.d)}</span><span>${esc(u.src)}「${esc(u.text)}」</span></div>`).join("")}</div>
+   <div class="hm-btns"><button class="btn sub" id="hmSlate">コレクションを見る</button><button class="btn" id="hmBack">分析にもどる</button></div></div>`;
+  $("root").appendChild(el);
+  try{ if(navigator.vibrate) navigator.vibrate([30,60,30]); }catch(e){}
+  const close=toSlate=>{ el.remove(); S.fitQ=(S.fitQ||[]).slice(1); if(S.fitQ.length) setTimeout(()=>showFit(S.fitQ[0]),250); else S.fitShown=true; persist();
+    if(toSlate){ const c=$("slatecard"); if(c){ c.scrollIntoView({behavior:"smooth",block:"start"}); c.classList.add("flash"); setTimeout(()=>c.classList.remove("flash"),1600); } } };
+  $("hmBack").onclick=()=>close(false); $("hmSlate").onclick=()=>close(true);
+  el.addEventListener("keydown",e=>{ if(e.key==="Escape") close(false); });
+  setTimeout(()=>{ const b=$("hmBack"); if(b) b.focus({preventScroll:true}); },60); }
+// 試作用：場面の切り替え（はじめて使う人／7日目）
+const EX_FIT=["昼休み","なのに誰もが","口結ぶ"];
+function fitPending(){ const s=P.slate&&P.slate.st&&P.slate.st.odd; return P.mock==="fit"&&!!s&&s.s==="loose"&&s.uses.length===2; }
+function ex1(){ return fitPending()&&!S.ku1.some(k=>famsIn(k.join("")).includes("odd"))?[EX_FIT]:EX.ku1; }
+function seedSlate(){ const sl=newSlate(), st=sl.st;
+  st.whole={s:"temochi",uses:[],d:"1日目",ev:{src:"コメント",text:"昼休みのような、のんびりした空気"}};
+  st.person={s:"temochi",uses:[],d:"1日目",ev:{src:"句",text:"口結び　ひとりだけ目を　閉じている"}};
+  st.small={s:"fit",fd:"4日目",pick:{d:"1日目",hint:"隅や背景の、小さなものに目を向ける",text:"遠くに汽車が走っている"},uses:[{d:"2日目",src:"句",text:"ビルの影　川の向こうに　汽車が行く"},{d:"3日目",src:"コメント",text:"遠くの川に、小さな舟が浮かんでいる"},{d:"4日目",src:"句",text:"遠き汽車　知らぬ顔して　座る四人"}]};
+  st.link={s:"fit",fd:"4日目",pick:{d:"1日目",hint:"離れた2か所を見比べて、つながりを探す",text:"四人の帽子と遠くのビルの並びが似ている"},uses:[{d:"2日目",src:"句",text:"四人並び　同じ方を　見ていない"},{d:"3日目",src:"コメント",text:"帽子と帽子が、同じかたちでそろっている"},{d:"4日目",src:"コメント",text:"ビルの並びと、四人の並びが似ている"}]};
+  st.odd={s:"loose",pick:{d:"2日目",hint:"「ふつうと違う」と感じるところは？",text:"ベンチなのに、誰も休んでいる顔をしていない"},uses:[{d:"6日目",src:"句",text:"ひとりだけ　ちがう方見る　昼下がり"},{d:"7日目",src:"コメント",text:"座っているのに、誰も休んでいる顔をしていない"}]};
+  st.color={s:"loose",uses:[],pick:{d:"4日目",hint:"色、形、線だけに注目してみる",text:"明るい空と、暗い服の対比が目立つ"}};
+  st.more={s:"hollow",uses:[],hd:"1日目"}; st.before={s:"hollow",uses:[],hd:"2日目"};
+  sl.grooves=["whole|small"]; sl.n=7; return sl; }
+function mockSet(kind){ const prev={org:P.org,nick:P.nick,exp:P.exp,consent:P.consent}, keep=JSON.parse(JSON.stringify(P0)); Object.keys(P).forEach(k=>delete P[k]); Object.assign(P,keep); P.slate=newSlate(); P.mock=kind;
+  if(kind==="fit"){ P.org=prev.org||ORGS[0]; P.orgs=[P.org.code]; P.nick=prev.nick||"あおい"; P.exp=prev.exp||"2〜3年目"; P.consent=prev.consent||"yes"; P.slate=seedSlate(); }
+  reset(); S.msgs=[]; if(kind==="fit") go("art1"); else { S.ph="talk"; render(); } }
+function mockCard(){ return `<div class="mockver"><button class="chip ${P.mock!=="fit"?"on":""}" id="mkFirst">初めて使う人Ver</button><button class="chip ${P.mock==="fit"?"on":""}" id="mkFit">既に7日試した人Ver</button></div>`; }
+function postsCard(){ return `<div class="card"><b>これまでの投稿</b><div class="pstat"><div><b>${P.posts.ku}</b><span class="note">句</span></div><div><b>${P.posts.pts}</b><span class="note">気になるポイント</span></div></div></div>`; }
+// ホームの上のボタン：中断中／初めて／2回目以降で出し分け
+function startButtons(stopped){ const re=`<div class="rsgrid"><button class="btn sub" id="mkFirst">最初からやり直す<small>（初めてVer）</small></button><button class="btn sub" id="mkFit">最初からやり直す<small>（試した人Ver）</small></button></div>`;
+  if(S.paused&&!stopped) return `<button class="btn" id="resume" style="width:100%;margin:6px 0">続きから再開</button>${re}`;
+  if(!P.org) return `<div class="rsgrid st"><button class="btn" id="go">はじめる<small>（初めてVer）</small></button><button class="btn" id="mkFit">はじめる<small>（試した人Ver）</small></button></div>`;
+  return `<button class="btn" id="go" style="width:100%;margin:6px 0">はじめる</button>${re}`; }
+function bindMock(){ const a=$("mkFirst"), b=$("mkFit"); if(a) a.onclick=()=>mockSet("first"); if(b) b.onclick=()=>mockSet("fit"); }
+
 let S;
 function reset(){ S={ph:"talk",ku1:[],d1:["","",""],hints:drawHints(),hc:{},ku2:[],d2:["","",""],peers:shuffle(PEER_KU).slice(0,4),who:shuffle(PEER_WHO),reacts:new Set(),ku3:[],d3:["","",""],cs:pick(CASES),worst:"",odd:"",points:[],inP:"",preacts:new Set(),cm:[],inC:"",day:3,shared:false}; }
 reset();
@@ -215,14 +418,14 @@ const LABEL={art1:"① 絵をあるがままに",art2:"② 見方のヒント",k
 function render(){
   const r=$("root"), key=S.ph, same=S._key===key, m=document.querySelector("main"), top=same&&m?m.scrollTop:0; S._key=key;
   if(S.ph==="talk"){ const stopped=P.org&&!P.org.active;
-   r.innerHTML=`<div class="mockbar">検証版：入力はダミーでお願いします</div>
+   r.innerHTML=`<div class="mockbar">${MOCKBAR}</div>
    <div class="bar"><span style="width:44px"></span><div class="t"><b>いっぷ句</b><small>臨床推論・軽量モード</small></div><span style="width:44px"></span></div>
    <main><div class="seal" style="font-size:15px">いっぷ句</div>
    <h2>${P.nick?esc(honor(P.nick))+"、":""}${S.paused?"おかえりなさい":"今日のいっぷ句、はじめませんか"}</h2>
    <p class="lead">${S.paused?`前回は「${esc(LABEL[S.paused]||"")}」で中断しました。書いた内容は残っています。`:"絵を眺めて句を詠み、そのあと臨床の場面をひとつ。5分ほどです。"}</p>
    ${(S.msgs||[]).slice(-1).map(m=>`<div class="card"><div class="note">${m}</div></div>`).join("")}
-   ${S.paused&&!stopped?`<button class="btn" id="resume" style="width:100%;margin:6px 0">続きから再開</button><button class="btn sub" id="restart" style="width:100%;margin:6px 0">最初からやり直す</button>`:`<button class="btn" id="go" style="width:100%;margin:6px 0">はじめる</button>`}
-   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><button class="btn sub" id="rm2">分析結果</button><button class="btn sub" id="rm3">これまでの投稿</button><button class="btn sub" id="rm4" style="grid-column:1/3">設定を変える</button></div>
+   ${startButtons(stopped)}
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><button class="btn sub" id="rm2">分析結果</button><button class="btn sub" id="rm4">設定変更</button></div>
    <button class="btn sub" id="toline" style="width:100%;margin-top:8px">LINEに戻る</button>
    <span id="rm1" hidden></span>
    ${FOOT_LINKS}</main>`;
@@ -232,14 +435,13 @@ function render(){
      if(S.paused){ const ph=S.paused; S.paused=null; go(ph); return; } const d=S.day, msgs=S.msgs; reset(); S.msgs=msgs; if(S.didToday){} go("art1"); };
    const g0=$("go"); if(g0) g0.onclick=start; $("rm1").onclick=start;
    $("rm2").onclick=()=>{ if(P.org&&!P.org.active){ start(); return; } go("hist"); };
-   $("rm3").onclick=()=>say(`これまでの投稿：句 ${P.posts.ku}句、気になるポイント ${P.posts.pts}つ（デモ）。`);
    $("rm4").onclick=()=>{ if(!P.org){ go("org"); return; } S.tmp={nick:P.nick,exp:P.exp,org:P.org.code,consent:P.consent,mode:"lite"}; go("set"); };
    const ds=$("demostop"); if(ds) ds.onclick=()=>{ P.org.active=!P.org.active; say(P.org.active?"（デモ）組織の利用を再開しました。":"（デモ）所属組織の利用を停止しました。「今日の学習」を押すと、案内が届きます。"); };
-   $("toline").onclick=()=>closeLine(false);
-   if(S.paused&&!stopped){ $("resume").onclick=()=>{ const ph=S.paused; S.paused=null; go(ph); }; $("restart").onclick=()=>{ const d=S.day, msgs=S.msgs; reset(); S.day=d; S.msgs=msgs; go("art1"); }; }
+   $("toline").onclick=()=>closeLine(false); bindMock();
+   if(S.paused&&!stopped){ $("resume").onclick=()=>{ const ph=S.paused; S.paused=null; go(ph); }; }
    return; }
   const v={set:vSet,profile:vProfile,s2p:vS2p,s2c:vS2c,org:vOrg,consent:vConsent,hist:vHist,histd:vHistD,art1:vArt1,art2:vArt2,ku2:vKu2,peer:vPeer,s1:vS1,s2:vS2,rev:vRev,done:vDone,share:vShare}[S.ph](), idx=FLOW.indexOf(S.ph);
-  r.innerHTML=`<div class="mockbar">検証版：入力はダミーでお願いします</div>
+  r.innerHTML=`<div class="mockbar">${MOCKBAR}</div>
    <div class="bar"><button class="x" id="close" aria-label="閉じる">✕</button><div class="t"><b>いっぷ句</b><small>臨床推論・軽量モード</small></div>${FLOW.includes(S.ph)?`<button class="pause" id="pause">中断</button>`:`<span style="width:44px"></span>`}</div>
    ${false?`<div class="steps">${FLOW.map((f,i)=>`<button class="${i<=idx?"on":""}" data-step="${i}" ${i<idx?"":"disabled"} aria-label="${LABEL[f]}${i<idx?"に戻る":""}"></button>`).join("")}</div><div class="steplabel">${LABEL[S.ph]}${idx>0?`<span class="note">　バーを押すと前の画面に戻れます</span>`:""}</div>`:""}
    ${PIN.includes(S.ph)?(()=>{const pi=pinInfo(); return `<div class="pinned"><div class="lwrap" id="lw"><img id="pimg" src="${pi.src}" alt="${esc(pi.alt)}"><div class="lens" id="lens" aria-hidden="true"></div></div><div class="pbar"><span class="note">${esc(pi.cap)}${S.loupe?"　画像をなぞると拡大します":""}</span><button class="chip ${S.loupe?"on":""}" id="loupe">${S.loupe?"虫眼鏡をやめる":"🔍 虫眼鏡"}</button></div></div>`;})():""}
@@ -274,7 +476,7 @@ function vProfile(){ const ok=P.nick.trim()&&P.exp; return {html:`<p class="lead
   <div class="q">ニックネーム</div><input class="ku" id="nk" maxlength="12" placeholder="12文字まで" value="${esc(P.nick)}" aria-label="ニックネーム"><div class="note">呼びかけに使うほか、みんなの句や気づきに、従事歴と一緒に表示されます。本名は避けてください。</div>
   <div class="q">${isNurse()?"看護の従事歴":"その仕事の従事歴"}</div><div class="chips" id="ex">${EXPS_now().map(x=>`<button class="chip ${P.exp===x?"on":""}">${x}</button>`).join("")}</div>
   <div class="q">研究への協力</div><button class="tgl ${P.consent==="yes"?"on":""}" id="ptg" role="switch" aria-checked="${P.consent==="yes"}"><span class="knob"></span><span class="tl">${P.consent==="yes"?"オン（協力する）":"オフ（協力しない）"}</span></button>
-  <div class="note" style="margin-top:4px">オンのとき、書いた句や気づきを、名前やLINEのIDを外して看護教育の研究に使います。オフでも学習はすべて使えます。あとから「設定を変える」で変えられます。</div>
+  <div class="note" style="margin-top:4px">オンのとき、書いた句や気づきを、名前やLINEのIDを外して看護教育の研究に使います。オフでも学習はすべて使えます。あとから「設定変更」で変えられます。</div>
   <details class="more"><summary>従事歴は何に使う？</summary><div class="note">分析で、同じくらいの経験の人と比べた傾向を返したり、事例の難しさを合わせたりするのに使います（本番での想定）。研究に使う場合も、名前やLINEのIDとはひもづけません。あとから変えられます。</div></details>`,
   foot:`<button class="btn" id="n" ${ok?"":"disabled"}>${ok?"次へ":"未入力："+[P.nick.trim()?"":"ニックネーム",P.exp?"":"従事歴"].filter(Boolean).join("・")}</button>`,
   bind(){ const upd=()=>{ const okk=P.nick.trim()&&P.exp, n=$("n"); n.disabled=!okk; n.textContent=okk?"次へ":"未入力："+[P.nick.trim()?"":"ニックネーム",P.exp?"":"従事歴"].filter(Boolean).join("・"); };
@@ -303,7 +505,7 @@ function vConsent(){ return {html:`<p class="lead">${esc(P.org.name)}</p><h2>研
   foot:`<button class="btn" id="n" ${P.consent?"":"disabled"}>${P.consent?"いっぷ句をはじめる":"未入力：研究への協力"}</button>`,
   bind(){ document.querySelectorAll("#cs .chip").forEach(b=>b.onclick=()=>{ P.consent=b.dataset.v; render(); }); $("n").onclick=()=>{ const msgs=S.msgs; reset(); S.msgs=msgs; go("art1"); }; }}; }
 // 過去の分析（時系列）
-function vHist(){ const h=P.hist; return {html:`<h2>分析結果と経過</h2>${P.nick?`<p class="lead">${esc(honor(P.nick))}（${esc(P.exp||"")}）</p>`:""}<div class="card"><b>あなたの経過</b>${chart(h.map(x=>({d:x.d,lens:x.lens,rate:x.rate})))}</div>
+function vHist(){ const h=P.hist; return {html:`<h2>分析結果と経過</h2>${P.nick?`<p class="lead">${esc(honor(P.nick))}（${esc(P.exp||"")}）</p>`:""}<div class="card"><b>あなたの経過</b>${chart(h.map(x=>({d:x.d,lens:x.lens,rate:x.rate})))}</div>${postsCard()}${slateHistCard()}
   <div class="q">これまでの分析（新しい順）</div>
   ${h.map((x,i)=>({x,i})).reverse().map(({x,i})=>`<button class="ob" data-h="${i}" style="width:100%;text-align:left;cursor:pointer;font:inherit;padding:12px"><span style="flex:1"><b>${esc(x.d)}　${esc(x.title)}</b><br><span class="note">${esc(x.gaze)}／句の見方 ${x.lens}／熟達者の観点 ${x.rate}%</span></span><span>›</span></button>`).join("")}
   <details class="more"><summary>くわしい説明</summary><div class="note">「今日」以外の記録は、表示確認用の仮のデータです。</div></details>`,
@@ -316,10 +518,10 @@ function vHistD(){ const x=P.hist[S.hsel]; return {html:`<h2>${esc(x.d)} の分�
 
 // ① 絵をあるがままに
 function vArt1(){ const n=S.ku1.length; return {html:`<div class="card" style="display:flex;gap:10px;align-items:center">${steam()}<div><b>いっぷ句の時間です</b><div class="note">まずは、あるがままに絵を眺めましょう。</div></div></div>
-  <div class="q">目にとまったこと、感じたことを一句で（何句でも）</div>${kuBlock("ku1","d1",EX.ku1)}
+  <div class="q">目にとまったこと、感じたことを一句で（何句でも）</div>${kuBlock("ku1","d1",ex1())}
   <details class="more"><summary>くわしい説明</summary><div class="note">正解はありません。音数は目安です（漢字は1字を1音として数えるため、ずれることがあります）。この絵の権利は確認中で、本番ではパブリックドメインかCC0の作品を使います。</div></details>`,
   foot:`<button class="btn" id="n" ${n?"":"disabled"}>${n?`${n}句詠みました。見方のヒントへ`:"未入力：句"}</button>`,
-  bind(){ bindKu("ku1","d1",EX.ku1); $("n").onclick=()=>go("art2"); }}; }
+  bind(){ bindKu("ku1","d1",ex1()); $("n").onclick=()=>{ if(!S.hintsSlate){ S.hints=drawHintsSlate(); S.hc={}; S.hintRound=0; S.hintsSlate=true; } go("art2"); }; }}; }
 // ② 見方のヒント（ヒントごとにコメント）
 const hcCount=()=>Object.values(S.hc).filter(x=>x.trim()).length;
 function refreshHints(){ const shown=new Set(S.hints.map(h=>h.t)), keep=S.hints.map((h,i)=>(S.hc[i]||"").trim()?h:null), tags=new Set(keep.filter(Boolean).map(h=>h.tag));
@@ -465,7 +667,7 @@ function vRev(){ const a=analyze(), CV=VIEWS.map(v=>v.n), dot=(on,c)=>`<span sty
   const summary=`<div class="card" style="background:var(--mist)"><b style="font-size:16px">まとめ：あなたの見方</b>
    <div class="note" style="margin-top:8px">押さえておきたいポイント（根）</div><ul style="margin:4px 0 10px 18px;padding:0;font-size:14px;line-height:1.7">${roots.slice(0,3).map(x=>`<li>${x}</li>`).join("")}</ul>
    <div class="note">あなたの持ち味（まなざし）</div><div style="font-size:17px;font-weight:700;color:var(--ink-d);margin:4px 0">${esc(gz)}</div><ul style="margin:4px 0 0 18px;padding:0;font-size:14px;line-height:1.7">${(mochi.length?mochi:["まずは、目にとまったものを言葉にしていきましょう"]).map(x=>`<li>${x}</li>`).join("")}</ul></div>`;
-  return {html:`<h2>今日のいっぷ句の分析</h2>${summary}<details class="more"><summary>くわしい分析を見る（句・事前予測・パッと見）</summary>
+  return {html:`<h2>今日のいっぷ句の分析</h2>${summary}<details class="more"><summary>詳しい分析を見る（句・事前予測・パッと見）</summary>
   <div class="card"><b>句の分析（いっぷ句の8つの見方）</b><img src="${ART}" alt="今日の一枚" style="display:block;width:100%;max-height:170px;object-fit:contain;border-radius:10px;background:var(--surface);margin:8px 0"><div class="note" style="margin-top:2px">①あるがまま ${S.ku1.length}句／②ヒントのあと ${S.ku2.length}句／みんなの句のあと ${S.ku3.length}句</div>
    <table style="width:100%;font-size:13px;margin-top:8px;border-collapse:collapse"><tr style="color:var(--sub)"><td style="padding:4px 0">見方</td><td style="text-align:center">①</td><td style="text-align:center">②</td><td style="text-align:center">後</td><td style="text-align:center">熟達者</td></tr>
    ${LENS.map(l=>`<tr style="border-top:1px solid var(--line)"><td style="padding:6px 0">${esc(l.n)}</td><td style="text-align:center">${dot(a.L1.includes(l.n),"var(--ink)")}</td><td style="text-align:center">${dot(a.L2.includes(l.n),"var(--ink)")}</td><td style="text-align:center">${dot(a.L3.includes(l.n),"var(--ink)")}</td><td style="text-align:center">${dot(a.EL.includes(l.n),"var(--shu)")}</td></tr>`).join("")}</table></div>
@@ -485,8 +687,8 @@ function vRev(){ const a=analyze(), CV=VIEWS.map(v=>v.n), dot=(on,c)=>`<span sty
   ${a.miss.length?`<div class="insight shu">次は<b>${q(a.miss.slice(0,2))}</b>も疑ってみましょう。熟達者の多くが、この場面で最初に気にする点です。</div>`:`<div class="insight">熟達者の多くが最初に気にする点を、すべて押さえられています。</div>`}
   <div class="insight">書いた気になるポイントは、次の「信号（緑・黄・赤）」を決める材料になります。</div>
   </details>
-  <details class="more"><summary>くわしい説明</summary><div class="note">ここではキーワードで仮に判定しています。本番ではAIが記述を読み取り、いっぷ句の8つの見方と、先生が監修した臨床の観点で返します。熟達者の句と観点は仮のものです。</div></details>`,
-  foot:`<button class="btn" id="n">${S.fromHist?"一覧に戻る":"おわる"}</button>`, bind(){ if(!S.saved){ S.saved=true; P.posts.ku+=S.ku1.length+S.ku2.length+S.ku3.length; P.posts.pts+=S.points.length; P.hist.push({d:"今日",today:true,title:S.cs.title,gaze:gz,lens:a.Lall.length,rate:a.rate,ku:S.ku1.length+S.ku2.length+S.ku3.length,pts:S.points.length,own:a.own,miss:a.miss}); } $("n").onclick=()=>{ if(S.fromHist){ S.fromHist=false; go("hist"); } else go("done"); }; }}; }
+  ${slateToday()}`,
+  foot:`<button class="btn" id="n">${S.fromHist?"一覧に戻る":"おわる"}</button>`, bind(){ slateAfter(); if(!S.saved){ S.saved=true; P.posts.ku+=S.ku1.length+S.ku2.length+S.ku3.length; P.posts.pts+=S.points.length; P.hist.push({d:"今日",today:true,title:S.cs.title,gaze:gz,lens:a.Lall.length,rate:a.rate,ku:S.ku1.length+S.ku2.length+S.ku3.length,pts:S.points.length,own:a.own,miss:a.miss}); } $("n").onclick=()=>{ if(S.fromHist){ S.fromHist=false; go("hist"); } else go("done"); }; }}; }
 const _vRevFull=vRev;
 vRev=function(){ if(!S.skipClin) return _vRevFull(); const a=analyze(), gz=gazeOf(), n=S.ku1.length+S.ku2.length+S.ku3.length;
   return {html:`<div class="card" style="background:var(--mist)"><b style="font-size:16px">句の分析：あなたの見方</b>
@@ -497,9 +699,9 @@ vRev=function(){ if(!S.skipClin) return _vRevFull(); const a=analyze(), gz=gazeO
     ${a.own.length?`<li>${q(a.own)}は、熟達者の句にはないあなたらしい見方です</li>`:""}
     ${a.expOnly.length?`<li>熟達者は${q(a.expOnly.slice(0,2))}にも目を向けていました。次の一枚で探してみましょう</li>`:""}
    </ul></div>
-   <div class="note" style="margin-top:10px">今日は臨床の場面をスキップしました。次回は場面まで進むと、臨床推論の分析も届きます。</div>`,
+   <div class="note" style="margin-top:10px">今日は臨床の場面をスキップしました。次回は場面まで進むと、臨床推論の分析も届きます。</div>${slateToday()}`,
    foot:`<button class="btn sub" id="clin">やっぱり臨床の場面へ</button><button class="btn" id="n">おわる</button>`,
-   bind(){ if(!S.saved){ S.saved=true; P.posts.ku+=n; P.hist.push({d:"今日",today:true,title:"句のみ（場面スキップ）",gaze:gz,lens:a.Lall.length,rate:0,ku:n,pts:0,own:a.own,miss:[]}); }
+   bind(){ slateAfter(); if(!S.saved){ S.saved=true; P.posts.ku+=n; P.hist.push({d:"今日",today:true,title:"句のみ（場面スキップ）",gaze:gz,lens:a.Lall.length,rate:0,ku:n,pts:0,own:a.own,miss:[]}); }
     $("clin").onclick=()=>{ S.skipClin=false; if(S.saved){ P.hist.pop(); P.posts.ku-=n; S.saved=false; } go("s1"); };
     $("n").onclick=()=>go("done"); }}; };
 // ===== 経過（成長の記録）と、シェア =====
@@ -525,7 +727,7 @@ function vShare(){ const all=[...S.ku1,...S.ku2,...S.ku3]; if(S.sel===undefined)
   bind(){ document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{S.sel=+b.dataset.s; render();}); $("b").onclick=()=>go("done"); $("go2").onclick=()=>{S.shared=true; render();}; }}; }
 
 // ===== LINE版（LIFF）の仕組み =====
-const LIFF_ID="2012192016-D0MCxjX9", APP_VER="18", KEY="ippuku-lite-v1";
+const LIFF_ID="2012192016-D0MCxjX9", APP_VER="19", KEY="ippuku-lite-v1";
 const ADD_FRIEND="https://line.me/R/ti/p/@777vdkoq";
 const LINKS={company:"https://pokkeishi.studio.site/",video:"https://www.youtube.com/watch?v=g8ZsscBmsvM"};
 const LOGO_URL="https://hikino1212.github.io/ippuku-liff/logo.png";
@@ -564,11 +766,11 @@ async function shareApp(){
     footer:{type:"box",layout:"vertical",spacing:"sm",contents:[{type:"button",style:"primary",color:"#2F5D50",action:{type:"uri",label:"友だち追加して始める",uri:ADD_FRIEND}},{type:"button",style:"link",height:"sm",color:"#2F5D50",action:{type:"uri",label:"紹介動画を見る",uri:LINKS.video}},{type:"text",text:"合同会社ぽっけいし｜特許出願中",size:"xxs",color:"#9A8B78",align:"center",decoration:"underline",action:{type:"uri",label:"会社サイト",uri:LINKS.company}}]}}};
   try{ await liff.shareTargetPicker([msg]); }catch(e){ alert("送れませんでした"); } }
 function boot(){ let md=null; try{ md=localStorage.getItem("ippuku-mode"); }catch(e){} if(md==="full"){ location.replace("sora.html"+location.search+location.hash); return; }
-  restore(); const view=param("view"), org=orgFromText(param("org"));
+  restore(); ensureSlate(); const view=param("view"), org=orgFromText(param("org"));
   if(org&&!(P.org&&P.org.code===org)){ selectOrg(org); return; }
   if(view==="history"&&P.org){ go("hist"); return; }
   if((view==="join"||view==="settings")){ if(!P.org){ go("org"); return; } S.tmp={nick:P.nick,exp:P.exp,org:P.org.code,consent:P.consent,mode:"lite"}; go("set"); return; }
-  if(view==="posts"){ S.ph="talk"; render(); const b=document.getElementById("rm3"); if(b) b.click(); return; }
+  if(view==="posts"&&P.org){ go("hist"); return; }
   if(S.paused||FLOW.includes(S.ph)){ if(FLOW.includes(S.ph)) S.paused=S.ph; S.ph="talk"; render(); return; }
   S.ph="talk"; render(); }
 async function initLiff(){ try{ if(!window.liff) return; await liff.init({liffId:LIFF_ID}); LIFF_OK=true;
