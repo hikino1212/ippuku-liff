@@ -256,12 +256,14 @@ const go=ph=>{S.ph=ph; S._key=null; render();};
 function steam(){ return `<svg class="steam" width="44" height="44" viewBox="0 0 54 54" aria-hidden="true"><path d="M20 16c-3-4 3-6 0-10" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round"/><path d="M27 16c-3-4 3-6 0-10" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round"/><path d="M34 16c-3-4 3-6 0-10" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round"/><path d="M12 22h30v10a15 15 0 0 1-30 0z" fill="var(--ink)"/></svg>`; }
 // 複数の句
 function kuBlock(listKey,draftKey,pool){ const d=S[draftKey], ok=d.every(x=>x.trim());
-  return `${S[listKey].length?`<div class="trow">${S[listKey].map((k,i)=>`<div class="tanzaku">${k.map(esc).join("<br>")}</div>`).reverse().join("")}</div>`:""}
+  return `${S[listKey].length?`<div class="trow">${S[listKey].map((k,i)=>{const c=((S[listKey+"C"]||[])[i]||"").trim(); return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;max-width:120px"><div class="tanzaku">${k.map(esc).join("<br>")}</div>${c?`<div class="note" style="font-size:11.5px;text-align:center">${esc(c)}</div>`:""}</div>`;}).reverse().join("")}</div>`:""}
   <div>${[0,1,2].map(i=>{const m=mora(d[i]); return `<div class="kurow"><input class="ku" data-d="${draftKey}" data-i="${i}" value="${esc(d[i])}" placeholder="${PH[i]}" aria-label="${PH[i]}"><span class="mora ${m===T[i]?"ok":""}" id="m-${draftKey}-${i}">${m}／${T[i]}音</span></div>`;}).join("")}
+  <textarea class="ku" data-c="${draftKey}" rows="2" maxlength="100" placeholder="ひとことコメント（任意）：なぜこう詠んだか、どこに目がとまったか" aria-label="句へのコメント" style="margin:4px 0 8px">${esc(S[draftKey+"c"]||"")}</textarea>
   <div style="display:flex;justify-content:space-between;align-items:center"><button class="sample" data-ex="${draftKey}">例を入れる（デモ用）</button><button class="chip" id="post-${draftKey}" ${ok?"":"disabled"} style="${ok?"":"opacity:.45"}">${S[listKey].length?"もう一句出す":"この句を出す"}</button></div></div>`; }
 function bindKu(listKey,draftKey,pool,after){ document.querySelectorAll(`input[data-d="${draftKey}"]`).forEach(inp=>inp.oninput=e=>{ const i=+inp.dataset.i; S[draftKey][i]=e.target.value; const mm=mora(e.target.value),el=$(`m-${draftKey}-${i}`); el.textContent=`${mm}／${T[i]}音`; el.className="mora"+(mm===T[i]?" ok":""); const b=$("post-"+draftKey), ok=S[draftKey].every(x=>x.trim()); b.disabled=!ok; b.style.opacity=ok?"":".45"; });
   document.querySelector(`[data-ex="${draftKey}"]`).onclick=()=>{ const used=new Set(S[listKey].map(k=>k.join(""))); const left=pool.filter(k=>!used.has(k.join(""))); S[draftKey]=[...pick(left.length?left:pool)]; render(); };
-  $("post-"+draftKey).onclick=()=>{ if(!S[draftKey].every(x=>x.trim())) return; S[listKey].push(S[draftKey].map(x=>x.trim())); S[draftKey]=["","",""]; render(); }; }
+  const ct=document.querySelector(`textarea[data-c="${draftKey}"]`); if(ct) ct.oninput=e=>{ S[draftKey+"c"]=e.target.value; };
+  $("post-"+draftKey).onclick=()=>{ if(!S[draftKey].every(x=>x.trim())) return; const C=(S[listKey+"C"]||[]).slice(0,S[listKey].length); C.push((S[draftKey+"c"]||"").trim()); S[listKey+"C"]=C; S[listKey].push(S[draftKey].map(x=>x.trim())); S[draftKey]=["","",""]; S[draftKey+"c"]=""; render(); }; }
 
 // ① 組織の選択 ② 研究への同意
 function vOrg(){ return {html:`<h2>所属する組織を選んでください</h2><p class="lead">LINEでログインしました${S.lineName?"（"+esc(S.lineName)+"）":""}。所属先から配られた組織を選びます。</p><button class="btn" id="qr" style="width:100%;margin:4px 0 12px">組織のQRコードを読み取る</button>
@@ -508,7 +510,7 @@ function vShare(){ const all=[...S.ku1,...S.ku2,...S.ku3]; if(S.sel===undefined)
   bind(){ document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{S.sel=+b.dataset.s; render();}); $("b").onclick=()=>go("done"); $("go2").onclick=()=>{S.shared=true; render();}; }}; }
 
 // ===== LINE版（LIFF）の仕組み =====
-const LIFF_ID="2012192016-D0MCxjX9", APP_VER="15", KEY="ippuku-lite-v1";
+const LIFF_ID="2012192016-D0MCxjX9", APP_VER="16", KEY="ippuku-lite-v1";
 const ADD_FRIEND="https://line.me/R/ti/p/@777vdkoq";
 const LINKS={company:"https://pokkeishi.studio.site/",video:"https://www.youtube.com/watch?v=g8ZsscBmsvM"};
 const LOGO_URL="https://hikino1212.github.io/ippuku-liff/logo.png";
