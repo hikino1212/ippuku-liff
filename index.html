@@ -241,7 +241,7 @@ function render(){
   const v={set:vSet,profile:vProfile,s2p:vS2p,s2c:vS2c,org:vOrg,consent:vConsent,hist:vHist,histd:vHistD,art1:vArt1,art2:vArt2,ku2:vKu2,peer:vPeer,s1:vS1,s2:vS2,rev:vRev,done:vDone,share:vShare}[S.ph](), idx=FLOW.indexOf(S.ph);
   r.innerHTML=`<div class="mockbar">検証版：入力はダミーでお願いします</div>
    <div class="bar"><button class="x" id="close" aria-label="閉じる">✕</button><div class="t"><b>いっぷ句</b><small>臨床推論・軽量モード</small></div>${FLOW.includes(S.ph)?`<button class="pause" id="pause">中断</button>`:`<span style="width:44px"></span>`}</div>
-   ${idx>=0?`<div class="steps">${FLOW.map((f,i)=>`<button class="${i<=idx?"on":""}" data-step="${i}" ${i<idx?"":"disabled"} aria-label="${LABEL[f]}${i<idx?"に戻る":""}"></button>`).join("")}</div><div class="steplabel">${LABEL[S.ph]}${idx>0?`<span class="note">　バーを押すと前の画面に戻れます</span>`:""}</div>`:""}
+   ${false?`<div class="steps">${FLOW.map((f,i)=>`<button class="${i<=idx?"on":""}" data-step="${i}" ${i<idx?"":"disabled"} aria-label="${LABEL[f]}${i<idx?"に戻る":""}"></button>`).join("")}</div><div class="steplabel">${LABEL[S.ph]}${idx>0?`<span class="note">　バーを押すと前の画面に戻れます</span>`:""}</div>`:""}
    ${PIN.includes(S.ph)?(()=>{const pi=pinInfo(); return `<div class="pinned"><div class="lwrap" id="lw"><img id="pimg" src="${pi.src}" alt="${esc(pi.alt)}"><div class="lens" id="lens" aria-hidden="true"></div></div><div class="pbar"><span class="note">${esc(pi.cap)}${S.loupe?"　画像をなぞると拡大します":""}</span><button class="chip ${S.loupe?"on":""}" id="loupe">${S.loupe?"虫眼鏡をやめる":"🔍 虫眼鏡"}</button></div></div>`;})():""}
    <main>${v.html}</main>${v.foot?`<div class="foot">${v.foot}</div>`:""}`;
   $("close").onclick=()=>{ if(FLOW.includes(S.ph)) S.paused=S.ph; S.ph="talk"; persist(); closeLine(false); };
@@ -342,8 +342,8 @@ function vKu2(){ const n=S.ku2.length; return {html:`<div class="card"><b>ヒン
 function vPeer(){ return {html:`<div class="card"><b>みんなの句</b><div class="note">同じ絵を観た仲間の句です（ニックネームと従事歴）。自分にはなかった視点はありますか。</div></div>
   <div class="trow" style="justify-content:flex-start;flex-wrap:wrap">${S.peers.map((k,i)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div class="tanzaku" style="border-color:var(--line)">${k.map(esc).join("<br>")}</div>${whoTag(S.who[i])}<button class="chip ${S.reacts.has(i)?"on":""}" data-r="${i}" style="font-size:12px;padding:6px 10px">${S.reacts.has(i)?"ハッとした！":"その視点なかった"}</button></div>`).join("")}</div>
   <div class="q">みんなの句を見て、もう一句（任意）</div>${kuBlock("ku3","d3",EX.ku2)}`,
-  foot:`<button class="btn sub" id="skip">詠まずに次へ</button><button class="btn" id="n" ${S.ku3.length?"":"disabled"}>${S.ku3.length?"臨床の場面へ":"一句詠むと進めます"}</button>`,
-  bind(){ document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.r; S.reacts.has(i)?S.reacts.delete(i):S.reacts.add(i); render(); }); bindKu("ku3","d3",EX.ku2); $("n").onclick=()=>go("s1"); $("skip").onclick=()=>go("s1"); }}; }
+  foot:`<button class="btn sub" id="toart">分析に進む</button><button class="btn" id="n">臨床推論に進む</button>`,
+  bind(){ document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.r; S.reacts.has(i)?S.reacts.delete(i):S.reacts.add(i); render(); }); bindKu("ku3","d3",EX.ku2); $("n").onclick=()=>go("s1"); const ar=$("toart"); if(ar) ar.onclick=()=>{ S.skipClin=true; go("rev"); }; }}; }
 // ③ 事前予測（前日の様子から、書いて予測する）
 function vS1(){ const c=S.cs, ok=S.worst.trim()&&S.odd.trim(); return {html:`<div class="card"><b>${esc(c.title)}</b><div class="note" style="margin-top:6px">前日からの様子（申し送り）</div><div style="font-size:14.5px;line-height:1.7;margin-top:2px">${esc(c.prev)}</div></div>
   <div class="card"><b>検温データの変化</b><table style="width:100%;font-size:13.5px;margin-top:6px;border-collapse:collapse"><tr style="color:var(--sub)"><td></td><td style="padding:4px 6px">前日夜</td><td style="padding:4px 6px">今朝</td></tr>${c.vit.map(v=>`<tr style="border-top:1px solid var(--line)"><td style="padding:6px 6px 6px 0">${esc(v[0])}</td><td style="padding:6px">${esc(v[1])}</td><td style="padding:6px;font-weight:700">${esc(v[2])}</td></tr>`).join("")}</table></div>
@@ -487,6 +487,21 @@ function vRev(){ const a=analyze(), CV=VIEWS.map(v=>v.n), dot=(on,c)=>`<span sty
   </details>
   <details class="more"><summary>くわしい説明</summary><div class="note">ここではキーワードで仮に判定しています。本番ではAIが記述を読み取り、いっぷ句の8つの見方と、先生が監修した臨床の観点で返します。熟達者の句と観点は仮のものです。</div></details>`,
   foot:`<button class="btn" id="n">${S.fromHist?"一覧に戻る":"おわる"}</button>`, bind(){ if(!S.saved){ S.saved=true; P.posts.ku+=S.ku1.length+S.ku2.length+S.ku3.length; P.posts.pts+=S.points.length; P.hist.push({d:"今日",today:true,title:S.cs.title,gaze:gz,lens:a.Lall.length,rate:a.rate,ku:S.ku1.length+S.ku2.length+S.ku3.length,pts:S.points.length,own:a.own,miss:a.miss}); } $("n").onclick=()=>{ if(S.fromHist){ S.fromHist=false; go("hist"); } else go("done"); }; }}; }
+const _vRevFull=vRev;
+vRev=function(){ if(!S.skipClin) return _vRevFull(); const a=analyze(), gz=gazeOf(), n=S.ku1.length+S.ku2.length+S.ku3.length;
+  return {html:`<div class="card" style="background:var(--mist)"><b style="font-size:16px">句の分析：あなたの見方</b>
+   <div class="note" style="margin-top:8px">あなたの持ち味（まなざし）</div><div style="font-size:17px;font-weight:700;color:var(--ink-d);margin:4px 0">${esc(gz)}</div>
+   <ul style="margin:6px 0 0 18px;padding:0;font-size:14px;line-height:1.7">
+    <li>今日は${n}句、${a.Lall.length}つの見方で詠みました</li>
+    ${a.new2.length?`<li>ヒントで${q(a.new2.slice(0,2))}へ見方が広がりました</li>`:""}
+    ${a.own.length?`<li>${q(a.own)}は、熟達者の句にはないあなたらしい見方です</li>`:""}
+    ${a.expOnly.length?`<li>熟達者は${q(a.expOnly.slice(0,2))}にも目を向けていました。次の一枚で探してみましょう</li>`:""}
+   </ul></div>
+   <div class="note" style="margin-top:10px">今日は臨床の場面をスキップしました。次回は場面まで進むと、臨床推論の分析も届きます。</div>`,
+   foot:`<button class="btn sub" id="clin">やっぱり臨床の場面へ</button><button class="btn" id="n">おわる</button>`,
+   bind(){ if(!S.saved){ S.saved=true; P.posts.ku+=n; P.hist.push({d:"今日",today:true,title:"句のみ（場面スキップ）",gaze:gz,lens:a.Lall.length,rate:0,ku:n,pts:0,own:a.own,miss:[]}); }
+    $("clin").onclick=()=>{ S.skipClin=false; if(S.saved){ P.hist.pop(); P.posts.ku-=n; S.saved=false; } go("s1"); };
+    $("n").onclick=()=>go("done"); }}; };
 // ===== 経過（成長の記録）と、シェア =====
 const PAST=[{d:"11/3",lens:2,rate:25},{d:"11/4",lens:3,rate:50},{d:"11/6",lens:3,rate:50},{d:"11/8",lens:4,rate:75}];
 function chart(h){ const W=340,H=150,l=30,r=10,t=12,b=26,iw=W-l-r,ih=H-t-b,X=i=>l+i*iw/(h.length-1),Y1=v=>t+ih-v/8*ih,Y2=v=>t+ih-v/100*ih;
@@ -510,7 +525,7 @@ function vShare(){ const all=[...S.ku1,...S.ku2,...S.ku3]; if(S.sel===undefined)
   bind(){ document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{S.sel=+b.dataset.s; render();}); $("b").onclick=()=>go("done"); $("go2").onclick=()=>{S.shared=true; render();}; }}; }
 
 // ===== LINE版（LIFF）の仕組み =====
-const LIFF_ID="2012192016-D0MCxjX9", APP_VER="16", KEY="ippuku-lite-v1";
+const LIFF_ID="2012192016-D0MCxjX9", APP_VER="18", KEY="ippuku-lite-v1";
 const ADD_FRIEND="https://line.me/R/ti/p/@777vdkoq";
 const LINKS={company:"https://pokkeishi.studio.site/",video:"https://www.youtube.com/watch?v=g8ZsscBmsvM"};
 const LOGO_URL="https://hikino1212.github.io/ippuku-liff/logo.png";
