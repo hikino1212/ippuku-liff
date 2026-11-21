@@ -341,7 +341,9 @@ function ippukuAnalysis(a){ const st=ippukuStats(), by=Object.fromEntries(st.map
    <h3 class="sec">面白がりの特徴</h3>${featHTML}${co}
    <h3 class="sec">まとめ</h3><p>${esc(sum)}</p>
    <h3 class="sec">日常での使い方</h3><p>${daily}</p>
-   <h3 class="sec">次に試して欲しい見方</h3><p>${esc(next)}</p></div>`; }
+   <h3 class="sec">次に試して欲しい見方</h3><p>${esc(next)}</p>
+   <h3 class="sec">熟達者との違い</h3>${compareBox(a.Lall,a.EL,"あなただけ（持ち味）","熟達者だけ")}<p class="note" style="margin-top:6px">${a.own.length?`${q(a.own)}は、今日の熟達者の句にはなかった、あなたならではの見方です。`:""}${a.expOnly.length?`熟達者は${q(a.expOnly.slice(0,2))}の見方でも詠んでいました。`:""}</p>
+   <details class="more"><summary>熟達者の句を見る</summary><div class="trow" style="justify-content:flex-start;flex-wrap:wrap">${EXPERT_KU.map(e=>`<div style="text-align:center"><div class="tanzaku" style="border-color:var(--shu)">${e.ku.map(esc).join("<br>")}</div><div class="note">${esc(e.who)}</div></div>`).join("")}</div></details></div>`; }
 function bindIppuku(){ document.querySelectorAll(".qbtn[data-help]").forEach(b=>b.onclick=()=>{ const h=$("help-"+b.dataset.help); if(!h) return; h.hidden=!h.hidden; b.setAttribute("aria-expanded",String(!h.hidden)); });
   const f=$("ipFold"), t=$("ipTiles"); if(f&&t) f.onclick=()=>{ const open=!t.hidden; t.hidden=open; f.textContent=open?"▼ タイルを開く":"▲ タイルをたたんで先生のコメントを読む"; f.setAttribute("aria-expanded",String(!open)); if(open){ const c=$("ipCatch"); if(c) c.scrollIntoView({behavior:"smooth",block:"start"}); } }; }
 function postsCard(){ return `<div class="card"><b>これまでの投稿</b><div class="pstat"><div><b>${P.posts.ku}</b><span class="note">句</span></div><div><b>${P.posts.pts}</b><span class="note">気になるポイント</span></div></div></div>`; }
@@ -667,7 +669,7 @@ function vShare(){ const all=[...S.ku1,...S.ku2,...S.ku3]; if(S.sel===undefined)
   bind(){ document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{S.sel=+b.dataset.s; render();}); $("b").onclick=()=>go("done"); $("go2").onclick=()=>{S.shared=true; render();}; }}; }
 
 // ===== LINE版（LIFF）の仕組み =====
-const LIFF_ID="2012192016-D0MCxjX9", APP_VER="0.25.0", KEY="ippuku-lite-v1";
+const LIFF_ID="2012192016-D0MCxjX9", APP_VER="0.26.0", KEY="ippuku-lite-v1";
 const ADD_FRIEND="https://line.me/R/ti/p/@777vdkoq";
 const LINKS={company:"https://pokkeishi.studio.site/",video:"https://www.youtube.com/watch?v=g8ZsscBmsvM"};
 const LOGO_URL="https://hikino1212.github.io/ippuku-liff/logo.png";
