@@ -117,6 +117,38 @@ textarea.ku{resize:none;line-height:1.6}
 .whycard{background:var(--surface);border:1.5px solid var(--ink);border-radius:16px;padding:12px 14px;margin:6px 0 8px}
 .whyku{font-family:"Noto Serif JP",serif;font-size:15px;line-height:1.7}
 .sensei-row{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+:root{--co:#7A5C2E}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--co:#E2C08A}}
+:root[data-theme="dark"]{--co:#E2C08A}
+.ip p{font-size:14px;line-height:1.8;margin:4px 0 10px}
+.ip-sep{border-top:1px solid var(--line);margin-top:18px;padding-top:10px}
+.ip-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:4px 0 2px}
+.sec{display:flex;align-items:center;gap:8px;font-size:16px;margin:20px 0 8px}
+.sec::before{content:"";width:12px;height:12px;background:var(--text);border-radius:2px;flex:0 0 auto}
+.lg{display:flex;gap:14px;font-size:12px;color:var(--sub);margin:0 0 8px}
+.lg span{display:flex;align-items:center;gap:5px}
+.lg .ldot,.ip-note .ldot{position:static;transform:none;flex:0 0 auto}
+.lt{border:1.5px solid var(--line);border-radius:14px;padding:10px 12px 12px;margin:0 0 10px;background:var(--surface)}
+.lt.hi{border-color:var(--shu)}
+.lt-h{display:flex;align-items:center;gap:6px;font-size:14px}
+.qbtn{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--sub);background:var(--surface);color:var(--sub);font:inherit;font-size:12px;line-height:1;padding:0;cursor:pointer}
+.lt-help{margin:4px 0 0}
+.lr{display:grid;grid-template-columns:7.2em auto minmax(0,1fr) auto;align-items:center;gap:6px;margin-top:8px;font-size:13px}
+.ll{line-height:1.35}
+.lsc{font-size:12px;color:var(--sub)}
+.ltrack{position:relative;height:22px}
+.ltrack::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1.5px dashed var(--ink);opacity:.55}
+.ldot{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;transform:translate(-50%,-50%);display:inline-block;box-sizing:border-box}
+.ldot.you{background:var(--ink);border:2px solid var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.ldot.all{background:var(--surface);border:2px solid var(--sub)}
+.ldot.you.hi{border:3px solid var(--shu);width:18px;height:18px}
+.ip-note{display:flex;align-items:center;gap:6px;margin-top:4px}
+.ip-fold{display:block;margin:6px auto 0;text-decoration:none;font-weight:700}
+.catch{text-align:center;font-family:"Noto Serif JP",serif;font-size:17px;font-weight:700;line-height:1.7}
+.feat{margin:0 0 14px}.feat .ft{display:block;font-size:15px;line-height:1.6}
+.qcard{border-left:4px solid var(--ink);background:var(--surface);border-radius:0 12px 12px 0;padding:10px 12px;margin:6px 0 0;box-shadow:0 0 0 1px var(--line)}
+.qcard b{display:block;font-size:15px;line-height:1.6}
+.co{color:var(--co)}
 .toast{position:absolute;left:16px;right:16px;bottom:88px;z-index:30;background:var(--text);color:var(--surface);border-radius:12px;padding:10px 14px;font-size:13px;line-height:1.5;text-align:center}
 @keyframes shFade{from{opacity:0}to{opacity:1}}
 @keyframes shUp{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
@@ -264,6 +296,53 @@ function kuDetail(a){ const dot=(on,c)=>`<span style="display:inline-block;width
    <div class="note" style="margin-top:6px">${a.own.length?`${q(a.own)}は、今日の熟達者の句にはなかった、あなたならではの見方です。`:""}${a.expOnly.length?`熟達者の${q(a.expOnly.slice(0,2))}の見方も、次に試してみましょう。`:""}</div></div>
   <details class="more"><summary>熟達者の句を見る</summary><div class="trow" style="justify-content:flex-start">${EXPERT_KU.map(e=>`<div style="text-align:center"><div class="tanzaku" style="border-color:var(--shu)">${e.ku.map(esc).join("<br>")}</div><div class="note">${esc(e.who)}</div></div>`).join("")}</div></details>
   </details>`; }
+// 句だけのとき：従来のいっぷ句分析の項目
+const IG=[{n:"① 発想の距離",h:"絵の世界の中で考えるか、絵の外の今や自分のことに置きかえるか、の違いです。",l:["世界観の内側","世界観の外側"]},
+ {n:"② 意味の探し方",h:"感じたことをそのまま言葉にするか、そう見える理由や背景を考えるか、の違いです。",l:["感じたままに表現","なぜ・どういうことか"]},
+ {n:"③ 想像の向き",h:"出来事の流れを想像するか、人の気持ちや物語を想像するか、の違いです。",l:["場面・出来事を想像","人・気持ち・物語を想像"]},
+ {n:"④ 笑いに変える",h:"見つけたことを、くすっと笑えるかたちにする見方です。",l:["笑いに変える"]},
+ {n:"⑤ 離れたものを結びつける",h:"絵の中の離れた場所を見比べて、意味を見つける見方です。",l:["離れたものを結びつける"]}];
+const IL={"感じたままに表現":"感じたままに表現する","なぜ・どういうことか":"なぜ・どういうことかを考える","場面・出来事を想像":"場面・出来事を想像する","人・気持ち・物語を想像":"人・気持ち・物語を想像する"};
+const IF={
+ "世界観の内側":{c:"絵の中に入りこんで、その場の空気を詠む",t:"絵の中の時代や場面に入りこむ",d:"絵に描かれた時代や場所の中に身を置いて、その場の空気ごと詠む見方です。",q:"絵の中の場面に入りこんで、その場の空気を言葉にしているところです。",s:"絵の中に入りこんで、その場の空気を詠む",u:"人の話を聞くときにも使えそうです。その人がいる場所や立場に入りこんで聞いてみると、言葉の受け取り方が変わるかもしれません。",y:"絵の中の時代や場所に入りこんで、その場にいるつもりで眺めてみる"},
+ "世界観の外側":{c:"絵の世界を、今の自分の言葉に置きかえる",t:"絵の外にある今のことや、自分の知っていることに置きかえる",d:"絵の中のことを、今の自分が知っている言葉や身近な出来事に置きかえて詠む見方です。",q:"絵の中の出来事を、今の自分の言葉に置きかえているところです。",s:"絵の中のことを、今の言葉や自分のことに置きかえる",u:"人に何かを説明するときにも使えそうです。身近な例や今の言葉に置きかえると、ぐっと伝わりやすくなります。",y:"絵の中の出来事を、今の自分や身近なことに置きかえてみる"},
+ "感じたままに表現":{c:"感じたことを、そのまま言葉にする",t:"感じたことを、そのまま言葉にする",d:"きれい、さみしい、あたたかいなど、絵を見て心が動いたことを、そのまま言葉にする見方です。",q:"絵を見て感じたことを、そのまま言葉にしているところです。",s:"感じたことを、そのまま言葉にする",u:"毎日の中でも使えそうです。「いいな」「なんだか気になる」と感じたことを口にしてみると、自分が何に心を動かされているのかに気づけます。",y:"考える前に、絵を見てまず感じたことを、そのまま言葉にしてみる"},
+ "なぜ・どういうことか":{c:"見えたものの「なぜ」を追いかける",t:"そう見える理由や、描かれていない背景を考える",d:"見えたものについて「なぜだろう」「どういうことだろう」と考え、描かれていない事情まで読み取ろうとする見方です。",q:"見えたものの理由や背景を考えているところです。",s:"見えたものの理由や背景を考える",u:"いつもと違う小さな変化に気づくときにも役立ちそうです。「どうしてこうなっているんだろう」と、一度立ち止まってみてください。",y:"気になったものについて、「なぜこうなっているんだろう」と理由を考えてみる"},
+ "場面・出来事を想像":{c:"描かれた一瞬の、前と後を組み立てる",t:"そこで何が起きているのかを組み立てる",d:"描かれた一瞬の前後に何があったのか、これから何が起きるのかを組み立てて詠む見方です。",q:"描かれた一瞬の前後を想像して、出来事を組み立てているところです。",s:"描かれた一瞬の前後を組み立てる",u:"次に起こりそうなことに備えるときにも使えそうです。目の前の一場面から、少し前と少し後を想像してみてください。",y:"この場面の少し前と少し後に、何が起きているのかを想像してみる"},
+ "人・気持ち・物語を想像":{c:"人の気持ちから、物語を立ち上げる",t:"人の気持ちや関係、セリフを想像する",d:"登場している人の気持ちや関係、交わしていそうな言葉を想像して、物語として詠む見方です。",q:"人の気持ちや関係を想像して、物語にしているところです。",s:"人の気持ちや関係を想像して、物語にする",u:"毎日の会話や、人を気づかう場面でそのまま使えそうです。相手の表情やしぐさから、気持ちを想像してみてください。",y:"登場している人がどんな気持ちでいるのか、どんな関係なのかを想像してみる"},
+ "笑いに変える":{c:"見つけたずれを、笑いの形にする",t:"見つけたことを、笑えるかたちにする",d:"絵の中に見つけた変なところやツッコミどころを、くすっと笑えるかたちにして詠む見方です。",q:"見つけたことを、くすっと笑えるかたちにしているところです。",s:"見つけたずれを、笑えるかたちにする",u:"通勤路や職場で「ちょっと変だな」と思ったところを見つけるときにも使えそうです。口に出してみるだけで、場がなごむ笑いのネタになるかもしれません。",y:"絵の中のちょっと変なところを見つけて、くすっと笑えるかたちにしてみる"},
+ "離れたものを結びつける":{c:"離れたものどうしに、つながりを見つける",t:"離れたものどうしを結びつける",d:"絵の中の離れた場所を見比べて、似ているところや対になっているところから意味を見つける見方です。",q:"離れた場所どうしを見比べて、つながりを見つけているところです。",s:"離れたものどうしのつながりを見つける",u:"別々に見えていた出来事のつながりに気づくときにも役立ちそうです。離れたところにある共通点を探してみてください。",y:"絵の中の離れた2か所を見比べて、似ているところを探してみる"}};
+function ippukuStats(){ const mine=[...S.ku1,...S.ku2,...S.ku3], share=(arr,n)=>arr.length?arr.filter(k=>lensOf(k.join("")).includes(n)).length/arr.length:0;
+  return LENS.map(l=>{ const you=share(mine,l.n), all=share(PEER_KU,l.n); return {n:l.n,you,all,diff:you-all}; }); }
+function ippukuAnalysis(a){ const st=ippukuStats(), by=Object.fromEntries(st.map(x=>[x.n,x])), items=[];
+  ["ku1","ku2","ku3"].forEach(k=>S[k].forEach((ku,i)=>items.push({ku,why:((S[k+"C"]||[])[i]||"").trim(),L:lensOf(ku.join(""))})));
+  const top=st.filter(x=>x.you>0).sort((p,q)=>q.diff-p.diff||q.you-p.you).slice(0,2).map(x=>x.n), t1=top[0];
+  const d=new Date(), date=`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`, pos=v=>`${6+Math.round(v*88)}%`, kuT=k=>k.map(esc).join(" / ");
+  const tiles=IG.map((g,gi)=>`<div class="lt${g.l.some(n=>by[n].diff>=0.15)?" hi":""}"><div class="lt-h"><b>${esc(g.n)}</b><button class="qbtn" data-help="${gi}" aria-label="${esc(g.n)}の説明" aria-expanded="false">?</button></div>
+     <div class="note lt-help" id="help-${gi}" hidden>${esc(g.h)}</div>
+     ${g.l.map(n=>{ const x=by[n]; return `<div class="lr"><span class="ll">${esc(IL[n]||n)}</span><span class="lsc">少</span><span class="ltrack" role="img" aria-label="あなた${Math.round(x.you*100)}%、みんな${Math.round(x.all*100)}%"><i class="ldot all" style="left:${pos(x.all)}"></i><i class="ldot you${x.diff>=0.15?" hi":""}" style="left:${pos(x.you)}"></i></span><span class="lsc">多</span></div>`; }).join("")}</div>`).join("");
+  const feat=n=>{ const f=IF[n], x=by[n], it=items.find(i=>i.L.includes(n));
+    const cmp=x.all===0?"同じ絵を見た人には、あまり出ていない見方です。":x.diff>=0.15?"同じ絵を見た人より、多く出ていました。":"同じ絵を見た人と、同じくらい出ていました。";
+    return `<div class="feat"><b class="ft">${esc(f.t)}</b><p>${esc(f.d+cmp)}</p>${it?`<div class="qcard"><b>${kuT(it.ku)}</b><div class="note">—— ${esc(f.q)}${it.why?`<br>あなたの理由：「${esc(it.why)}」`:""}</div></div>`:""}</div>`; };
+  let featHTML=`<div class="feat"><b class="ft">目にとまったものを、まっすぐ言葉にする</b><p>今回は、絵の中で目にとまったものを、飾らずにそのまま句にしていました。</p></div>`, co="";
+  if(t1){ featHTML=top.map(feat).join("");
+    if(top.length===2){ const both=items.filter(i=>top.every(n=>i.L.includes(n))); if(both.length) co=`<p class="co">この二つの見方は${both.length>1?"一緒に出ることが多かったです":"一緒に出ている句がありました"}。「${kuT(both[0].ku)}」のように、ひとつの句の中で二つの見方が重なっていました。</p>`; } }
+  const n=items.length, m=st.filter(x=>x.you>0).length, ex1=t1?items.find(i=>i.L.includes(t1)):null;
+  const sum=t1?`今回は、${IF[t1].s}という見方が特徴的でした。${top[1]?`${IF[top[1]].s}見方も、あわせて出ていました。`:""}今日は${n}句、8つの見方のうち${m}つを使って詠みました。`:`今日は${n}句詠みました。次は、8つの見方のどれかを意識して詠んでみましょう。`;
+  const daily=t1?`${ex1?`「${kuT(ex1.ku.slice(0,2))}」のように`:""}${esc(IF[t1].s)}見方は、${esc(IF[t1].u)}`:"見たものをまっすぐ言葉にする見方は、毎日の小さな発見を残しておくときにも使えます。";
+  const cand=st.filter(x=>x.you===0).sort((p,q)=>q.all-p.all)[0]||st.slice().sort((p,q)=>p.diff-q.diff)[0];
+  const next=`次に絵を見るときは、${IF[cand.n].y}と、これまでとは違う発見があるかもしれません。${cand.all>0?"同じ絵を見た人の中には、この見方で詠んでいる人もいました。":""}`;
+  return `<div class="ip"><div class="ip-head"><h2 style="margin:0">いっぷ句分析</h2><span class="note">${date}</span></div>
+   <h3 class="sec">あなたの見方</h3><div class="lg"><span><i class="ldot you"></i>あなた</span><span><i class="ldot all"></i>みんな</span></div>
+   <div id="ipTiles">${tiles}<div class="note ip-note"><i class="ldot you hi"></i>縁がオレンジの丸は、みんなと大きな差があります（＋15pt以上）</div></div>
+   <button class="sample ip-fold" id="ipFold" aria-expanded="true">▲ タイルをたたんで先生のコメントを読む</button>
+   <h3 class="sec" id="ipCatch">キャッチコピー</h3><p class="catch">「${esc(t1?IF[t1].c:"目にとまったものを、まっすぐ言葉にする")}」</p>
+   <h3 class="sec">面白がりの特徴</h3>${featHTML}${co}
+   <h3 class="sec">まとめ</h3><p>${esc(sum)}</p>
+   <h3 class="sec">日常での使い方</h3><p>${daily}</p>
+   <h3 class="sec">次に試して欲しい見方</h3><p>${esc(next)}</p></div>`; }
+function bindIppuku(){ document.querySelectorAll(".qbtn[data-help]").forEach(b=>b.onclick=()=>{ const h=$("help-"+b.dataset.help); if(!h) return; h.hidden=!h.hidden; b.setAttribute("aria-expanded",String(!h.hidden)); });
+  const f=$("ipFold"), t=$("ipTiles"); if(f&&t) f.onclick=()=>{ const open=!t.hidden; t.hidden=open; f.textContent=open?"▼ タイルを開く":"▲ タイルをたたんで先生のコメントを読む"; f.setAttribute("aria-expanded",String(!open)); if(open){ const c=$("ipCatch"); if(c) c.scrollIntoView({behavior:"smooth",block:"start"}); } }; }
 function postsCard(){ return `<div class="card"><b>これまでの投稿</b><div class="pstat"><div><b>${P.posts.ku}</b><span class="note">句</span></div><div><b>${P.posts.pts}</b><span class="note">気になるポイント</span></div></div></div>`; }
 
 let S;
@@ -543,15 +622,7 @@ function vRev(){ const a=analyze(), CV=VIEWS.map(v=>v.n), dot=(on,c)=>`<span sty
   const summary=`<div class="card" style="background:var(--mist)"><b style="font-size:16px">まとめ：あなたの見方</b>
    <div class="note" style="margin-top:8px">押さえておきたいポイント（根）</div><ul style="margin:4px 0 10px 18px;padding:0;font-size:14px;line-height:1.7">${roots.slice(0,3).map(x=>`<li>${x}</li>`).join("")}</ul>
    <div class="note">あなたの持ち味（まなざし）</div><div style="font-size:17px;font-weight:700;color:var(--ink-d);margin:4px 0">${esc(gz)}</div><ul style="margin:4px 0 0 18px;padding:0;font-size:14px;line-height:1.7">${(mochi.length?mochi:["まずは、目にとまったものを言葉にしていきましょう"]).map(x=>`<li>${x}</li>`).join("")}</ul></div>`;
-  return {html:`<h2>今日のいっぷ句の分析</h2>${summary}<details class="more"><summary>詳しい分析を見る（句・事前予測・パッと見）</summary>
-  <div class="card"><b>句の分析（いっぷ句の8つの見方）</b><img src="${ART}" alt="今日の一枚" style="display:block;width:100%;max-height:170px;object-fit:contain;border-radius:10px;background:var(--surface);margin:8px 0"><div class="note" style="margin-top:2px">①あるがまま ${S.ku1.length}句／②ヒントのあと ${S.ku2.length}句／みんなの句のあと ${S.ku3.length}句</div>
-   <table style="width:100%;font-size:13px;margin-top:8px;border-collapse:collapse"><tr style="color:var(--sub)"><td style="padding:4px 0">見方</td><td style="text-align:center">①</td><td style="text-align:center">②</td><td style="text-align:center">後</td><td style="text-align:center">熟達者</td></tr>
-   ${LENS.map(l=>`<tr style="border-top:1px solid var(--line)"><td style="padding:6px 0">${esc(l.n)}</td><td style="text-align:center">${dot(a.L1.includes(l.n),"var(--ink)")}</td><td style="text-align:center">${dot(a.L2.includes(l.n),"var(--ink)")}</td><td style="text-align:center">${dot(a.L3.includes(l.n),"var(--ink)")}</td><td style="text-align:center">${dot(a.EL.includes(l.n),"var(--shu)")}</td></tr>`).join("")}</table></div>
-  ${a.new2.length?`<div class="insight">ヒントのあと、新しく<b>${q(a.new2)}</b>の見方で詠めました。</div>`:`<div class="insight">ヒントのあとも、同じ見方の中で深めました。</div>`}
-  ${S.ku3.length?(a.new3.length?`<div class="insight">みんなの句を見たあと、<b>${q(a.new3)}</b>が加わりました。</div>`:`<div class="insight">みんなの句を見たあとも、自分の見方を保って詠めました。</div>`):""}
-  <div class="card"><b>句：熟達者との違い</b>${compareBox(a.Lall,a.EL,"あなただけ（持ち味）","熟達者だけ")}
-   <div class="note" style="margin-top:6px">${a.own.length?`${q(a.own)}は、今日の熟達者の句にはなかった、あなたならではの見方です。`:""}${a.expOnly.length?`熟達者の${q(a.expOnly.slice(0,2))}の見方も、次に試してみましょう。`:""}</div></div>
-  <details class="more"><summary>熟達者の句を見る</summary><div class="trow" style="justify-content:flex-start">${EXPERT_KU.map(e=>`<div style="text-align:center"><div class="tanzaku" style="border-color:var(--shu)">${e.ku.map(esc).join("<br>")}</div><div class="note">${esc(e.who)}</div></div>`).join("")}</div></details>
+  return {html:`<h2>今日のいっぷ句の分析</h2>${summary}<details class="more"><summary>詳しい分析を見る（事前予測・パッと見）</summary>
   <div class="card" style="margin-top:12px"><b>③ 事前予測</b><img src="${svgURL(sceneSVG(S.cs.sc.night))}" alt="${esc(S.cs.sc.night.alt)}" style="display:block;width:100%;max-height:170px;object-fit:contain;border-radius:10px;background:var(--surface);margin:8px 0"><div class="note">昨夜の様子</div><div class="note" style="margin-top:4px">最悪：${esc(S.worst)}<br>予想外：${esc(S.odd)}</div><div class="note" style="margin-top:6px">${a.usedVital?"検温データの変化を、予測に使えました。":"熟達者は、検温データの変化（前日夜→今朝）を予測の根拠にしていました。次は数値の変化も材料にしてみましょう。"}${a.oddNew.length?`予想外の事態で、最悪とは別の角度（${q(a.oddNew)}）から考えられました。`:"予想外の事態が、最悪の事態と同じ方向でした。別の角度からも考えてみましょう。"}</div>
    <div class="note" style="margin-top:10px;color:var(--text);font-weight:700">熟達者との違い（予測した観点）</div>${compareBox([...new Set([...a.pW,...a.pO])],[...new Set([...viewsOf(S.cs.xw),...viewsOf(S.cs.xo)])],"あなただけ","熟達者だけ")}
    <details class="more"><summary>熟達者の予測を見る</summary><div class="note">最悪：${esc(S.cs.xw)}<br>予想外：${esc(S.cs.xo)}</div></details></div>
@@ -562,22 +633,15 @@ function vRev(){ const a=analyze(), CV=VIEWS.map(v=>v.n), dot=(on,c)=>`<span sty
   ${a.bridges.map(x=>`<div class="insight">絵のヒント「${esc(TAG[x.h.tag].n)}」の見方が、場面では<b>${q(x.c)}</b>として出ています。</div>`).join("")}
   ${a.miss.length?`<div class="insight shu">次は<b>${q(a.miss.slice(0,2))}</b>も疑ってみましょう。熟達者の多くが、この場面で最初に気にする点です。</div>`:`<div class="insight">熟達者の多くが最初に気にする点を、すべて押さえられています。</div>`}
   <div class="insight">書いた気になるポイントは、次の「信号（緑・黄・赤）」を決める材料になります。</div>
-  </details>`,
-  foot:`<button class="btn" id="n">${S.fromHist?"一覧に戻る":"おわる"}</button>`, bind(){ if(!S.saved){ S.saved=true; P.posts.ku+=S.ku1.length+S.ku2.length+S.ku3.length; P.posts.pts+=S.points.length; P.hist.push({d:"今日",today:true,title:S.cs.title,gaze:gz,lens:a.Lall.length,rate:a.rate,ku:S.ku1.length+S.ku2.length+S.ku3.length,pts:S.points.length,own:a.own,miss:a.miss}); } $("n").onclick=()=>{ if(S.fromHist){ S.fromHist=false; go("hist"); } else go("done"); }; }}; }
+  </details>
+  <div class="ip-sep">${ippukuAnalysis(a)}</div>`,
+  foot:`<button class="btn" id="n">${S.fromHist?"一覧に戻る":"おわる"}</button>`, bind(){ bindIppuku(); if(!S.saved){ S.saved=true; P.posts.ku+=S.ku1.length+S.ku2.length+S.ku3.length; P.posts.pts+=S.points.length; P.hist.push({d:"今日",today:true,title:S.cs.title,gaze:gz,lens:a.Lall.length,rate:a.rate,ku:S.ku1.length+S.ku2.length+S.ku3.length,pts:S.points.length,own:a.own,miss:a.miss}); } $("n").onclick=()=>{ if(S.fromHist){ S.fromHist=false; go("hist"); } else go("done"); }; }}; }
 const _vRevFull=vRev;
 vRev=function(){ if(!S.skipClin) return _vRevFull(); const a=analyze(), gz=gazeOf(), n=S.ku1.length+S.ku2.length+S.ku3.length;
-  return {html:`<h2>今日のいっぷ句の分析</h2><div class="card" style="background:var(--mist)"><b style="font-size:16px">句の分析：あなたの見方</b>
-   <div class="note" style="margin-top:8px">あなたの持ち味（まなざし）</div><div style="font-size:17px;font-weight:700;color:var(--ink-d);margin:4px 0">${esc(gz)}</div>
-   <ul style="margin:6px 0 0 18px;padding:0;font-size:14px;line-height:1.7">
-    <li>今日は${n}句、${a.Lall.length}つの見方で詠みました</li>
-    ${a.new2.length?`<li>ヒントで${q(a.new2.slice(0,2))}へ見方が広がりました</li>`:""}
-    ${a.own.length?`<li>${q(a.own)}は、熟達者の句にはないあなたらしい見方です</li>`:""}
-    ${a.expOnly.length?`<li>熟達者は${q(a.expOnly.slice(0,2))}にも目を向けていました。次の一枚で探してみましょう</li>`:""}
-   </ul></div>
-   ${senseiCard(a)}${kuDetail(a)}
+  return {html:`${ippukuAnalysis(a)}
    <div class="note" style="margin-top:10px">今日は臨床の場面をスキップしました。次回は場面まで進むと、臨床推論の分析も届きます。</div>`,
    foot:`<button class="btn sub" id="clin">やっぱり臨床の場面へ</button><button class="btn" id="n">おわる</button>`,
-   bind(){ if(!S.saved){ S.saved=true; P.posts.ku+=n; P.hist.push({d:"今日",today:true,title:"句のみ（場面スキップ）",gaze:gz,lens:a.Lall.length,rate:0,ku:n,pts:0,own:a.own,miss:[]}); }
+   bind(){ bindIppuku(); if(!S.saved){ S.saved=true; P.posts.ku+=n; P.hist.push({d:"今日",today:true,title:"句のみ（場面スキップ）",gaze:gz,lens:a.Lall.length,rate:0,ku:n,pts:0,own:a.own,miss:[]}); }
     $("clin").onclick=()=>{ S.skipClin=false; if(S.saved){ P.hist.pop(); P.posts.ku-=n; S.saved=false; } go("s1"); };
     $("n").onclick=()=>go("done"); }}; };
 // ===== 経過（成長の記録）と、シェア =====
@@ -603,7 +667,7 @@ function vShare(){ const all=[...S.ku1,...S.ku2,...S.ku3]; if(S.sel===undefined)
   bind(){ document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{S.sel=+b.dataset.s; render();}); $("b").onclick=()=>go("done"); $("go2").onclick=()=>{S.shared=true; render();}; }}; }
 
 // ===== LINE版（LIFF）の仕組み =====
-const LIFF_ID="2012192016-D0MCxjX9", APP_VER="21", KEY="ippuku-lite-v1";
+const LIFF_ID="2012192016-D0MCxjX9", APP_VER="23", KEY="ippuku-lite-v1";
 const ADD_FRIEND="https://line.me/R/ti/p/@777vdkoq";
 const LINKS={company:"https://pokkeishi.studio.site/",video:"https://www.youtube.com/watch?v=g8ZsscBmsvM"};
 const LOGO_URL="https://hikino1212.github.io/ippuku-liff/logo.png";
