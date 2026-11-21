@@ -122,6 +122,7 @@ textarea.ku{resize:none;line-height:1.6}
 :root[data-theme="dark"]{--co:#E2C08A}
 .ip p{font-size:14px;line-height:1.8;margin:4px 0 10px}
 .ip-sep{border-top:1px solid var(--line);margin-top:18px;padding-top:10px}
+.ver{width:64px;flex:0 0 auto;font-size:11px;color:var(--sub);text-align:right;white-space:nowrap}
 .ip-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:4px 0 2px}
 .sec{display:flex;align-items:center;gap:8px;font-size:16px;margin:20px 0 8px}
 .sec::before{content:"";width:12px;height:12px;background:var(--text);border-radius:2px;flex:0 0 auto}
@@ -364,7 +365,7 @@ function render(){
   const r=$("root"), key=S.ph, same=S._key===key, m=document.querySelector("main"), top=same&&m?m.scrollTop:0; S._key=key;
   if(S.ph==="talk"){ const stopped=P.org&&!P.org.active;
    r.innerHTML=`<div class="mockbar">検証版：入力はダミーでお願いします</div>
-   <div class="bar"><span style="width:44px"></span><div class="t"><b>いっぷ句</b><small>臨床推論・軽量モード</small></div><span style="width:44px"></span></div>
+   <div class="bar"><span style="width:64px"></span><div class="t"><b>いっぷ句</b><small>臨床推論・軽量モード</small></div><span class="ver">Ver${esc(APP_VER)}</span></div>
    <main><div class="seal" style="font-size:15px">いっぷ句</div>
    <h2>${P.nick?esc(honor(P.nick))+"、":""}${S.paused?"おかえりなさい":"今日のいっぷ句、はじめませんか"}</h2>
    <p class="lead">${S.paused?`前回は「${esc(LABEL[S.paused]||"")}」で中断しました。書いた内容は残っています。`:"絵を眺めて句を詠み、そのあと臨床の場面をひとつ。5分ほどです。"}</p>
@@ -619,10 +620,10 @@ const q=a=>a.map(x=>`「${esc(x)}」`).join("");
 function vRev(){ const a=analyze(), CV=VIEWS.map(v=>v.n), dot=(on,c)=>`<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${on?c:"var(--mist2)"}"></span>`;
   const gz=gazeOf(), roots=[]; if(a.miss.length) roots.push(`熟達者の多くが最初に気にする${q(a.miss.slice(0,2))}を、次は疑ってみましょう`); if(!a.usedVital) roots.push("検温データの変化（前日夜→今朝）を、予測の根拠にしましょう"); if(a.notChecked.length) roots.push(`予測した${q(a.notChecked.slice(0,2))}を、訪室して確かめに行きましょう`); if(!a.oddNew.length) roots.push("予想外の事態は、最悪とは別の角度から考えてみましょう"); if(!roots.length) roots.push("押さえどころは、しっかり押さえられています");
   const youOnlyClin=a.pt.filter(x=>!viewsOf(S.cs.xp.join("")).includes(x)), mochi=[]; if(a.own.length) mochi.push(`句では${q(a.own)}の見方が、熟達者にはないあなたらしさです`); if(youOnlyClin.length) mochi.push(`臨床では${q(youOnlyClin)}に目が向きました。熟達者が挙げなかった視点です`); if(a.new2.length) mochi.push(`ヒントを使って${q(a.new2.slice(0,2))}へ見方を広げられる、やわらかさがあります`); if(a.bridges.length) mochi.push("絵で使った見方を、臨床の場面でも使えています");
-  const summary=`<div class="card" style="background:var(--mist)"><b style="font-size:16px">まとめ：あなたの見方</b>
+  const summary=`<div class="card" style="background:var(--mist)"><b style="font-size:16px">全体サマリ</b>
    <div class="note" style="margin-top:8px">押さえておきたいポイント（根）</div><ul style="margin:4px 0 10px 18px;padding:0;font-size:14px;line-height:1.7">${roots.slice(0,3).map(x=>`<li>${x}</li>`).join("")}</ul>
    <div class="note">あなたの持ち味（まなざし）</div><div style="font-size:17px;font-weight:700;color:var(--ink-d);margin:4px 0">${esc(gz)}</div><ul style="margin:4px 0 0 18px;padding:0;font-size:14px;line-height:1.7">${(mochi.length?mochi:["まずは、目にとまったものを言葉にしていきましょう"]).map(x=>`<li>${x}</li>`).join("")}</ul></div>`;
-  return {html:`<h2>今日のいっぷ句の分析</h2>${summary}<details class="more"><summary>詳しい分析を見る（事前予測・パッと見）</summary>
+  return {html:`<h2>今日のいっぷ句の分析</h2>${summary}<div class="ip-sep">${ippukuAnalysis(a)}</div><div class="ip-sep"><div class="ip-head"><h2 style="margin:0">臨床推論分析</h2></div>
   <div class="card" style="margin-top:12px"><b>③ 事前予測</b><img src="${svgURL(sceneSVG(S.cs.sc.night))}" alt="${esc(S.cs.sc.night.alt)}" style="display:block;width:100%;max-height:170px;object-fit:contain;border-radius:10px;background:var(--surface);margin:8px 0"><div class="note">昨夜の様子</div><div class="note" style="margin-top:4px">最悪：${esc(S.worst)}<br>予想外：${esc(S.odd)}</div><div class="note" style="margin-top:6px">${a.usedVital?"検温データの変化を、予測に使えました。":"熟達者は、検温データの変化（前日夜→今朝）を予測の根拠にしていました。次は数値の変化も材料にしてみましょう。"}${a.oddNew.length?`予想外の事態で、最悪とは別の角度（${q(a.oddNew)}）から考えられました。`:"予想外の事態が、最悪の事態と同じ方向でした。別の角度からも考えてみましょう。"}</div>
    <div class="note" style="margin-top:10px;color:var(--text);font-weight:700">熟達者との違い（予測した観点）</div>${compareBox([...new Set([...a.pW,...a.pO])],[...new Set([...viewsOf(S.cs.xw),...viewsOf(S.cs.xo)])],"あなただけ","熟達者だけ")}
    <details class="more"><summary>熟達者の予測を見る</summary><div class="note">最悪：${esc(S.cs.xw)}<br>予想外：${esc(S.cs.xo)}</div></details></div>
@@ -633,8 +634,7 @@ function vRev(){ const a=analyze(), CV=VIEWS.map(v=>v.n), dot=(on,c)=>`<span sty
   ${a.bridges.map(x=>`<div class="insight">絵のヒント「${esc(TAG[x.h.tag].n)}」の見方が、場面では<b>${q(x.c)}</b>として出ています。</div>`).join("")}
   ${a.miss.length?`<div class="insight shu">次は<b>${q(a.miss.slice(0,2))}</b>も疑ってみましょう。熟達者の多くが、この場面で最初に気にする点です。</div>`:`<div class="insight">熟達者の多くが最初に気にする点を、すべて押さえられています。</div>`}
   <div class="insight">書いた気になるポイントは、次の「信号（緑・黄・赤）」を決める材料になります。</div>
-  </details>
-  <div class="ip-sep">${ippukuAnalysis(a)}</div>`,
+  </div>`,
   foot:`<button class="btn" id="n">${S.fromHist?"一覧に戻る":"おわる"}</button>`, bind(){ bindIppuku(); if(!S.saved){ S.saved=true; P.posts.ku+=S.ku1.length+S.ku2.length+S.ku3.length; P.posts.pts+=S.points.length; P.hist.push({d:"今日",today:true,title:S.cs.title,gaze:gz,lens:a.Lall.length,rate:a.rate,ku:S.ku1.length+S.ku2.length+S.ku3.length,pts:S.points.length,own:a.own,miss:a.miss}); } $("n").onclick=()=>{ if(S.fromHist){ S.fromHist=false; go("hist"); } else go("done"); }; }}; }
 const _vRevFull=vRev;
 vRev=function(){ if(!S.skipClin) return _vRevFull(); const a=analyze(), gz=gazeOf(), n=S.ku1.length+S.ku2.length+S.ku3.length;
@@ -667,7 +667,7 @@ function vShare(){ const all=[...S.ku1,...S.ku2,...S.ku3]; if(S.sel===undefined)
   bind(){ document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{S.sel=+b.dataset.s; render();}); $("b").onclick=()=>go("done"); $("go2").onclick=()=>{S.shared=true; render();}; }}; }
 
 // ===== LINE版（LIFF）の仕組み =====
-const LIFF_ID="2012192016-D0MCxjX9", APP_VER="23", KEY="ippuku-lite-v1";
+const LIFF_ID="2012192016-D0MCxjX9", APP_VER="0.25.0", KEY="ippuku-lite-v1";
 const ADD_FRIEND="https://line.me/R/ti/p/@777vdkoq";
 const LINKS={company:"https://pokkeishi.studio.site/",video:"https://www.youtube.com/watch?v=g8ZsscBmsvM"};
 const LOGO_URL="https://hikino1212.github.io/ippuku-liff/logo.png";
