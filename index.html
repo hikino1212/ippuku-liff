@@ -116,6 +116,7 @@ textarea.ku{resize:none;line-height:1.6}
 .selhint{border:1.5px solid var(--ink);background:var(--surface)}
 .whycard{background:var(--surface);border:1.5px solid var(--ink);border-radius:16px;padding:12px 14px;margin:6px 0 8px}
 .whyku{font-family:"Noto Serif JP",serif;font-size:15px;line-height:1.7}
+.sensei-row{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
 .toast{position:absolute;left:16px;right:16px;bottom:88px;z-index:30;background:var(--text);color:var(--surface);border-radius:12px;padding:10px 14px;font-size:13px;line-height:1.5;text-align:center}
 @keyframes shFade{from{opacity:0}to{opacity:1}}
 @keyframes shUp{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
@@ -240,6 +241,29 @@ function clinPop(from){ sheet(`<div class="sh-head"><h3 class="sh-t">臨床推�
   <p class="lead" style="margin:0">絵で使った見方を、臨床の場面で試します。前の日の様子からこの後を予測し、訪室して気になるポイントを見つけます。</p>
   <div class="sh-btns"><button class="btn" id="cpGo">臨床推論verへ進む</button><button class="btn sub" id="cpNo">${from==="end"?"今日は句だけにする（分析を見る）":"句をつづける"}</button></div>`,
   ()=>{ $("shX").onclick=closeSheet; $("cpGo").onclick=()=>{ closeSheet(); S.skipClin=false; go("s1"); }; $("cpNo").onclick=()=>{ closeSheet(); if(from==="end"){ S.skipClin=true; go("rev"); } }; }); }
+function flushWhy(list){ if(!whyPending(list)) return; const v=(S.whyDraft||"").trim(); if(v){ const C=S[list+"C"]||[]; C[S.why.idx]=v; S[list+"C"]=C; } S.why=null; S.whyDraft=""; }
+const LENS_TIP={"世界観の内側":"絵の中の時代や場面に入りこんで","世界観の外側":"絵を、今の自分のことに引き寄せて","感じたままに表現":"感じたことを、そのまま言葉にして","なぜ・どういうことか":"そう見える理由や背景を考えて","場面・出来事を想像":"そこで起きている出来事を組み立てて","人・気持ち・物語を想像":"人の気持ちや関係を想像して","笑いに変える":"見つけたことを笑いに変えて","離れたものを結びつける":"離れた場所どうしを結びつけて"};
+function senseiCard(a){ const items=[]; [["ku1","① あるがままに"],["ku2","② ヒントのあと"],["ku3","みんなの句のあと"]].forEach(([k,lab])=>S[k].forEach((ku,i)=>items.push({lab,ku,why:((S[k+"C"]||[])[i]||"").trim()})));
+  if(!items.length) return "";
+  const usedL=new Set(), rows=items.slice(0,4).map(it=>{ const t=it.ku.join(""), L=lensOf(t), V=artOf(t), L0=L.find(x=>!usedL.has(x))||L[0]; if(L0) usedL.add(L0);
+    const s1=L0?`${LENS_TIP[L0]}詠んだ句ですね。`:V.length?`${V[0]}に目をとめた句ですね。`:"目にとまったものを、素直に言葉にした句ですね。";
+    const own=L.find(x=>!a.EL.includes(x)), s2=own?`「${own}」は、今日の熟達者の句にはない見方です。`:"";
+    const w=it.why.length>40?it.why.slice(0,40)+"…":it.why, s3=w?`「${w}」という理由に、あなたの見方がよく出ています。`:"";
+    return `<div class="sensei-row"><div class="note">${esc(it.lab)}</div><div class="whyku">「${it.ku.map(esc).join("　")}」</div><div style="font-size:14px;line-height:1.7;margin-top:2px">${esc(s1+s2+s3)}</div></div>`; }).join("");
+  const nextL=a.expOnly[0]||LENS.map(l=>l.n).find(x=>!a.Lall.includes(x)), nl=LENS.find(l=>l.n===nextL);
+  const tip=nl?`次の一枚では、「${nl.n}」の見方でも詠んでみましょう。${nl.d}見方です。`:"8つの見方をすべて使えています。次は、ひとつの句に2つの見方を重ねてみましょう。";
+  return `<div class="card sensei"><b style="font-size:16px">面白がり先生のひとこと</b>${rows}<div class="insight" style="margin:12px 0 0">${esc(tip)}</div><div class="note" style="margin-top:6px">検証版では、キーワードから仮のコメントを出しています。</div></div>`; }
+function kuDetail(a){ const dot=(on,c)=>`<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${on?c:"var(--mist2)"}"></span>`;
+  return `<details class="more"><summary>詳しい分析を見る（句）</summary>
+  <div class="card"><b>句の分析（いっぷ句の8つの見方）</b><img src="${ART}" alt="今日の一枚" style="display:block;width:100%;max-height:170px;object-fit:contain;border-radius:10px;background:var(--surface);margin:8px 0"><div class="note" style="margin-top:2px">①あるがまま ${S.ku1.length}句／②ヒントのあと ${S.ku2.length}句／みんなの句のあと ${S.ku3.length}句</div>
+   <table style="width:100%;font-size:13px;margin-top:8px;border-collapse:collapse"><tr style="color:var(--sub)"><td style="padding:4px 0">見方</td><td style="text-align:center">①</td><td style="text-align:center">②</td><td style="text-align:center">後</td><td style="text-align:center">熟達者</td></tr>
+   ${LENS.map(l=>`<tr style="border-top:1px solid var(--line)"><td style="padding:6px 0">${esc(l.n)}</td><td style="text-align:center">${dot(a.L1.includes(l.n),"var(--ink)")}</td><td style="text-align:center">${dot(a.L2.includes(l.n),"var(--ink)")}</td><td style="text-align:center">${dot(a.L3.includes(l.n),"var(--ink)")}</td><td style="text-align:center">${dot(a.EL.includes(l.n),"var(--shu)")}</td></tr>`).join("")}</table></div>
+  ${a.new2.length?`<div class="insight">ヒントのあと、新しく<b>${q(a.new2)}</b>の見方で詠めました。</div>`:`<div class="insight">ヒントのあとも、同じ見方の中で深めました。</div>`}
+  ${S.ku3.length?(a.new3.length?`<div class="insight">みんなの句を見たあと、<b>${q(a.new3)}</b>が加わりました。</div>`:`<div class="insight">みんなの句を見たあとも、自分の見方を保って詠めました。</div>`):""}
+  <div class="card"><b>句：熟達者との違い</b>${compareBox(a.Lall,a.EL,"あなただけ（持ち味）","熟達者だけ")}
+   <div class="note" style="margin-top:6px">${a.own.length?`${q(a.own)}は、今日の熟達者の句にはなかった、あなたならではの見方です。`:""}${a.expOnly.length?`熟達者の${q(a.expOnly.slice(0,2))}の見方も、次に試してみましょう。`:""}</div></div>
+  <details class="more"><summary>熟達者の句を見る</summary><div class="trow" style="justify-content:flex-start">${EXPERT_KU.map(e=>`<div style="text-align:center"><div class="tanzaku" style="border-color:var(--shu)">${e.ku.map(esc).join("<br>")}</div><div class="note">${esc(e.who)}</div></div>`).join("")}</div></details>
+  </details>`; }
 function postsCard(){ return `<div class="card"><b>これまでの投稿</b><div class="pstat"><div><b>${P.posts.ku}</b><span class="note">句</span></div><div><b>${P.posts.pts}</b><span class="note">気になるポイント</span></div></div></div>`; }
 
 let S;
@@ -302,9 +326,9 @@ function steam(){ return `<svg class="steam" width="44" height="44" viewBox="0 0
 function kuBlock(listKey,draftKey,pool){ const d=S[draftKey], ok=d.every(x=>x.trim()), C=S[listKey+"C"]||[];
   const list=S[listKey].length?`<div class="trow">${S[listKey].map((k,i)=>{const c=(C[i]||"").trim(); return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;max-width:120px"><div class="tanzaku">${k.map(esc).join("<br>")}</div>${c?`<div class="note" style="font-size:11.5px;text-align:center">${esc(c)}</div>`:""}</div>`;}).reverse().join("")}</div>`:"";
   if(whyPending(listKey)){ const k=S[listKey][S.why.idx]||[], w=S.whyDraft||"";
-    return `${list}<div class="whycard"><div class="whyku">「${k.map(esc).join("　")}」</div><div class="q" style="margin-top:10px">どうしてそう思った？</div>
+    return `${list}<div class="whycard"><div class="whyku">「${k.map(esc).join("　")}」</div><div class="q" style="margin-top:10px">どうしてそう思った？${listKey==="ku3"?"（任意）":""}</div>
      <textarea class="ku" id="why-${listKey}" rows="2" maxlength="${MAXC}" placeholder="目がとまったところや、そう感じた理由（${MAXC}字まで）" aria-label="どうしてそう思った？">${esc(w)}</textarea>
-     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px"><button class="sample" id="whyex-${listKey}">例を入れる（デモ用）</button><button class="chip" id="whyok-${listKey}" ${w.trim()?"":"disabled"} style="${w.trim()?"":"opacity:.45"}">書けた</button></div></div>`; }
+     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px"><button class="sample" id="whyex-${listKey}">例を入れる（デモ用）</button><span style="display:flex;gap:6px">${listKey==="ku3"?`<button class="chip" id="whyskip-${listKey}">飛ばす</button>`:""}<button class="chip" id="whyok-${listKey}" ${w.trim()?"":"disabled"} style="${w.trim()?"":"opacity:.45"}">書けた</button></span></div></div>`; }
   return `${list}
   <div>${[0,1,2].map(i=>{const m=mora(d[i]); return `<div class="kurow"><input class="ku" data-d="${draftKey}" data-i="${i}" value="${esc(d[i])}" placeholder="${PH[i]}" aria-label="${PH[i]}"><span class="mora ${m===T[i]?"ok":""}" id="m-${draftKey}-${i}">${m}／${T[i]}音</span></div>`;}).join("")}
   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px"><button class="sample" data-ex="${draftKey}">例を入れる（デモ用）</button><button class="chip" id="post-${draftKey}" ${ok?"":"disabled"} style="${ok?"":"opacity:.45"}">${S[listKey].length?"もう一句出す":"この句を出す"}</button></div></div>`; }
@@ -312,6 +336,7 @@ function bindKu(listKey,draftKey,pool,after){
   if(whyPending(listKey)){ const ta=$("why-"+listKey), okb=$("whyok-"+listKey);
     ta.oninput=e=>{ S.whyDraft=e.target.value; const v=S.whyDraft.trim(); okb.disabled=!v; okb.style.opacity=v?"":".45"; };
     $("whyex-"+listKey).onclick=()=>{ S.whyDraft=pick(EX.comment); render(); };
+    const sk=$("whyskip-"+listKey); if(sk) sk.onclick=()=>{ S.why=null; S.whyDraft=""; render(); };
     okb.onclick=()=>{ const v=(S.whyDraft||"").trim(); if(!v) return; const C=S[listKey+"C"]||[]; C[S.why.idx]=v; S[listKey+"C"]=C; S.why=null; S.whyDraft=""; render(); };
     return; }
   document.querySelectorAll(`input[data-d="${draftKey}"]`).forEach(inp=>inp.oninput=e=>{ const i=+inp.dataset.i; S[draftKey][i]=e.target.value; const mm=mora(e.target.value),el=$(`m-${draftKey}-${i}`); el.textContent=`${mm}／${T[i]}音`; el.className="mora"+(mm===T[i]?" ok":""); const b=$("post-"+draftKey), ok=S[draftKey].every(x=>x.trim()); b.disabled=!ok; b.style.opacity=ok?"":".45"; });
@@ -395,8 +420,8 @@ function vKu2(){ const n=S.ku2.length, h=S.hints[S.hintSel]; return {html:`${h?`
 function vPeer(){ return {html:`<div class="card"><b>みんなの句</b><div class="note">同じ絵を観た仲間の句です（ニックネームと従事歴）。自分にはなかった視点はありますか。</div></div>
   <div class="trow" style="justify-content:flex-start;flex-wrap:wrap">${S.peers.map((k,i)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div class="tanzaku" style="border-color:var(--line)">${k.map(esc).join("<br>")}</div>${whoTag(S.who[i])}<button class="chip ${S.reacts.has(i)?"on":""}" data-r="${i}" style="font-size:12px;padding:6px 10px">${S.reacts.has(i)?"ハッとした！":"その視点なかった"}</button></div>`).join("")}</div>
   <div class="q">みんなの句を見て、もう一句（任意）</div>${kuBlock("ku3","d3",EX.ku2)}`,
-  foot:`<button class="btn" id="n" ${whyPending("ku3")?"disabled":""}>${whyPending("ku3")?"未入力：どうしてそう思った？":"次へ"}</button>`,
-  bind(){ document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.r; S.reacts.has(i)?S.reacts.delete(i):S.reacts.add(i); render(); }); bindKu("ku3","d3",EX.ku2); $("n").onclick=()=>clinPop("end"); }}; }
+  foot:`<button class="btn" id="n">次へ</button>`,
+  bind(){ document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.r; S.reacts.has(i)?S.reacts.delete(i):S.reacts.add(i); render(); }); bindKu("ku3","d3",EX.ku2); $("n").onclick=()=>{ flushWhy("ku3"); clinPop("end"); }; }}; }
 // ③ 事前予測（前日の様子から、書いて予測する）
 function vS1(){ const c=S.cs, ok=S.worst.trim()&&S.odd.trim(); return {html:`<div class="card"><b>${esc(c.title)}</b><div class="note" style="margin-top:6px">前日からの様子（申し送り）</div><div style="font-size:14.5px;line-height:1.7;margin-top:2px">${esc(c.prev)}</div></div>
   <div class="card"><b>検温データの変化</b><table style="width:100%;font-size:13.5px;margin-top:6px;border-collapse:collapse"><tr style="color:var(--sub)"><td></td><td style="padding:4px 6px">前日夜</td><td style="padding:4px 6px">今朝</td></tr>${c.vit.map(v=>`<tr style="border-top:1px solid var(--line)"><td style="padding:6px 6px 6px 0">${esc(v[0])}</td><td style="padding:6px">${esc(v[1])}</td><td style="padding:6px;font-weight:700">${esc(v[2])}</td></tr>`).join("")}</table></div>
@@ -541,7 +566,7 @@ function vRev(){ const a=analyze(), CV=VIEWS.map(v=>v.n), dot=(on,c)=>`<span sty
   foot:`<button class="btn" id="n">${S.fromHist?"一覧に戻る":"おわる"}</button>`, bind(){ if(!S.saved){ S.saved=true; P.posts.ku+=S.ku1.length+S.ku2.length+S.ku3.length; P.posts.pts+=S.points.length; P.hist.push({d:"今日",today:true,title:S.cs.title,gaze:gz,lens:a.Lall.length,rate:a.rate,ku:S.ku1.length+S.ku2.length+S.ku3.length,pts:S.points.length,own:a.own,miss:a.miss}); } $("n").onclick=()=>{ if(S.fromHist){ S.fromHist=false; go("hist"); } else go("done"); }; }}; }
 const _vRevFull=vRev;
 vRev=function(){ if(!S.skipClin) return _vRevFull(); const a=analyze(), gz=gazeOf(), n=S.ku1.length+S.ku2.length+S.ku3.length;
-  return {html:`<div class="card" style="background:var(--mist)"><b style="font-size:16px">句の分析：あなたの見方</b>
+  return {html:`<h2>今日のいっぷ句の分析</h2><div class="card" style="background:var(--mist)"><b style="font-size:16px">句の分析：あなたの見方</b>
    <div class="note" style="margin-top:8px">あなたの持ち味（まなざし）</div><div style="font-size:17px;font-weight:700;color:var(--ink-d);margin:4px 0">${esc(gz)}</div>
    <ul style="margin:6px 0 0 18px;padding:0;font-size:14px;line-height:1.7">
     <li>今日は${n}句、${a.Lall.length}つの見方で詠みました</li>
@@ -549,6 +574,7 @@ vRev=function(){ if(!S.skipClin) return _vRevFull(); const a=analyze(), gz=gazeO
     ${a.own.length?`<li>${q(a.own)}は、熟達者の句にはないあなたらしい見方です</li>`:""}
     ${a.expOnly.length?`<li>熟達者は${q(a.expOnly.slice(0,2))}にも目を向けていました。次の一枚で探してみましょう</li>`:""}
    </ul></div>
+   ${senseiCard(a)}${kuDetail(a)}
    <div class="note" style="margin-top:10px">今日は臨床の場面をスキップしました。次回は場面まで進むと、臨床推論の分析も届きます。</div>`,
    foot:`<button class="btn sub" id="clin">やっぱり臨床の場面へ</button><button class="btn" id="n">おわる</button>`,
    bind(){ if(!S.saved){ S.saved=true; P.posts.ku+=n; P.hist.push({d:"今日",today:true,title:"句のみ（場面スキップ）",gaze:gz,lens:a.Lall.length,rate:0,ku:n,pts:0,own:a.own,miss:[]}); }
@@ -577,7 +603,7 @@ function vShare(){ const all=[...S.ku1,...S.ku2,...S.ku3]; if(S.sel===undefined)
   bind(){ document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{S.sel=+b.dataset.s; render();}); $("b").onclick=()=>go("done"); $("go2").onclick=()=>{S.shared=true; render();}; }}; }
 
 // ===== LINE版（LIFF）の仕組み =====
-const LIFF_ID="2012192016-D0MCxjX9", APP_VER="20", KEY="ippuku-lite-v1";
+const LIFF_ID="2012192016-D0MCxjX9", APP_VER="21", KEY="ippuku-lite-v1";
 const ADD_FRIEND="https://line.me/R/ti/p/@777vdkoq";
 const LINKS={company:"https://pokkeishi.studio.site/",video:"https://www.youtube.com/watch?v=g8ZsscBmsvM"};
 const LOGO_URL="https://hikino1212.github.io/ippuku-liff/logo.png";
